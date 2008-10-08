@@ -8,6 +8,7 @@
    *   The class that implements the checking of the constraint.
    *   Parameters to initialize the parameters of the constraint.
    *   The groups under which the constraint should be checked.
+   *   The message to be returned when the specified constraint fails.
   *  The user shall be able to annotate the following with constraints:
    *   Classes
    *   Fields
@@ -16,4 +17,7 @@
   *  The API shall implement the GroupSequence annotation as specified by JSR-303.
    *   GroupSequence shall have a group name.
    *   GroupSequence shall specify a sequence of groupings to run.
-
+  *  The API shall provide identical validation procedures for the client side JavaScript and pure JVM code.
+  *  The user shall be able to correlate messages on constraints to external message strings.
+   *   Intended to support internationalization or multiple sites sharing the same validation.
+   *   The API shall provide this support through the standard internationalization package of GWT.
