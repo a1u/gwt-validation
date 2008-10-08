@@ -1,0 +1,36 @@
+#summary Description of the GroupOrdering annotation
+#labels sequence,ordering
+
+= Introduction =
+
+The GroupOrdering annotation allows the developer to specify what groups should be run and in what order for a specific class.
+
+= Example =
+
+{{{
+@GroupOrdering(name="default", sequence={"minimal","full","extended"})
+public class Person {
+
+    @NotNull(groups={"minimal","full})
+    @NotEmpty(groups={"full"})
+    @Length(groups={"extended"})
+    private String name = null;
+
+    
+    @NotNull(groups={"minimal"})
+    @Past(groups={"minimal"})
+    private Date dob = null;
+
+    public String getName() { return this.name; }
+    public Date getDob() { return this.dob; }
+}
+}}}
+
+Running a validation on this class with the group "default" would cause the following sequence of groups to be run: minimal, full, extended.
+
+Even though @NotNull on name is in two groups it would be processed only once.
+
+When one group fails, the subsequent groups are not run.  This can allow the user to put more processing intensive tasks in later groups so that a minimum of effort is expended to find any invalid constraints.
+
+This means that if an object of this class were created as it was right now and validated with the "default" group the minimal group would fail and the full and extended groups would not be processed at all.
+
