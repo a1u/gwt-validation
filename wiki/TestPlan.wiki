@@ -41,10 +41,13 @@ The same tests must be made for both the client side and for the server side so 
 
 === Validator Testing ===
 
-There is a use case for the client side validator and for the jvm validator.  As new features (ex: GroupSequence) are added they are added (nearly identically, allowing for differing creation mechanisms) to both the ClientValidatorTest and the ServerValidatorTest so that it can be shown that they work and they work identically.  
+There is a use case for the client side validator and for the jvm validator.  As new features (ex: GroupSequence) are added they are added (nearly identically, allowing for differing creation mechanisms) to both the [http://code.google.com/p/gwt-validation/source/browse/trunk/test/com/google/gwt/validation/client/ClientValidatorTest.java ClientValidatorTest] and the [http://code.google.com/p/gwt-validation/source/browse/trunk/test/com/google/gwt/validation/server/ServerValidatorTest.java ServerValidatorTest] so that it can be shown that they work and they work identically.  
 
 These validator tests will also implement all of the examples from the JSR-303 framework so that it can show conformance with the operating specifications of the standard.
 
+=== Automated Unit Testing Procedure ===
+
+All of the unit tests will be built into the Test suites that are run from through Ant using JUnit.  Each client side unit test (in the [http://code.google.com/p/gwt-validation/source/browse/trunk/test/com/google/gwt/validation/client/ClientTestSuite.java ClientTestSuite]) will use GWT specific JUnit tests and will be run (by Ant) in both hosted and compiled (browser) modes.  A failure in either equates to a full test failure.
 
 == Inspections ==
 
