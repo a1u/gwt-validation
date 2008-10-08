@@ -8,6 +8,8 @@
    *   Parameters to initialize the parameters of the constraint.
    *   The groups under which the constraint should be checked.
    *   The message to be returned when the specified constraint fails.
+   *   A constraint shall not contain the Class object of the failed test.
+   *   A constraint shall not specify other items that break the GWT model.
   *  The user shall be able to annotate the following with constraints:
    *   Classes
    *   Fields
