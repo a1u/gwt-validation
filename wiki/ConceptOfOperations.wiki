@@ -1,4 +1,5 @@
 #summary How GWT Validation works
+#labels Phase-Design,Featured
 
 = Introduction =
 
