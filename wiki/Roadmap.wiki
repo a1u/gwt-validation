@@ -12,7 +12,7 @@ Release 1.0
  * Class level validation.
  * Object graph validation through the @Valid annotation.
  * Groups fully working with "default" grouping and such.
- * @GroupOrdering annotation.
+ * @GroupSequence annotation.
  * InvalidConstraint is as JSR-303 compliant as it is likely to get
 
 Release 1.1
