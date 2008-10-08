@@ -1,9 +1,53 @@
 #summary How testing is performed.
+#labels Featured,Phase-QA
 
 = Test Plan =
 
+The goal of this project is to provide a validation framework for web applications and validation is often a very critical procedure.  Keeping this in mind the project will place an emphasis on testing with a heavy reliance on automated unit tests.  
+
 == Automated Unit Tests ==
 
+The JUnit framework and the GWT adapters to it will provide the unit testing framework.
+
+=== Constraint Testing ===
+
+Each constraint must have both a pass (true) and fail (false) test for each of the scenarios that it is meant to check.  
+
+Take length for example:
+{{{
+public class LengthValidator implements IConstraint<Length> {
+
+	public boolean isValid(Object value) {
+		if(value == null) return true;
+		
+		boolean valid = false;
+		
+		int size = -1;
+		
+		if(value.getClass().toString().equals(String.class.toString())) {
+			size = ((String)value).trim().length();
+		}
+
+		if(size >= 0 && this.maximum >= size && this.minimum <= size) valid = true;
+		
+		return valid;
+	}
+}
+}}}
+
+LengthValidator has 5 test cases.  One under the minimum, one at the minimum, one in the middle, one at the maximum, and one over the maximum.  This exhaustively tests that the validator works.  In order to make this more complete some testing could be done with both null and by passing not strings.
+
+The same tests must be made for both the client side and for the server side so that it can be shown that the validator works the same on both sides of GWT.
+
+=== Validator Testing ===
+
+There is a use case for the client side validator and for the jvm validator.  As new features (ex: GroupSequence) are added they are added (nearly identically, allowing for differing creation mechanisms) to both the ClientValidatorTest and the ServerValidatorTest so that it can be shown that they work and they work identically.  
+
+These validator tests will also implement all of the examples from the JSR-303 framework so that it can show conformance with the operating specifications of the standard.
+
+
 == Inspections ==
+
+Code inspections are important to the operation of this project.  New code shall be submitted to the project for review before being included in the repository.  
 
 == User Testing ==
