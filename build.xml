@@ -1,0 +1,204 @@
+<project name="GWT Validation Framework" basedir=".">
+
+	<description>
+        Builds, Tests, and Packages the GWT Validation Framework
+    </description>
+	
+	<property name="src" location="src"/>
+	<property name="test" location="test"/>
+	<property name="build" location="build"/> 
+	<property name="dist"  location="dist"/>
+	<property name="libraries"  location="lib"/> 
+	
+	<!-- build! -->
+	<target name="build" depends="clean" description="compile the source " >
+
+		<!-- create directory for compiled build -->
+		<mkdir dir="${build}\src"/>
+		
+		<!-- Compile the java code from ${src} into ${build}\src -->
+		<!-- Also specify that the source and target should be jdk5, not 6 -->
+		<javac 	srcdir="${src}" 
+				destdir="${build}\src" 
+				source="1.5"
+				target="1.5"	
+				>
+		
+			<classpath>
+				<fileset dir="${libraries}">
+					<include name="**/*.jar"/>
+				</fileset>
+			</classpath>
+		
+		</javac>
+	</target>
+	
+	<target name="test" description="junit test the project">
+
+		<!-- create test compiled dir -->
+		<mkdir dir="${build}\test"/>
+		
+		<!-- Compile the java code from ${test} into ${build}\test -->
+		<!-- Also specify that the source and target should be jdk5, not 6 -->
+		<javac 	destdir="${build}\test"
+				source="1.5"
+				target="1.5"	
+				>
+			
+			<src path="${src}" />
+			<src path="${test}" />
+		
+			<classpath>
+				<fileset dir="${libraries}">
+					<include name="**/*.jar"/>
+				</fileset>
+			</classpath>
+		
+		</javac>
+		
+		<!-- hosted mode tests -->
+		<junit printsummary="on" haltonfailure="no" fork="yes" maxmemory="512m">
+
+			<classpath>
+				<pathelement path="${src}" />
+				<pathelement path="${test}" />
+				<pathelement path="${build}\test" />
+				<fileset dir="${libraries}">
+					<include name="**/*.jar"/>
+				</fileset>
+			</classpath>
+
+		    <test name="com.google.gwt.validation.client.ClientTestSuite" haltonfailure="no" />
+			
+		</junit>
+			
+		<!-- web mode tests -->
+		<junit printsummary="on" haltonfailure="no" fork="yes" maxmemory="512m">
+			<jvmarg value="-Dgwt.args=&quot;-web&quot;"/>
+			
+			<classpath>
+				<pathelement path="${src}" />
+				<pathelement path="${test}" />
+				<pathelement path="${build}\test" />
+				<fileset dir="${libraries}">
+					<include name="**/*.jar"/>
+				</fileset>
+			</classpath>
+
+		    <test name="com.google.gwt.validation.client.ClientTestSuite" haltonfailure="no" />
+			
+		</junit>		
+		
+		<!-- rebind and server tests -->
+		<junit printsummary="on" haltonfailure="no" >
+
+			<classpath>
+				<pathelement path="${test}" />
+				<pathelement path="${build}\test" />
+				<fileset dir="${libraries}">
+					<include name="**/*.jar"/>
+				</fileset>
+			</classpath>
+
+			<test name="com.google.gwt.validation.rebind.RebindTestSuite" haltonfailure="no" />
+			<test name="com.google.gwt.validation.server.ServerTestSuite" haltonfailure="no" />
+			
+		</junit>
+		
+	</target>
+	
+	<target name="dist" depends="build" description="build the jar for distribution">
+
+		<!-- test! -->
+		<antcall target="test"></antcall>
+		
+		<!-- javadoc -->
+		<antcall target="javadoc"></antcall>
+
+		<!-- build jar -->
+		<antcall target="buildjar"></antcall>
+		
+		<!-- minimal clean -->
+		<antcall target="dir-clean"></antcall>
+		
+	</target>
+
+	<target name="javadoc">
+
+		<!-- create javadoc dir -->
+		<mkdir dir="${dist}/javadoc"/>
+		  	
+		<!-- create javadoc -->
+		<javadoc packagenames="com.google.gwt.*"
+			sourcepath="${src}"
+			defaultexcludes="yes"
+			destdir="${dist}/javadoc"
+			author="true"
+			version="true"
+			use="true"
+			windowtitle="GWT Validation Framework">
+			
+			<classpath>
+				<fileset dir="${libraries}">
+					<include name="**/*.jar"/>
+				</fileset>
+			</classpath>
+			
+		</javadoc>
+	</target>
+	
+	<target name="buildjar">
+		<!-- jar -->
+		<jar destfile="gwt-validation.jar" basedir="${build}/src" filesonly="true">
+
+			<!-- javadoc -->
+			<fileset dir="${dist}/javadoc">
+				<include name="**/*"/>
+			</fileset>			
+			
+			<!-- sourcefile entries -->
+			<fileset dir="${src}">
+				<include name="**/*.java"/>
+				<include name="**/*.xml"/>
+			</fileset>
+			
+		</jar>
+	</target>
+	
+	<target name="dist-no-test" depends="build" description="build the jar for distribution without testing">
+		<!-- javadoc -->
+		<antcall target="javadoc"></antcall>
+
+		<!-- build jar -->
+		<antcall target="buildjar"></antcall>
+		
+		<!-- minimal clean -->
+		<antcall target="dir-clean"></antcall>
+	</target>
+
+	<!-- dir clean -->
+	<target name="dir-clean">
+	
+		<!-- delete the build dir -->
+		<delete dir="${build}" failonerror="false" />
+		
+		<!-- delete the dist dir -->
+		<delete dir="${dist}" failonerror="false" />
+	
+	</target>
+	
+	<!-- clean! -->
+	<target name="clean" description="clean project things">
+	
+		<!-- delete the build dir -->
+		<delete dir="${build}" failonerror="false" />
+		
+		<!-- delete the dist dir -->
+		<delete dir="${dist}" failonerror="false" />
+	
+		<!-- delete the gwt-validation.jar -->
+		<delete file="gwt-validation.jar" failonerror="false" />
+		
+	</target>
+	
+</project>
