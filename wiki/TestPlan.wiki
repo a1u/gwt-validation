@@ -51,3 +51,7 @@ These validator tests will also implement all of the examples from the JSR-303 f
 Code inspections are important to the operation of this project.  New code shall be submitted to the project for review before being included in the repository.  
 
 == User Testing ==
+
+User feedback will be solicited through the Google group for this project as well as through the issue tracker on the Google code page.  
+
+Users are encouraged to focus on making their own validators and to come up with as complex schemes as they can manage to fully exercise the capabilites of GWTVF.
