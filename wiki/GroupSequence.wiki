@@ -4,6 +4,8 @@
 
 The GroupSequence annotation allows the developer to specify what groups should be run and in what order for a specific class.
 
+See [http://code.google.com/p/gwt-validation/source/browse/trunk/src/com/google/gwt/validation/client/GroupSequence.java GroupSequence] in the source repository.
+
 = Example =
 
 {{{
