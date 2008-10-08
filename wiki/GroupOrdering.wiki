@@ -1,4 +1,4 @@
-#summary Description of the GroupOrdering annotation
+#summary Description of the GrouSequence annotation
 #labels sequence,ordering
 
 = Introduction =
