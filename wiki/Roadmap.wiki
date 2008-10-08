@@ -1,0 +1,25 @@
+#summary Future development roadmap
+#labels Featured
+
+= Roadmap =
+
+Release 1.0
+ * Annotation based field/method validation.
+ * Annotations from superclasses and implemented interfaces.
+ * Group based selection of methods. 
+ * Validation on whole objects or single properties. (Client side and Server side)
+ * Facilitates writing custom validators.
+ * Class level validation.
+ * Object graph validation through the @Valid annotation.
+ * Groups fully working with "default" grouping and such.
+ * @GroupOrdering annotation.
+ * InvalidConstraint is as JSR-303 compliant as it is likely to get
+
+Release 1.1
+ * The validateValue method fully implemented.
+
+Release 1.2
+ * Message interpolation and i8n support for messages
+
+Release 1.3
+ * To be determined
