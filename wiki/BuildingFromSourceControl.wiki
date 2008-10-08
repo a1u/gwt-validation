@@ -1,5 +1,5 @@
 #summary How to build gwt-validation from Source Control
-#labels compile,build,distribute
+#labels Phase-Deploy
 
 = Checkout =
 
