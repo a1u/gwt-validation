@@ -1,0 +1,11 @@
+<module>
+
+      <!-- Inherit the core Web Toolkit stuff.                        -->
+      <inherits name='com.google.gwt.user.User'/>
+
+	  <!-- Generators -->
+	  <generate-with class="com.google.gwt.validation.rebind.ValidatorGenerator">
+	  	<when-type-assignable class="com.google.gwt.validation.client.interfaces.IValidatable" />
+	  </generate-with>
+	  
+</module>
