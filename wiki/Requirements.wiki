@@ -3,3 +3,17 @@
 
 = Requirements =
 
+ * The [GWTVF] API shall conform to basic aspects of the JSR-303 specification
+  *  A constraint specifies:
+   *   The class that implements the checking of the constraint.
+   *   Parameters to initialize the parameters of the constraint.
+   *   The groups under which the constraint should be checked.
+  *  The user shall be able to annotate the following with constraints:
+   *   Classes
+   *   Fields
+   *   Methods
+  *  The Validation procedure will follow the methodology and ordering as specified by JSR-303.
+  *  The API shall implement the GroupSequence annotation as specified by JSR-303.
+   *   GroupSequence shall have a group name.
+   *   GroupSequence shall specify a sequence of groupings to run.
+
