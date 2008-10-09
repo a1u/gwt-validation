@@ -85,7 +85,7 @@ public abstract class AbstractValidator<T> implements IValidator<T> {
 	protected Set<InvalidConstraint<T>> validateProperty(T object, String propertyName, ArrayList<String> groups) {
 		
 		//do inner call to processing method
-		return this.performValidation(object, propertyName, null, groups);
+		return this.prepareValidation(object, propertyName, null, groups);
 	}
 
 	/**
@@ -96,7 +96,7 @@ public abstract class AbstractValidator<T> implements IValidator<T> {
 	 * @param groups
 	 * @return
 	 */
-	protected Set<InvalidConstraint<T>> performValidation(T object, String propertyName, Object inputValue, ArrayList<String> groups) {
+	protected Set<InvalidConstraint<T>> prepareValidation(T object, String propertyName, Object inputValue, ArrayList<String> groups) {
 		//hash set for results
 		HashSet<InvalidConstraint<T>> icSet = new HashSet<InvalidConstraint<T>>();
 		
@@ -115,7 +115,7 @@ public abstract class AbstractValidator<T> implements IValidator<T> {
 		HashSet<String> processedGroups = new HashSet<String>();
 		
 		//if group sequences exist
-		if(groupSequences.size() > 0 && groups.size() > 0) {
+		if(groupSequences != null && groupSequences.size() > 0 && groups.size() > 0) {
 			
 			//go through the groups by each group name so that
 			//we can get the proper ordering for the groups in that 
