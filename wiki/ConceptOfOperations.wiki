@@ -43,7 +43,7 @@ As a product of the Validation process an Invalid Constraint (see [InvalidConstr
 First the user defines a class with some constraint annotations.  These can be from the built in constraints or from ones defined by the user.  
 
 {{{
-public class Person {
+public class Person implements IValidatable {
   
   @NotEmpty
   @NotNull
