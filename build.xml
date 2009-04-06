@@ -24,11 +24,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
         Builds, Tests, and Packages the GWT Validation Framework
     </description>
 	
+	<!-- build locations -->
 	<property name="src" location="src"/>
 	<property name="test" location="test"/>
 	<property name="build" location="build"/> 
 	<property name="dist"  location="dist"/>
 	<property name="libraries"  location="lib"/> 
+	
+	<!-- environment variables -->
+	<property environment="env"/>
 	
 	<!-- build! -->
 	<target name="build" depends="clean" description="compile the source " >
@@ -46,6 +50,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 		
 			<classpath>
 				<fileset dir="${libraries}">
+					<include name="**/*.jar"/>
+				</fileset>
+				<fileset dir="${env.GWT_HOME}">
 					<include name="**/*.jar"/>
 				</fileset>
 			</classpath>
@@ -72,18 +79,24 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 				<fileset dir="${libraries}">
 					<include name="**/*.jar"/>
 				</fileset>
+				<fileset dir="${env.GWT_HOME}">
+					<include name="**/*.jar"/>
+				</fileset>
 			</classpath>
 		
 		</javac>
 		
 		<!-- hosted mode tests -->
-		<junit printsummary="on" haltonfailure="no" fork="yes" maxmemory="512m">
+		<junit printsummary="on" haltonfailure="no" fork="yes" maxmemory="1024m">
 
 			<classpath>
 				<pathelement path="${src}" />
 				<pathelement path="${test}" />
 				<pathelement path="${build}\test" />
 				<fileset dir="${libraries}">
+					<include name="**/*.jar"/>
+				</fileset>
+				<fileset dir="${env.GWT_HOME}">
 					<include name="**/*.jar"/>
 				</fileset>
 			</classpath>
@@ -93,7 +106,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 		</junit>
 			
 		<!-- web mode tests -->
-		<junit printsummary="on" haltonfailure="no" fork="yes" maxmemory="512m">
+		<junit printsummary="on" haltonfailure="no" fork="yes" maxmemory="1024m">
 			<jvmarg value="-Dgwt.args=&quot;-web&quot;"/>
 			
 			<classpath>
@@ -101,6 +114,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 				<pathelement path="${test}" />
 				<pathelement path="${build}\test" />
 				<fileset dir="${libraries}">
+					<include name="**/*.jar"/>
+				</fileset>
+				<fileset dir="${env.GWT_HOME}">
 					<include name="**/*.jar"/>
 				</fileset>
 			</classpath>
@@ -116,6 +132,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 				<pathelement path="${test}" />
 				<pathelement path="${build}\test" />
 				<fileset dir="${libraries}">
+					<include name="**/*.jar"/>
+				</fileset>
+				<fileset dir="${env.GWT_HOME}">
 					<include name="**/*.jar"/>
 				</fileset>
 			</classpath>
@@ -160,6 +179,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 			
 			<classpath>
 				<fileset dir="${libraries}">
+					<include name="**/*.jar"/>
+				</fileset>
+				<fileset dir="${env.GWT_HOME}">
 					<include name="**/*.jar"/>
 				</fileset>
 			</classpath>
