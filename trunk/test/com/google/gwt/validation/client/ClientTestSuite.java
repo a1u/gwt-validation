@@ -40,7 +40,8 @@ import org.junit.runners.Suite.SuiteClasses;
 	PastTest.class,
 	FutureTest.class,
 	SizeTest.class,
-	EmailTest.class
+	EmailTest.class,
+	CodeMuseumTest.class
 })
 public class ClientTestSuite {
 

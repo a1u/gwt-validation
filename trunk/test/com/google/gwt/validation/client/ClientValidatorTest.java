@@ -20,8 +20,12 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.junit.Test;
 
@@ -50,10 +54,10 @@ public class ClientValidatorTest extends GWTTestCase{
 		
 
 		//validate
-		IValidator<TestModel> testModelValidator = GWT.create(TestModel.class);
+		final IValidator<TestModel> testModelValidator = GWT.create(TestModel.class);
 		
 		//crate model
-		TestModel tm = new TestModel();
+		final TestModel tm = new TestModel();
 		
 		//validate 
 		Set<InvalidConstraint<TestModel>> icSet = testModelValidator.validate(tm);
@@ -109,10 +113,10 @@ public class ClientValidatorTest extends GWTTestCase{
 
 	public void testClassLevel() {
 		//null class instance
-		AnnotatedSuperClass ac = new AnnotatedSuperClass();
+		final AnnotatedSuperClass ac = new AnnotatedSuperClass();
 		
 		//get class level validator
-		IValidator<AnnotatedSuperClass> validator = GWT.create(AnnotatedSuperClass.class);
+		final IValidator<AnnotatedSuperClass> validator = GWT.create(AnnotatedSuperClass.class);
 		
 		//get invalid constraint
 		Set<InvalidConstraint<AnnotatedSuperClass>> icSet = validator.validate(ac);
@@ -132,10 +136,10 @@ public class ClientValidatorTest extends GWTTestCase{
 	
 	public void testClassLevelWithFullInheritence() {
 		//null class instance
-		AnnotatedClass ac = new AnnotatedClass();
+		final AnnotatedClass ac = new AnnotatedClass();
 		
 		//get class level validator
-		IValidator<AnnotatedClass> validator = GWT.create(AnnotatedClass.class);
+		final IValidator<AnnotatedClass> validator = GWT.create(AnnotatedClass.class);
 		
 		//get invalid constraint
 		Set<InvalidConstraint<AnnotatedClass>> icSet = validator.validate(ac);
@@ -155,10 +159,10 @@ public class ClientValidatorTest extends GWTTestCase{
 	
 	public void testValidAnnotationOnClass() {
 		//object graph thingy
-		ObjectGraphTest ogt = new ObjectGraphTest();
+		final ObjectGraphTest ogt = new ObjectGraphTest();
 		
 		//get class level validator
-		IValidator<ObjectGraphTest> validator = GWT.create(ObjectGraphTest.class);
+		final IValidator<ObjectGraphTest> validator = GWT.create(ObjectGraphTest.class);
 		
 		//get invalid constraints
 		Set<InvalidConstraint<ObjectGraphTest>> icSet = validator.validate(ogt);
@@ -196,15 +200,15 @@ public class ClientValidatorTest extends GWTTestCase{
 	public void testRecursive() {
 		
 		//recursive thingy
-		RecursiveValidationTest rvt = new RecursiveValidationTest();
+		final RecursiveValidationTest rvt = new RecursiveValidationTest();
 		rvt.setRvt(new RecursiveValidationTest());
 		rvt.getRvt().setRvt(new RecursiveValidationTest());
 		
 		//get class level validator
-		IValidator<RecursiveValidationTest> validator = GWT.create(RecursiveValidationTest.class);
+		final IValidator<RecursiveValidationTest> validator = GWT.create(RecursiveValidationTest.class);
 		
 		//get invalid constraints
-		Set<InvalidConstraint<RecursiveValidationTest>> icSet = validator.validate(rvt);
+		final Set<InvalidConstraint<RecursiveValidationTest>> icSet = validator.validate(rvt);
 		
 		//should recursively descend for 3
 		assertEquals("Should be three not null constraints.", 3, icSet.size());		
@@ -213,13 +217,13 @@ public class ClientValidatorTest extends GWTTestCase{
 	public void testCyclic() {
 		
 		//cyclic test class
-		CyclicTestParent ctp = new CyclicTestParent();
+		final CyclicTestParent ctp = new CyclicTestParent();
 		
 		//get class level validator
-		IValidator<CyclicTestParent> validator = GWT.create(CyclicTestParent.class);
+		final IValidator<CyclicTestParent> validator = GWT.create(CyclicTestParent.class);
 		
 		//get invalid constraints
-		Set<InvalidConstraint<CyclicTestParent>> icSet = validator.validate(ctp);
+		final Set<InvalidConstraint<CyclicTestParent>> icSet = validator.validate(ctp);
 		
 		//should be two things
 		assertEquals("Should be two not null constraints.", 2, icSet.size());
@@ -228,10 +232,10 @@ public class ClientValidatorTest extends GWTTestCase{
 	public void testGroupSequence() {
 		
 		//group test class
-		GroupSequenceClassTest gsct = new GroupSequenceClassTest();
+		final GroupSequenceClassTest gsct = new GroupSequenceClassTest();
 		
 		//get class level validator
-		IValidator<GroupSequenceClassTest> validator = GWT.create(GroupSequenceClassTest.class);
+		final IValidator<GroupSequenceClassTest> validator = GWT.create(GroupSequenceClassTest.class);
 		
 		//get invalid constraints
 		Set<InvalidConstraint<GroupSequenceClassTest>> icSet = validator.validate(gsct);
@@ -261,14 +265,14 @@ public class ClientValidatorTest extends GWTTestCase{
 	public void testJSR303_GroupSequenceExamples() {
 
 		//create new author
-		Author author = new Author();
+		final Author author = new Author();
 		author.setLastName("Baudelaire");
 		author.setFirstName("");
-		Book book = new Book();
+		final Book book = new Book();
 		book.setAuthor(author);
 		
 		//create validator for book
-		IValidator<Book> validator = GWT.create(Book.class);
+		final IValidator<Book> validator = GWT.create(Book.class);
 		
 		//should return
 		//	NotEmpty failure on the title field
@@ -294,7 +298,7 @@ public class ClientValidatorTest extends GWTTestCase{
 		boolean notempty = false;
 		
 		//check
-		for(InvalidConstraint<Book> ic : icSet) {
+		for(final InvalidConstraint<Book> ic : icSet) {
 			if(ic.getMessage().equals("{constraint.length}")) length = true;
 			if(ic.getMessage().equals("{constraint.notempty}")) notempty = true;
 			
@@ -309,14 +313,14 @@ public class ClientValidatorTest extends GWTTestCase{
 	public void testJSR303_Address1Example() {
 		
 		//create address (#1 has no @Valid annotation and conforms to what is expected in JSR-303's example)
-		Address1 address = new Address1();
+		final Address1 address = new Address1();
 		address.setAddressline1( null );
 		address.setAddressline2( null );
 		address.setCity("Llanfairpwllgwyngyllgogerychwyrndrobwyll-llantysiliogogogoch");
 		//town in North Wales <- preserving the joke for posterity
 		
 		//create validator for address
-		IValidator<Address1> validator = GWT.create(Address1.class);
+		final IValidator<Address1> validator = GWT.create(Address1.class);
 		
 		//validate
 		assertEquals("One for addressline1 violating NotNull, one for addressline2 violating NotNull and one for city violating Length.", 3, validator.validate(address).size());
@@ -329,4 +333,89 @@ public class ClientValidatorTest extends GWTTestCase{
 	public void emptyTest() {
 		//so that junit won't complain about an empty test
 	}
+	
+	public void testInvalidConstraintPath(){
+	       
+           //object graph thingy
+        final ObjectGraphTest ogt = new ObjectGraphTest();
+        
+        //get class level validator
+        final IValidator<ObjectGraphTest> validator = GWT.create(ObjectGraphTest.class);
+        
+        //get invalid constraints
+        final Set<InvalidConstraint<ObjectGraphTest>> icSet = validator.validate(ogt);
+        
+        //should fail 4(one child) + 6(other child)
+        assertEquals("Should be 54 invalid constraints", 54, icSet.size());
+        
+        //build map of invalid constraints paths and its count
+        final Map<String,Integer> icPaths = new TreeMap<String,Integer>();
+        for (final InvalidConstraint<ObjectGraphTest> invalidConstraint : icSet) {
+            Integer count = icPaths.get(invalidConstraint.getPropertyPath());
+            
+            //if new path set count to 0
+            if(count == null) { 
+                count = 0;
+            }
+            
+            //increase path count
+            count += 1;
+            
+            //put current count into map
+            icPaths.put(invalidConstraint.getPropertyPath(),count);
+        }
+        
+        //prepare testable strings - '<path> (<count>)'
+        final Set<String> testablePaths = new TreeSet<String>();
+        for (final String path : icPaths.keySet()) {
+            testablePaths.add(path + " (" + icPaths.get(path) + ")");
+        }
+        
+        //define test patterns - '<path> (<count>)'
+        final String [] testPatterns = {
+                "ac (4)",
+                "acList[0] (4)",
+                "acList[1] (4)",
+                "acList[2] (4)",
+                "acSet[0] (4)",
+                "acSet[1] (4)",
+                "tm.date (1)",
+                "tm.failFutureDate (1)",
+                "tm.notInFuture (1)",
+                "tm.shouldBeFalse (1)",
+                "tm.shouldBeTrue (1)",
+                "tm.shouldNotBeEmpty (1)",
+                "tmArray[0].date (1)",
+                "tmArray[0].failFutureDate (1)",
+                "tmArray[0].notInFuture (1)",
+                "tmArray[0].shouldBeFalse (1)",
+                "tmArray[0].shouldBeTrue (1)",
+                "tmArray[0].shouldNotBeEmpty (1)",
+                "tmArray[1].date (1)",
+                "tmArray[1].failFutureDate (1)",
+                "tmArray[1].notInFuture (1)",
+                "tmArray[1].shouldBeFalse (1)",
+                "tmArray[1].shouldBeTrue (1)",
+                "tmArray[1].shouldNotBeEmpty (1)",
+                "tmMap[\"string1\"].date (1)",
+                "tmMap[\"string1\"].failFutureDate (1)",
+                "tmMap[\"string1\"].notInFuture (1)",
+                "tmMap[\"string1\"].shouldBeFalse (1)",
+                "tmMap[\"string1\"].shouldBeTrue (1)",
+                "tmMap[\"string1\"].shouldNotBeEmpty (1)",
+                "tmMap[\"string2\"].date (1)",
+                "tmMap[\"string2\"].failFutureDate (1)",
+                "tmMap[\"string2\"].notInFuture (1)",
+                "tmMap[\"string2\"].shouldBeFalse (1)",
+                "tmMap[\"string2\"].shouldBeTrue (1)",
+                "tmMap[\"string2\"].shouldNotBeEmpty (1)"
+        };
+        
+        //sort patterns strings
+        final Set<String> patternsPaths = new TreeSet<String>(Arrays.asList(testPatterns));
+        
+        //all paths should be the same
+        assertTrue("All paths should be equals.", patternsPaths.equals(testablePaths));
+                
+    }
 }

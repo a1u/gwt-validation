@@ -60,7 +60,7 @@ public class ValidatorCreator {
 	 * @param context
 	 * @param typeName
 	 */
-	public ValidatorCreator(TreeLogger logger, GeneratorContext context, String typeName) {
+	public ValidatorCreator(final TreeLogger logger, final GeneratorContext context, final String typeName) {
 
 		//super
 		this();
@@ -90,23 +90,23 @@ public class ValidatorCreator {
 
 		try {
 			//get class type
-			JClassType classType = this.typeOracle.getType(this.typeName);
+			final JClassType classType = this.typeOracle.getType(this.typeName);
 
 			//write to string
-			SourceWriter sw = this.getSourceWriter(classType);
-
+			final SourceWriter sw = this.getSourceWriter(classType);
+			
 			//if sourcewriter is null, prematurely return the classname
 			if(sw == null) {
-				return classType.getParameterizedQualifiedSourceName() + "Validator";
+              return classType.getParameterizedQualifiedSourceName() + "Validator";
 			}
 
 			//fully qualified
-			String fullClass = classType.getQualifiedSourceName();
+			final String fullClass = classType.getQualifiedSourceName();
 
 			try {
 
 				//get the real class for the given class name
-				Class<?> inputClass = Class.forName(fullClass);
+				final Class<?> inputClass = Class.forName(fullClass);
 
 				//write the group mapping
 				//protected HashMap<String, ArrayList<String>> getGroupSequenceMapping(Class<?> inputClass) {
@@ -116,10 +116,10 @@ public class ValidatorCreator {
 				sw.println("HashMap<String, ArrayList<String>> orderingMap = new HashMap<String, ArrayList<String>>();");
 				
 				//get list
-				HashMap<String, ArrayList<String>> groupSequenceMap = ValidationMetadataFactory.getGroupSequenceMap(inputClass);
+				final HashMap<String, ArrayList<String>> groupSequenceMap = ValidationMetadataFactory.getGroupSequenceMap(inputClass);
 				
 				//for each thing thing create an ArrayList<String> of the order
-				for(String group : groupSequenceMap.keySet()) {
+				for(final String group : groupSequenceMap.keySet()) {
 					//output (using scope trick)
 					sw.println("if(true) {");
 					sw.indent();
@@ -128,10 +128,10 @@ public class ValidatorCreator {
 					sw.println("ArrayList<String> groups = new ArrayList<String>();");
 
 					//get group list
-					ArrayList<String> groupOrder = groupSequenceMap.get(group);
+					final ArrayList<String> groupOrder = groupSequenceMap.get(group);
 
 					//for each group add to the thing
-					for(String g : groupOrder) {
+					for(final String g : groupOrder) {
 						//add to a group
 						sw.println("groups.add(\"" + g + "\");");
 					}
@@ -158,7 +158,7 @@ public class ValidatorCreator {
 				sw.println("HashSet<InvalidConstraint<" + fullClass + ">> iCSet = new HashSet<InvalidConstraint<" + fullClass + ">>();");
 
 				//condition propertyName to be null if empty (simplify if test)
-				sw.println("if(propertyName != null && propertyName.trim().isEmpty()) {");
+				sw.println("if(propertyName != null && (propertyName.trim().length() == 0)) {"); //there is no String.isEmpty() in jdk5
 				sw.indent();
 				sw.println("propertyName = null;");
 				sw.outdent();
@@ -176,16 +176,16 @@ public class ValidatorCreator {
 				ArrayList<ValidationPackage> validationPackageList = ValidationMetadataFactory.getValidatorsForClass(inputClass);
 
 				//do code output for each method
-				for(ValidationPackage vPack : validationPackageList) {
+				for(final ValidationPackage vPack : validationPackageList) {
 
 					//get implementing class name
-					String impl = vPack.getImplementingConstraint().getClass().getName();
+					final String impl = vPack.getImplementingConstraint().getClass().getName();
 
 					//create if string for the if block (includes propertyName and groups)
 					String ifTest = "(propertyName == null || propertyName.equals(\"" + vPack.getItemName() + "\")) && (groups.size() == 0";
 
 					//list all groups
-					for(String group : vPack.getGroups()) {
+					for(final String group : vPack.getGroups()) {
 						ifTest += " || groups.contains(\"" + group + "\")";
 					}
 					//close if test
@@ -195,7 +195,7 @@ public class ValidatorCreator {
 					ifTest += " && (processedGroups.size() == 0 || (";
 					
 					//do the same for processed groups
-					for(String group : vPack.getGroups()) {
+					for(final String group : vPack.getGroups()) {
 						ifTest += "!processedGroups.contains(\"" + group + "\") && ";
 					}
 					//close if test
@@ -247,15 +247,15 @@ public class ValidatorCreator {
 				validationPackageList = ValidationMetadataFactory.getClassLevelValidatorsForClass(inputClass);
 
 				//do code output for each class level validator
-				for(ValidationPackage vPack : validationPackageList) {
+				for(final ValidationPackage vPack : validationPackageList) {
 
 					//get implementing class name
-					String impl = vPack.getImplementingConstraint().getClass().getName();
+					final String impl = vPack.getImplementingConstraint().getClass().getName();
 
 					//create if string for the if block (includes propertyName and groups)
 					String ifTest = "(propertyName == null || propertyName.equals(\"" + vPack.getItemName() + "\")) && (groups.size() == 0";
 
-					for(String group : vPack.getGroups()) {
+					for(final String group : vPack.getGroups()) {
 						ifTest += " || groups.contains(\"" + group + "\")";
 					}
 					//close if test
@@ -265,7 +265,7 @@ public class ValidatorCreator {
 					ifTest += " && (processedGroups.size() == 0 || (";
 					
 					//do the same for processed groups
-					for(String group : vPack.getGroups()) {
+					for(final String group : vPack.getGroups()) {
 						ifTest += "!processedGroups.contains(\"" + group + "\") && ";
 					}
 					//close if test
@@ -314,19 +314,19 @@ public class ValidatorCreator {
 
 
 				//get @Valid package list
-				ArrayList<ValidationPackage> vpValidList = ValidationMetadataFactory.getValidAnnotedPackages(inputClass);
+				final ArrayList<ValidationPackage> vpValidList = ValidationMetadataFactory.getValidAnnotedPackages(inputClass);
 
 				//process annotations
-				for(ValidationPackage vPack : vpValidList) {
+				for(final ValidationPackage vPack : vpValidList) {
 
 					try {
 						//get return thingy
-						Class<?> returnType = vPack.getMethod().getReturnType();
+						final Class<?> returnType = vPack.getMethod().getReturnType();
 
 						if(returnType != null) {
 
 							//build if test and check that property name and object.method() are okay
-							String ifTest = "(propertyName == null || propertyName.equals(\"" + vPack.getItemName() + "\")) && object." + vPack.getMethod().getName() + "() != null";
+							final String ifTest = "(propertyName == null || propertyName.equals(\"" + vPack.getItemName() + "\")) && object." + vPack.getMethod().getName() + "() != null";
 							//put if around thing
 							sw.println("if("+ifTest+") {");
 							sw.indent();
@@ -337,7 +337,7 @@ public class ValidatorCreator {
 								if(returnType.asSubclass(Object[].class) != null) {
 
 									//get component type name
-									Type componentType = returnType.getComponentType();
+									final Type componentType = returnType.getComponentType();
 									String typeName = componentType.toString();
 									typeName = typeName.substring(typeName.indexOf(" "));
 
@@ -352,7 +352,8 @@ public class ValidatorCreator {
 									sw.println("" + typeName + "[] objectArray = object." + vPack.getMethod().getName() + "();");
 
 									//go through the array
-									sw.println("for(" + typeName + " innerObject : objectArray) {");
+									sw.println("for(int it = 0; it < objectArray.length; ++it) {");
+									sw.println(typeName + " innerObject = objectArray[it];");
 									sw.indent();
 
 									//create object identifier
@@ -364,9 +365,11 @@ public class ValidatorCreator {
 									
 									//add to the processed list
 									sw.println("processedObjects.add(objIdent);");
-									
+
 									//validate the object
-									sw.println("iCSet.addAll(this.unrollConstraintSet(object, propertyName, subValidator.performValidation(innerObject, null, groups, processedGroups, processedObjects)));");
+									sw.println("iCSet.addAll(this.unrollConstraintSet(object," +
+											"\"" + vPack.getItemName() + "[\" + String.valueOf(it) + \"]\"" + //insert sequence no from collection in []
+											",subValidator.performValidation(innerObject, null, groups, processedGroups, processedObjects)));");
 									
 									//done checking
 									sw.outdent();
@@ -382,23 +385,23 @@ public class ValidatorCreator {
 									sw.println("//error handling goes here");
 									sw.outdent();
 									sw.println("}");
-
+									
 									//has been validated somehow, no other method needed
 									validated = true;
 								}
-							} catch (ClassCastException ccex) {
+							} catch (final ClassCastException ccex) {
 
 							}
 
 							if(!validated) {
 
 								try {
-									Class<?> collectionClass = returnType.asSubclass(Collection.class);
+									final Class<?> collectionClass = returnType.asSubclass(Collection.class);
 
 									if(collectionClass != null) {
 
 										//get the type from the method declaration
-										Type typeToValidate = ((ParameterizedType)vPack.getMethod().getGenericReturnType()).getActualTypeArguments()[0];
+										final Type typeToValidate = ((ParameterizedType)vPack.getMethod().getGenericReturnType()).getActualTypeArguments()[0];
 										String typeName = typeToValidate.toString();
 										typeName = typeName.substring(typeName.indexOf(" "));
 
@@ -412,10 +415,13 @@ public class ValidatorCreator {
 										//get object instance
 										sw.println("Collection<" + typeName + "> objectCollection = (Collection<" + typeName + ">) object." + vPack.getMethod().getName() + "();");
 
-										//go through the array
+										//we need the counter
+										sw.println("int it = 0;");
+										
+										//go through the collection
 										sw.println("for(" + typeName + " innerObject : objectCollection) {");
 										sw.indent();
-										
+
 										//create object identifier
 										sw.println("String objIdent = innerObject.hashCode() + \":\" + grouplisting.hashCode();");
 
@@ -427,7 +433,12 @@ public class ValidatorCreator {
 										sw.println("processedObjects.add(objIdent);");
 										
 										//validate the object
-										sw.println("iCSet.addAll(this.unrollConstraintSet(object, propertyName, subValidator.performValidation(innerObject, null, groups, processedGroups, processedObjects)));");
+										sw.println("iCSet.addAll(this.unrollConstraintSet(object, "+
+										        "\"" + vPack.getItemName() + "[\" + String.valueOf(it) + \"]\"" + //insert sequence no from collection in []
+										        ", subValidator.performValidation(innerObject, null, groups, processedGroups, processedObjects)));");
+										
+										//increment counter
+										sw.println("++it;");
 										
 										//done checking
 										sw.outdent();
@@ -447,7 +458,7 @@ public class ValidatorCreator {
 										//has been validated somehow, no other method needed
 										validated = true;
 									}
-								} catch (ClassCastException ccex) {
+								} catch (final ClassCastException ccex) {
 
 								}
 							}
@@ -455,17 +466,17 @@ public class ValidatorCreator {
 							if(!validated) {
 								try {
 
-									Class<?> mapClass = returnType.asSubclass(Map.class);
+									final Class<?> mapClass = returnType.asSubclass(Map.class);
 
 									if(mapClass != null) {
 
 										//get the types from the method declaration
-										Type keyType = ((ParameterizedType)vPack.getMethod().getGenericReturnType()).getActualTypeArguments()[0];
+										final Type keyType = ((ParameterizedType)vPack.getMethod().getGenericReturnType()).getActualTypeArguments()[0];
 										String keyTypeName = keyType.toString();
 										keyTypeName = keyTypeName.substring(keyTypeName.indexOf(" "));
 
 										//get the type from the method declaration
-										Type typeToValidate = ((ParameterizedType)vPack.getMethod().getGenericReturnType()).getActualTypeArguments()[1];
+										final Type typeToValidate = ((ParameterizedType)vPack.getMethod().getGenericReturnType()).getActualTypeArguments()[1];
 										String typeName = typeToValidate.toString();
 										typeName = typeName.substring(typeName.indexOf(" "));
 
@@ -478,8 +489,9 @@ public class ValidatorCreator {
 
 										sw.println("Map<" + keyTypeName + "," + typeName + "> objectMap = (Map<" + keyTypeName + "," + typeName + ">) object." + vPack.getMethod().getName() + "();");
 
-										//go through the array
-										sw.println("for(" + typeName + " innerObject : objectMap.values()) {");
+										//go through the map
+										sw.println("for(" + keyTypeName + " mapKey : objectMap.keySet()) {");
+										sw.println(typeName + " innerObject = objectMap.get(mapKey) ;");
 										sw.indent();
 										
 										//create object identifier
@@ -493,7 +505,9 @@ public class ValidatorCreator {
 										sw.println("processedObjects.add(objIdent);");
 										
 										//validate the object
-										sw.println("iCSet.addAll(this.unrollConstraintSet(object, propertyName, subValidator.performValidation(innerObject, null, groups, processedGroups, processedObjects)));");
+										sw.println("iCSet.addAll(this.unrollConstraintSet(object, " +
+										        "\"" + vPack.getItemName() + "[\\\"\" + mapKey+ \"\\\"]\"" + //insert map key into []
+										        ", subValidator.performValidation(innerObject, null, groups, processedGroups, processedObjects)));");
 										
 										//done checking
 										sw.outdent();
@@ -513,7 +527,7 @@ public class ValidatorCreator {
 										//has been validated somehow, no other method needed
 										validated = true;
 									}
-								} catch (ClassCastException ccex) {
+								} catch (final ClassCastException ccex) {
 
 								}
 
@@ -527,7 +541,7 @@ public class ValidatorCreator {
 								sw.indent();
 
 								//type name
-								String typeName = returnType.getCanonicalName();
+								final String typeName = returnType.getCanonicalName();
 
 								//GWT.create() validator
 								sw.println("AbstractValidator<" + typeName + "> subValidator = GWT.create(" + typeName + ".class);");
@@ -546,7 +560,7 @@ public class ValidatorCreator {
 								sw.println("processedObjects.add(objIdent);");
 								
 								//validate
-								sw.println("iCSet.addAll(this.unrollConstraintSet(object, propertyName, subValidator.performValidation(innerObject, null, groups, processedGroups, processedObjects)));");
+								sw.println("iCSet.addAll(this.unrollConstraintSet(object, \"" + vPack.getItemName() + "\", subValidator.performValidation(innerObject, null, groups, processedGroups, processedObjects)));");
 
 								//close for loop
 								sw.outdent();
@@ -566,12 +580,12 @@ public class ValidatorCreator {
 							sw.println("}");
 						}
 
-					} catch (IllegalArgumentException e) {
+					} catch (final IllegalArgumentException e) {
 						e.printStackTrace();
 					}
 				}
 
-			} catch (ClassNotFoundException e) {
+			} catch (final ClassNotFoundException e) {
 				e.printStackTrace();
 			}
 
@@ -584,11 +598,11 @@ public class ValidatorCreator {
 
 			//commit to tree logger
 			sw.commit(this.logger);
-
+			
 			//output class name
 			outputClassName = classType.getParameterizedQualifiedSourceName() + "Validator";
 
-		} catch (NotFoundException e) {
+		} catch (final NotFoundException e) {
 			this.logger.log(TreeLogger.ERROR, "Type " + this.typeName + " not found.");
 		}
 
@@ -602,17 +616,17 @@ public class ValidatorCreator {
 	 * @param classType
 	 * @return
 	 */
-	private SourceWriter getSourceWriter(JClassType classType) {
+	private SourceWriter getSourceWriter(final JClassType classType) {
 
 		//get package
-		String packageName = classType.getPackage().getName();
-		String simpleName = classType.getSimpleSourceName() + "Validator";
+		final String packageName = classType.getPackage().getName();
+		final String simpleName = classType.getSimpleSourceName() + "Validator";
 
 		//get full name for package + validator
 		//String fullName = packageName + "." + simpleName;
 
 		//create validator that implements ivalidator for given typename
-		ClassSourceFileComposerFactory composer = new ClassSourceFileComposerFactory(packageName, simpleName);
+		final ClassSourceFileComposerFactory composer = new ClassSourceFileComposerFactory(packageName, simpleName);
 
 		//add the abstract validator method
 		composer.setSuperclass("com.google.gwt.validation.client.AbstractValidator<" + classType.getSimpleSourceName() + ">");
@@ -634,7 +648,7 @@ public class ValidatorCreator {
 		//need to be created again.  in either case a null sourcewriter would be created and the
 		//creation method would return just the name that should have been used so that it can
 		//be loaded by the classloader.
-		PrintWriter printWriter = this.context.tryCreate(this.logger, packageName, simpleName);
+		final PrintWriter printWriter = this.context.tryCreate(this.logger, packageName, simpleName);
 
 		//set sourcewriter
 		SourceWriter sw = null;
@@ -662,17 +676,22 @@ public class ValidatorCreator {
 	 * @param propertyMap
 	 * @param sw
 	 */
-	private void writeMapToCode(Map<String, String> propertyMap, SourceWriter sw) {
+	private void writeMapToCode(final Map<String, String> propertyMap, final SourceWriter sw) {
 
 		//create empty object, regardless
 		sw.println("HashMap<String,String> propertyMap = new HashMap<String,String>();");
 
 		if(propertyMap == null || propertyMap.size() == 0) return;
 
-		for(String key : propertyMap.keySet()) {
+		for(final String key : propertyMap.keySet()) {
 			//value
 			String value = propertyMap.get(key);
 
+			//fix for issue #3 - http://code.google.com/p/gwt-validation/issues/detail?id=3
+			if(value != null && value.trim().length() > 0) {
+				value = value.replaceAll("\\", "\\\\");
+			}
+			
 			//put out propertykey
 			//propertyMap.put(key, value);
 			sw.println("propertyMap.put(\"" + key + "\",\"" + value + "\");");
