@@ -31,14 +31,14 @@ import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.validation.client.Size;
 import com.google.gwt.validation.client.SizeValidator;
 
-public class SizeTest extends GWTTestCase {
+public class GwtTestSizeTest extends GWTTestCase {
 	
 	@Override
 	public String getModuleName() {
 		return "com.google.gwt.validation.Validation"; 
 	}
 
-	private Size s = new Size() {
+	private final Size s = new Size() {
 
 		public String[] groups() {
 			return null;
@@ -62,14 +62,15 @@ public class SizeTest extends GWTTestCase {
 		
 	};
 	
-	private SizeValidator sv = new SizeValidator();
+	private final SizeValidator sv = new SizeValidator();
 	
 	@Before
 	public void setupConstraint() {
 		this.sv.initialize(this.s);
 	}
 	
-	public void gwtSetUp() {
+	@Override
+    public void gwtSetUp() {
 		this.setupConstraint();
 	}
 	
@@ -77,7 +78,7 @@ public class SizeTest extends GWTTestCase {
 	public void testArrayInSize() {
 	
 		//create array
-		int[] intArray = new int[]{1,2};
+		final int[] intArray = new int[]{1,2};
 		
 		//assert
 		assertTrue("The array of 2 is within the minimum and maximum.", this.sv.isValid(intArray));
@@ -87,7 +88,7 @@ public class SizeTest extends GWTTestCase {
 	public void testArrayOverSize() {
 
 		//create array
-		int[] intArray = new int[]{1,2,3,4,5,6};
+		final int[] intArray = new int[]{1,2,3,4,5,6};
 		
 		//assert
 		assertFalse("The array of 6 is over the maximum.", this.sv.isValid(intArray));
@@ -97,7 +98,7 @@ public class SizeTest extends GWTTestCase {
 	public void testArrayUnderSize() {
 
 		//create array
-		String[] stringArray = new String[]{"one"};
+		final String[] stringArray = new String[]{"one"};
 				
 		//assert
 		assertFalse("The array of 1 is under the minimum.", this.sv.isValid(stringArray));
@@ -107,7 +108,7 @@ public class SizeTest extends GWTTestCase {
 	public void testCollectionInSize() {
 		
 		//build collection
-		ArrayList<String> collection = new ArrayList<String>();
+		final ArrayList<String> collection = new ArrayList<String>();
 		collection.add("one");
 		collection.add("two");
 		collection.add("three");
@@ -120,7 +121,7 @@ public class SizeTest extends GWTTestCase {
 	public void testCollectionOverSize() {
 		
 		//build collection
-		ArrayList<String> collection = new ArrayList<String>();
+		final ArrayList<String> collection = new ArrayList<String>();
 		collection.add("one");
 		collection.add("two");
 		collection.add("three");
@@ -135,7 +136,7 @@ public class SizeTest extends GWTTestCase {
 	public void testCollectionUnderSize() {
 
 		//build collection
-		ArrayList<String> collection = new ArrayList<String>();
+		final ArrayList<String> collection = new ArrayList<String>();
 		collection.add("one");
 		
 		//assert
@@ -146,7 +147,7 @@ public class SizeTest extends GWTTestCase {
 	public void testMapInSize() {
 		
 		//build map
-		HashMap<String, String> map = new HashMap<String, String>();
+		final HashMap<String, String> map = new HashMap<String, String>();
 		map.put("one", "one-dash");
 		map.put("two", "two-dash");
 		
@@ -158,7 +159,7 @@ public class SizeTest extends GWTTestCase {
 	public void testMapOverSize() {
 		
 		//build map
-		HashMap<String, String> map = new HashMap<String, String>();
+		final HashMap<String, String> map = new HashMap<String, String>();
 		map.put("one", "one-dash");
 		map.put("two", "two-dash");
 		map.put("three", "three-dash");
@@ -172,7 +173,7 @@ public class SizeTest extends GWTTestCase {
 	public void testMapUnderSize() {
 		
 		//build map
-		HashMap<String, String> map = new HashMap<String, String>();
+		final HashMap<String, String> map = new HashMap<String, String>();
 		map.put("one", "one-dash");
 		
 		//assert

@@ -22,8 +22,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import java.util.Set;
 
-import org.junit.Test;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.user.client.ui.Button;
@@ -33,7 +31,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.validation.client.interfaces.IValidatable;
 import com.google.gwt.validation.client.interfaces.IValidator;
 
-public class CodeMuseumTest extends GWTTestCase {
+public class GwtTestCodeMuseumTest extends GWTTestCase {
 
 	@Override
 	public String getModuleName() {
@@ -47,7 +45,7 @@ public class CodeMuseumTest extends GWTTestCase {
 	          @Length(groups={"minimal"},minimum=3) 
 	          private String FullName; 
 	          public String getFullName() { return this.FullName; } 
-	          public void setFullName(String inFullName) {this.FullName = inFullName;} 
+	          public void setFullName(final String inFullName) {this.FullName = inFullName;} 
 	} 
 	
 	/**
@@ -57,19 +55,19 @@ public class CodeMuseumTest extends GWTTestCase {
 	 * works and will continue to work for all versions of GWT
 	 * 
 	 */
-	@Test
+	//@Test
 	public void testJim_01_02_2009() {
 		
-		Button clickMeButton = new Button();
+		final Button clickMeButton = new Button();
 		
 		final TextBox txtFullName = new TextBox();
 		txtFullName.setText(null);		
 		
 		clickMeButton.addClickListener(new ClickListener() { 
-            public void onClick(Widget sender) { 
-                    Submission mySubmission = new Submission(); 
+            public void onClick(final Widget sender) { 
+                    final Submission mySubmission = new Submission(); 
                     mySubmission.setFullName(txtFullName.getText()); 
-                    IValidator<Submission> myvalidator = GWT.create(Submission.class); 
+                    final IValidator<Submission> myvalidator = GWT.create(Submission.class); 
                     Set<InvalidConstraint<Submission>> invalidConstraints = myvalidator.validate(mySubmission,"default"); 
                     
                     //IC should be more than one if the txt is

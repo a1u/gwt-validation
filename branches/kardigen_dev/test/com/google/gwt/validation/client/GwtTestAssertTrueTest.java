@@ -23,9 +23,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import org.junit.Test;
 
 import com.google.gwt.junit.client.GWTTestCase;
-import com.google.gwt.validation.client.NotNullValidator;
+import com.google.gwt.validation.client.AssertTrueValidator;
 
-public class NotNullTest extends GWTTestCase {
+public class GwtTestAssertTrueTest extends GWTTestCase {
 	
 	@Override
 	public String getModuleName() {
@@ -33,17 +33,21 @@ public class NotNullTest extends GWTTestCase {
 	}
 
 	@Test
-	public void testNotNull() {
+	public void testTrueValidation() {
+		//create validator
+		final AssertTrueValidator atv = new AssertTrueValidator();
 		
-		NotNullValidator  nnv = new NotNullValidator();
-		assertTrue("Should be true for not null.", nnv.isValid(new String("")));
-		
+		//test
+		assertTrue("Validation of true should return true.",atv.isValid(true));		
 	}
 	
 	@Test
-	public void testIsNull() {
-		NotNullValidator nnv = new NotNullValidator();
-		assertFalse("Should be false for null.", nnv.isValid(null));
+	public void testFalseValidation() {
+		//create validator
+		final AssertTrueValidator atv = new AssertTrueValidator();
+		
+		//test
+		assertFalse("Validation of false should return false.",atv.isValid(false));
 	}
-
+	
 }

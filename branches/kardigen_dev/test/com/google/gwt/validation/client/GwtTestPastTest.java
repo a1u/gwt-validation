@@ -20,12 +20,14 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+import java.util.Date;
+
 import org.junit.Test;
 
 import com.google.gwt.junit.client.GWTTestCase;
-import com.google.gwt.validation.client.AssertTrueValidator;
+import com.google.gwt.validation.client.PastValidator;
 
-public class AssertTrueTest extends GWTTestCase {
+public class GwtTestPastTest extends GWTTestCase {
 	
 	@Override
 	public String getModuleName() {
@@ -33,21 +35,29 @@ public class AssertTrueTest extends GWTTestCase {
 	}
 
 	@Test
-	public void testTrueValidation() {
-		//create validator
-		AssertTrueValidator atv = new AssertTrueValidator();
+	public void testInFuture() {
 		
+		//create future validator
+		final PastValidator pv = new PastValidator();
+		
+		//create future date
+		final Date d = new Date((new Date()).getTime() + 10000000);
+	
 		//test
-		assertTrue("Validation of true should return true.",atv.isValid(true));		
+		assertFalse("New date is in future", pv.isValid(d));
 	}
 	
 	@Test
-	public void testFalseValidation() {
-		//create validator
-		AssertTrueValidator atv = new AssertTrueValidator();
+	public void testInPast() {
+
+		//create future validator
+		final PastValidator pv = new PastValidator();
 		
+		//create past date
+		final Date d = new Date(0);
+	
 		//test
-		assertFalse("Validation of false should return false.",atv.isValid(false));
+		assertTrue("New date is in past", pv.isValid(d));		
 	}
 	
 }
