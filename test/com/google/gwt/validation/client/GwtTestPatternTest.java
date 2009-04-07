@@ -28,14 +28,14 @@ import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.validation.client.Pattern;
 import com.google.gwt.validation.client.PatternValidator;
 
-public class PatternTest extends GWTTestCase {
+public class GwtTestPatternTest extends GWTTestCase {
 	
 	@Override
 	public String getModuleName() {
 		return "com.google.gwt.validation.Validation"; 
 	}
 
-	private Pattern emailPattern = new Pattern(){
+	private final Pattern emailPattern = new Pattern(){
 
 		public String[] groups() {
 			return null;
@@ -55,7 +55,7 @@ public class PatternTest extends GWTTestCase {
 		
 	};
 	
-	private Pattern websitePattern = new Pattern(){
+	private final Pattern websitePattern = new Pattern(){
 
 		public String[] groups() {
 			return null;
@@ -79,12 +79,12 @@ public class PatternTest extends GWTTestCase {
 	public void testEmailPattern() {
 		
 		//init
-		PatternValidator pv = new PatternValidator();
+		final PatternValidator pv = new PatternValidator();
 		pv.initialize(this.emailPattern);
 		
 		//email
-		String email = "some.guy@hasdomain.com";
-		String notEmail = "some@@@domain...coooom";
+		final String email = "some.guy@hasdomain.com";
+		final String notEmail = "some@@@domain...coooom";
 		
 		//assert true with pattern
 		assertTrue("Email matches pattern.", pv.isValid(email));
@@ -97,12 +97,12 @@ public class PatternTest extends GWTTestCase {
 	public void testWebsitePattern() {
 		
 		//init
-		PatternValidator pv = new PatternValidator();
+		final PatternValidator pv = new PatternValidator();
 		pv.initialize(this.websitePattern);
 
 		//create string
-		String website = "http://www.google.com";
-		String notWebsite = "http[]iam/not/site";
+		final String website = "http://www.google.com";
+		final String notWebsite = "http[]iam/not/site";
 		
 		//assert true with pattern
 		assertTrue("Website matches pattern.", pv.isValid(website));

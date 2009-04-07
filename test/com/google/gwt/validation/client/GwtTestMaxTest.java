@@ -25,24 +25,24 @@ import java.lang.annotation.Annotation;
 import org.junit.Test;
 
 import com.google.gwt.junit.client.GWTTestCase;
-import com.google.gwt.validation.client.Min;
-import com.google.gwt.validation.client.MinValidator;
+import com.google.gwt.validation.client.Max;
+import com.google.gwt.validation.client.MaxValidator;
 
-public class MinTest extends GWTTestCase {
+public class GwtTestMaxTest extends GWTTestCase {
 	
 	@Override
 	public String getModuleName() {
 		return "com.google.gwt.validation.Validation"; 
 	}
-	
+
 	//annotation instance
-	private Min m = new Min() {
+	private final Max m = new Max() {
 
 		public String[] groups() {
 			return null;
 		}
 
-		public int minimum() {
+		public int maximum() {
 			return 2007;
 		}
 
@@ -57,41 +57,42 @@ public class MinTest extends GWTTestCase {
 	};
 	
 	@Test
-	public void testUnderMin() {
+	public void testUnderMax() {
 	
 		//create annotation
-		MinValidator mv = new MinValidator();
+		final MaxValidator mv = new MaxValidator();
 		mv.initialize(this.m);
 		
 		//values
-		int i =  12;
-		double d =  12;
-		float f = 12;
-		long l = 12;
+		final int i =  12;
+		final double d =  12;
+		final float f = 12;
+		final long l = 12;
 		
 		//assertions
-		assertFalse("12i is under minimum of 2007",mv.isValid(i));
-		assertFalse("12d is under minimum of 2007",mv.isValid(d));
-		assertFalse("12f is under minimum of 2007",mv.isValid(f));
-		assertFalse("12l is under minimum of 2007",mv.isValid(l));
+		assertTrue("12i is under maximum of 2007",mv.isValid(i));
+		assertTrue("12d is under maximum of 2007",mv.isValid(d));
+		assertTrue("12f is under maximum of 2007",mv.isValid(f));
+		assertTrue("12l is under maximum of 2007",mv.isValid(l));
 	}
 	
 	@Test
-	public void testOverMin() {
+	public void testOverMax() {
 		//create annotation
-		MinValidator mv = new MinValidator();
+		final MaxValidator mv = new MaxValidator();
 		mv.initialize(this.m);
 		
 		//values
-		int i =  12000;
-		double d =  12000;
-		float f = 12000;
-		long l = 12000;
+		final int i =  12000;
+		final double d =  12000;
+		final float f = 12000;
+		final long l = 12000;
 		
 		//assertions
-		assertTrue("12000i is over minimum of 2007",mv.isValid(i));
-		assertTrue("12000d is over minimum of 2007",mv.isValid(d));
-		assertTrue("12000f is over minimum of 2007",mv.isValid(f));
-		assertTrue("12000l is over minimum of 2007",mv.isValid(l));
+		assertFalse("12000i is over maximum of 2007",mv.isValid(i));
+		assertFalse("12000d is over maximum of 2007",mv.isValid(d));
+		assertFalse("12000f is over maximum of 2007",mv.isValid(f));
+		assertFalse("12000l is over maximum of 2007",mv.isValid(l));
 	}
+	
 }

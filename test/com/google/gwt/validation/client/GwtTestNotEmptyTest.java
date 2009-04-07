@@ -23,9 +23,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import org.junit.Test;
 
 import com.google.gwt.junit.client.GWTTestCase;
-import com.google.gwt.validation.client.AssertFalseValidator;
+import com.google.gwt.validation.client.NotEmptyValidator;
 
-public class AssertFalseTest extends GWTTestCase {
+public class GwtTestNotEmptyTest extends GWTTestCase {
 	
 	@Override
 	public String getModuleName() {
@@ -33,21 +33,23 @@ public class AssertFalseTest extends GWTTestCase {
 	}
 
 	@Test
-	public void testFalseValidation() {
-		//create validator
-		AssertFalseValidator afv = new AssertFalseValidator();
+	public void testNotEmpty() {
 		
-		//test
-		assertTrue("Validation of false should return true.",afv.isValid(false));		
+		final NotEmptyValidator nev = new NotEmptyValidator();
+		assertTrue("Should be true for not empty.", nev.isValid("not_an_empty_string"));
+		
 	}
 	
 	@Test
-	public void testTrueValidation() {
-		//create validator
-		AssertFalseValidator afv = new AssertFalseValidator();
-		
-		//test
-		assertFalse("Validation of true should return false.",afv.isValid(true));
+	public void testIsEmpty() {
+		final NotEmptyValidator nev = new NotEmptyValidator();
+		assertFalse("Should be false for empty.", nev.isValid(""));
+	}
+
+	@Test
+	public void testIsAllSpaces() {
+		final NotEmptyValidator nev = new NotEmptyValidator();
+		assertFalse("Should be false for all spaces.", nev.isValid("                                  "));
 	}
 	
 }

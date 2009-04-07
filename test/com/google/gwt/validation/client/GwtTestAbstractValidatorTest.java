@@ -30,7 +30,7 @@ import org.junit.Test;
 import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.validation.client.interfaces.IValidatable;
 
-public class AbstractValidatorTest extends GWTTestCase {
+public class GwtTestAbstractValidatorTest extends GWTTestCase {
 	
 	@Override
 	public String getModuleName() {
@@ -41,41 +41,41 @@ public class AbstractValidatorTest extends GWTTestCase {
 	public void testIntersectionTrue() {
 		
 		//list a
-		ArrayList<String> listA = new ArrayList<String>();
+		final ArrayList<String> listA = new ArrayList<String>();
 		listA.add("one");
 		listA.add("two");
 		listA.add("three");
 		
 		//list b
-		ArrayList<String> listB = new ArrayList<String>();
+		final ArrayList<String> listB = new ArrayList<String>();
 		listB.add("three");
 		listB.add("four");
 		listB.add("five");
 		
 		//create AbstractValidator instance
-		AbstractValidator<IValidatable> abs = new AbstractValidator<IValidatable>() {
+		final AbstractValidator<IValidatable> abs = new AbstractValidator<IValidatable>() {
 
 			@Override
-			public Set<InvalidConstraint<IValidatable>> validate(IValidatable object, String... groups) {
+			public Set<InvalidConstraint<IValidatable>> validate(final IValidatable object, final String... groups) {
 				return null;
 			}
 
 			@Override
-			public Set<InvalidConstraint<IValidatable>> validateProperty(IValidatable object, String propertyName, String... groups) {
+			public Set<InvalidConstraint<IValidatable>> validateProperty(final IValidatable object, final String propertyName, final String... groups) {
 				return null;
 			}
 
 			@Override
 			protected HashMap<String, ArrayList<String>> getGroupSequenceMapping(
-					Class<?> inputClass) {
+					final Class<?> inputClass) {
 				return null;
 			}
 
 			@Override
 			public Set<InvalidConstraint<IValidatable>> performValidation(
-					IValidatable object, String propertyName, 
-					ArrayList<String> groups, HashSet<String> processedGroups,
-					HashSet<String> processedObjects) {
+					final IValidatable object, final String propertyName, 
+					final ArrayList<String> groups, final HashSet<String> processedGroups,
+					final HashSet<String> processedObjects) {
 				return null;
 			}
 			
@@ -89,41 +89,41 @@ public class AbstractValidatorTest extends GWTTestCase {
 	public void testIntersectionFalse() {
 		
 		//list a
-		ArrayList<String> listA = new ArrayList<String>();
+		final ArrayList<String> listA = new ArrayList<String>();
 		listA.add("one");
 		listA.add("two");
 		listA.add("three");
 		
 		//list b
-		ArrayList<String> listB = new ArrayList<String>();
+		final ArrayList<String> listB = new ArrayList<String>();
 		listB.add("four");
 		listB.add("five");
 		listB.add("six");
 		
 		//create AbstractValidator instance
-		AbstractValidator<IValidatable> abs = new AbstractValidator<IValidatable>() {
+		final AbstractValidator<IValidatable> abs = new AbstractValidator<IValidatable>() {
 
 			@Override
-			public Set<InvalidConstraint<IValidatable>> validate(IValidatable object, String... groups) {
+			public Set<InvalidConstraint<IValidatable>> validate(final IValidatable object, final String... groups) {
 				return null;
 			}
 			
 			@Override
-			public Set<InvalidConstraint<IValidatable>> validateProperty(IValidatable object, String propertyName, String... groups) {
+			public Set<InvalidConstraint<IValidatable>> validateProperty(final IValidatable object, final String propertyName, final String... groups) {
 				return null;
 			}
 
 			@Override
 			protected HashMap<String, ArrayList<String>> getGroupSequenceMapping(
-					Class<?> inputClass) {
+					final Class<?> inputClass) {
 				return null;
 			}
 
 			@Override
 			public Set<InvalidConstraint<IValidatable>> performValidation(
-					IValidatable object, String propertyName, 
-					ArrayList<String> groups, HashSet<String> processedGroups,
-					HashSet<String> processedObjects) {
+					final IValidatable object, final String propertyName, 
+					final ArrayList<String> groups, final HashSet<String> processedGroups,
+					final HashSet<String> processedObjects) {
 				return null;
 			}			
 			

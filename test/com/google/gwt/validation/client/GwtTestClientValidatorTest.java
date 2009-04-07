@@ -43,13 +43,14 @@ import com.google.gwt.validation.client.test.jsr303.Address1;
 import com.google.gwt.validation.client.test.jsr303.Author;
 import com.google.gwt.validation.client.test.jsr303.Book;
 
-public class ClientValidatorTest extends GWTTestCase{
+public class GwtTestClientValidatorTest extends GWTTestCase{
 
 	@Override
 	public String getModuleName() {
 		return "com.google.gwt.validation.Validation"; 
 	}	
 	
+	@Test
 	public void testTestModel() {
 		
 

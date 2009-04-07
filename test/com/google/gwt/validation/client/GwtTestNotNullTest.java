@@ -23,9 +23,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import org.junit.Test;
 
 import com.google.gwt.junit.client.GWTTestCase;
-import com.google.gwt.validation.client.NotEmptyValidator;
+import com.google.gwt.validation.client.NotNullValidator;
 
-public class NotEmptyTest extends GWTTestCase {
+public class GwtTestNotNullTest extends GWTTestCase {
 	
 	@Override
 	public String getModuleName() {
@@ -33,23 +33,17 @@ public class NotEmptyTest extends GWTTestCase {
 	}
 
 	@Test
-	public void testNotEmpty() {
+	public void testNotNull() {
 		
-		NotEmptyValidator nev = new NotEmptyValidator();
-		assertTrue("Should be true for not empty.", nev.isValid("not_an_empty_string"));
+		final NotNullValidator  nnv = new NotNullValidator();
+		assertTrue("Should be true for not null.", nnv.isValid(new String("")));
 		
 	}
 	
 	@Test
-	public void testIsEmpty() {
-		NotEmptyValidator nev = new NotEmptyValidator();
-		assertFalse("Should be false for empty.", nev.isValid(""));
+	public void testIsNull() {
+		final NotNullValidator nnv = new NotNullValidator();
+		assertFalse("Should be false for null.", nnv.isValid(null));
 	}
 
-	@Test
-	public void testIsAllSpaces() {
-		NotEmptyValidator nev = new NotEmptyValidator();
-		assertFalse("Should be false for all spaces.", nev.isValid("                                  "));
-	}
-	
 }
