@@ -1,23 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--  
-GWT-Validation Framework - Annotation based validation for the GWT Framework
-
-Copyright (C) 2008  Christopher Ruffalo
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
--->
+  <!--
+    GWT-Validation Framework - Annotation based validation for the GWT Framework Copyright (C) 2008 Christopher Ruffalo This library is free software; you can redistribute it
+    and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
+    any later version. This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+    A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. You should have received a copy of the GNU Lesser General Public License along with this
+    library; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.googlecode</groupId>
@@ -25,9 +13,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
   <name>GWT validation</name>
   <version>1.1-SNAPSHOT</version>
   <description>GWT validation based on JSR303</description>
+  <url>http://code.google.com/p/gwt-validation/</url>
+  <scm>
+    <connection>scm:svn:http://gwt-validation.googlecode.com/svn/</connection>
+    <developerConnection>scm:svn:https://gwt-validation.googlecode.com/svn/</developerConnection>
+    <tag>branches/kardigen_dev</tag>
+    <url>http://gwt-validation.googlecode.com/svn/</url>
+  </scm>
+  <issueManagement>
+    <system>Google</system>
+    <url>http://code.google.com/p/gwt-validation/issues/list</url>
+  </issueManagement>
+  
   <properties>
     <gwtVersion>1.5.3</gwtVersion>
   </properties>
+  
   <dependencies>
     <dependency>
       <groupId>com.google.gwt</groupId>
@@ -57,11 +58,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
       <scope>test</scope>
     </dependency>
   </dependencies>
+  
+  <!--  BUILD SECTION -->
   <build>
     <sourceDirectory>src</sourceDirectory>
     <testSourceDirectory>test</testSourceDirectory>
     <plugins>
-      <plugin>
+      <plugin> <!-- used to disable standard testing on GWT stuff -->
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.4.2</version>
@@ -72,7 +75,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
           </excludes>
         </configuration>
       </plugin>
-      <plugin>
+      <plugin> <!-- used to testing GWT stuff -->
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
         <version>1.1-SNAPSHOT</version>
@@ -122,6 +125,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
       </resource>
     </resources>
   </build>
+  
   <!--  profiles (with activation per platform) -->
   <profiles>
     <profile>
