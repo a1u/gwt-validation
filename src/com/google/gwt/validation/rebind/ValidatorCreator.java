@@ -685,12 +685,12 @@ public class ValidatorCreator {
 
 		for(final String key : propertyMap.keySet()) {
 			//value
-			String value = propertyMap.get(key);
+			final String value = propertyMap.get(key);
 
-			//fix for issue #3 - http://code.google.com/p/gwt-validation/issues/detail?id=3
-			if(value != null && value.trim().length() > 0) {
-				value = value.replaceAll("\\", "\\\\");
-			}
+//			//fix for issue #3 - http://code.google.com/p/gwt-validation/issues/detail?id=3
+//			if(value != null && value.trim().length() > 0) {
+//				value = value.replaceAll("\\", "\\\\");
+//			}
 			
 			//put out propertykey
 			//propertyMap.put(key, value);
