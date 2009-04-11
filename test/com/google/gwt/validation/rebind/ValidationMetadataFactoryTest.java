@@ -26,7 +26,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import org.junit.Test;
 
 import com.google.gwt.validation.client.AssertFalse;
@@ -60,7 +59,7 @@ public class ValidationMetadataFactoryTest {
 			})			
 			private String patternTestCase;
 
-			public void setPatternTestCase(String patternTestCase) {
+			public void setPatternTestCase(final String patternTestCase) {
 				this.patternTestCase = patternTestCase;
 			}
 
@@ -71,7 +70,7 @@ public class ValidationMetadataFactoryTest {
 		}
 		
 		//get packages
-		ArrayList<ValidationPackage> vplist = ValidationMetadataFactory.getValidatorsForClass(TestPatternsClass.class);
+		final ArrayList<ValidationPackage> vplist = ValidationMetadataFactory.getValidatorsForClass(TestPatternsClass.class);
 		
 		//assertions
 		assertEquals("Should have 4 pattern validation packages", 4, vplist.size());
@@ -87,7 +86,7 @@ public class ValidationMetadataFactoryTest {
 			@Pattern
 			private String patternTestCase;
 
-			public void setPatternTestCase(String patternTestCase) {
+			public void setPatternTestCase(final String patternTestCase) {
 				this.patternTestCase = patternTestCase;
 			}
 
@@ -98,7 +97,7 @@ public class ValidationMetadataFactoryTest {
 		}
 		
 		//get packages
-		ArrayList<ValidationPackage> vplist = ValidationMetadataFactory.getValidatorsForClass(TestPatternClass.class);
+		final ArrayList<ValidationPackage> vplist = ValidationMetadataFactory.getValidatorsForClass(TestPatternClass.class);
 		
 		//assertions
 		assertEquals("Should have 1 pattern validation packages", 1, vplist.size());		
@@ -127,7 +126,7 @@ public class ValidationMetadataFactoryTest {
 			//11 validators total for one field			
 			private String patternTestCase;
 
-			public void setPatternTestCase(String patternTestCase) {
+			public void setPatternTestCase(final String patternTestCase) {
 				this.patternTestCase = patternTestCase;
 			}
 
@@ -137,7 +136,7 @@ public class ValidationMetadataFactoryTest {
 		}
 		
 		//get packages
-		ArrayList<ValidationPackage> vplist = ValidationMetadataFactory.getValidatorsForClass(TestMAClass.class);
+		final ArrayList<ValidationPackage> vplist = ValidationMetadataFactory.getValidatorsForClass(TestMAClass.class);
 		
 		//assertions
 		assertEquals("Should have 11 validation packages", 11, vplist.size());
@@ -195,7 +194,7 @@ public class ValidationMetadataFactoryTest {
 				
 			}
 
-			public void setTestString(String testString) {
+			public void setTestString(final String testString) {
 				this.testString = testString;
 			}
 
@@ -203,7 +202,7 @@ public class ValidationMetadataFactoryTest {
 				return testString;
 			}
 
-			public void setTestBoolean(boolean testBoolean) {
+			public void setTestBoolean(final boolean testBoolean) {
 				this.testBoolean = testBoolean;
 			}
 
@@ -216,7 +215,7 @@ public class ValidationMetadataFactoryTest {
 		
 	
 		//get packages
-		ArrayList<ValidationPackage> vplist = ValidationMetadataFactory.getValidatorsForClass(TesterClass.class);
+		final ArrayList<ValidationPackage> vplist = ValidationMetadataFactory.getValidatorsForClass(TesterClass.class);
 		
 		//assertions
 		assertEquals("Should have 9 validation packages", 9, vplist.size());
@@ -278,7 +277,7 @@ public class ValidationMetadataFactoryTest {
 			@NotEmpty
 			protected String innerString;
 
-			public void setInnerString(String innerString) {
+			public void setInnerString(final String innerString) {
 				this.innerString = innerString;
 			}
 
@@ -315,7 +314,7 @@ public class ValidationMetadataFactoryTest {
 			@NotEmpty
 			private String outerString;
 
-			public void setOuterString(String outerString) {
+			public void setOuterString(final String outerString) {
 				this.outerString = outerString;
 			}
 
@@ -328,15 +327,16 @@ public class ValidationMetadataFactoryTest {
 				return null;
 			}
 			
-			@NotNull
+			@Override
+            @NotNull
 			public String middleStringTest() {
 				return "";
 			}
 			
 		}
 		
-		//get packages
-		ArrayList<ValidationPackage> vplist = ValidationMetadataFactory.getValidatorsForClass(SubClass.class);
+		//get validation packages for SubClass
+		final ArrayList<ValidationPackage> vplist = ValidationMetadataFactory.getValidatorsForClassHierarchy(SubClass.class);
 
 		//should be 10
 		assertEquals("Should have 9 validation packages [4 from SubClass, 1 from SuperClass, 1 from SubInterface1, 1 from MiddleInterface1, 1 from SuperInterface1, 1 from SuperInterface2].", 9, vplist.size());
@@ -361,13 +361,13 @@ public class ValidationMetadataFactoryTest {
 	public void testClassLevelWithInheritence() {
 		
 		//get packages for class
-		ArrayList<ValidationPackage> vplist = ValidationMetadataFactory.getValidatorsForClass(AnnotatedClass.class);
+		ArrayList<ValidationPackage> vplist = ValidationMetadataFactory.getValidatorsForClassHierarchy(AnnotatedClass.class);
 	
 		//assert that it does NOT show up at the package level
 		assertEquals("Field/Method level should be 0.", 0, vplist.size());
 		
-		//get class level packages
-		vplist = ValidationMetadataFactory.getClassLevelValidatorsForClass(AnnotatedClass.class);
+		//get packages for class
+		vplist = ValidationMetadataFactory.getClassLevelValidatorsForClassHierarchy(AnnotatedClass.class);
 		
 		//assert that it shows up at the class level
 		assertEquals("Class level should be 4", 4, vplist.size());
@@ -394,7 +394,7 @@ public class ValidationMetadataFactoryTest {
 	public void testGroupSequenceMetadata() {
 		
 		//get group sequence list for class
-		HashMap<String, ArrayList<String>> orderTable = ValidationMetadataFactory.getGroupSequenceMap(GroupSequenceClassTest.class);
+		final HashMap<String, ArrayList<String>> orderTable = ValidationMetadataFactory.getGroupSequenceMap(GroupSequenceClassTest.class);
 	
 		//assertions
 		assertTrue("Contains group 'default'.",orderTable.containsKey("default"));
@@ -403,10 +403,10 @@ public class ValidationMetadataFactoryTest {
 		assertTrue("Contains group 'three'.",orderTable.containsKey("three"));
 		
 		//get lists
-		ArrayList<String> one = orderTable.get("one");
-		ArrayList<String> two = orderTable.get("two");
-		ArrayList<String> three = orderTable.get("three");
-		ArrayList<String> defaultList = orderTable.get("default");
+		final ArrayList<String> one = orderTable.get("one");
+		final ArrayList<String> two = orderTable.get("two");
+		final ArrayList<String> three = orderTable.get("three");
+		final ArrayList<String> defaultList = orderTable.get("default");
 		
 		//assert not null
 		assertNotNull("Group sequence one is not null.", one);
