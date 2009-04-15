@@ -406,10 +406,6 @@ public class GwtTestClientValidatorTest extends GWTTestCase {
         // get invalid constraints
         final Set<InvalidConstraint<ParametrizedTypes>> icSet = validator.validate(obj);
 
-//        for (final InvalidConstraint<ParametrizedTypes> ic : icSet) {
-//            System.err.println("testParametrizedTypes:" + ic.getPropertyPath());
-//        }
-
         assertEquals("Should be 4 not null invalid constraints.", 4, icSet.size());
 
     }
