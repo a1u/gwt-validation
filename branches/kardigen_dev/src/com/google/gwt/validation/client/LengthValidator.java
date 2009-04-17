@@ -20,8 +20,6 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import java.util.Map;
-
 import com.google.gwt.validation.client.interfaces.IConstraint;
 
 /**
@@ -32,30 +30,29 @@ import com.google.gwt.validation.client.interfaces.IConstraint;
  *
  */
 public class LengthValidator implements IConstraint<Length> {
+    
+    
+    public interface Length {
+        String[] groups();
+        String message();
+        int maximum();
+        int minimum();
+    }
 
 	private int minimum;
 	private int maximum;
 	
-	public void initialize(Length constraintAnnotation) {
+	public void initialize(final Length constraintAnnotation) {
 		this.minimum = constraintAnnotation.minimum();
 		this.maximum = constraintAnnotation.maximum();
 	}
-
-	public void initialize(Map<String, String> propertyMap) {
 	
-		/*
-		 * !!!!
-		 * Notice that these keys are exactly the same as the method names on the annotation
-		 * !!!!
-		 */
-		
-		
-		this.minimum = Integer.parseInt(propertyMap.get("minimum"));
-		this.maximum = Integer.parseInt(propertyMap.get("maximum"));
-		
-	}
+	public void initialize(final com.google.gwt.validation.client.Length constraintAnnotation) {
+        this.minimum = constraintAnnotation.minimum();
+        this.maximum = constraintAnnotation.maximum();
+    }
 	
-	public boolean isValid(Object value) {
+	public boolean isValid(final Object value) {
 		if(value == null) return true;
 		
 		boolean valid = false;
@@ -70,7 +67,5 @@ public class LengthValidator implements IConstraint<Length> {
 		
 		return valid;
 	}
-
-
 
 }

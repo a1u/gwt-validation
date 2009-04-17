@@ -33,30 +33,29 @@ import com.google.gwt.validation.client.interfaces.IConstraint;
  *
  */
 public class SizeValidator implements IConstraint<Size> {
+    
+    public interface Size {
+        String[] groups();
+        String message();
+        int maximum();
+        int minimum();
+    }
 
 	private int minimum;
 	private int maximum;
 	
-	public void initialize(Size constraintAnnotation) {
+	/** {@inheritDoc} */
+    public void initialize(final com.google.gwt.validation.client.Size constraintAnnotation) {
+        this.minimum = constraintAnnotation.minimum();
+        this.maximum = constraintAnnotation.maximum();
+    }
+	
+	public void initialize(final Size constraintAnnotation) {
 		this.minimum = constraintAnnotation.minimum();
 		this.maximum = constraintAnnotation.maximum();
 	}
 
-	public void initialize(Map<String, String> propertyMap) {
-	
-		/*
-		 * !!!!
-		 * Notice that these keys are exactly the same as the method names on the annotation
-		 * !!!!
-		 */
-		
-		
-		this.minimum = Integer.parseInt(propertyMap.get("minimum"));
-		this.maximum = Integer.parseInt(propertyMap.get("maximum"));
-		
-	}
-	
-	public boolean isValid(Object value) {
+    public boolean isValid(final Object value) {
 		if(value == null) return true;
 		
 		boolean valid = false;
@@ -67,18 +66,15 @@ public class SizeValidator implements IConstraint<Size> {
 			
 			try {
 				size = ((Object[])value).length;
-			} catch (Exception ex) {
-				//ex.printStackTrace();
+			} catch (final Exception ex) {
 			}
-		
 		}
 
 		if(size < 0) {
 			
 			try {
 				size = ((int[])value).length;
-			} catch (Exception ex) {
-				//ex.printStackTrace();
+			} catch (final Exception ex) {
 			}
 		
 		}
@@ -87,8 +83,7 @@ public class SizeValidator implements IConstraint<Size> {
 			
 			try {
 				size = ((float[])value).length;
-			} catch (Exception ex) {
-				//ex.printStackTrace();
+			} catch (final Exception ex) {
 			}
 		
 		}
@@ -97,8 +92,7 @@ public class SizeValidator implements IConstraint<Size> {
 			
 			try {
 				size = ((double[])value).length;
-			} catch (Exception ex) {
-				//ex.printStackTrace();
+			} catch (final Exception ex) {
 			}
 		
 		}
@@ -107,8 +101,7 @@ public class SizeValidator implements IConstraint<Size> {
 			
 			try {
 				size = ((long[])value).length;
-			} catch (Exception ex) {
-				//ex.printStackTrace();
+			} catch (final Exception ex) {
 			}
 		
 		}
@@ -117,8 +110,7 @@ public class SizeValidator implements IConstraint<Size> {
 			
 			try {
 				size = ((Collection<?>)value).size();
-			} catch (Exception ex) {
-				
+			} catch (final Exception ex) {
 			}
 
 		}
@@ -127,8 +119,7 @@ public class SizeValidator implements IConstraint<Size> {
 			
 			try {
 				size = ((Map<?,?>)value).size();
-			} catch (Exception ex) {
-				
+			} catch (final Exception ex) {
 			}
 
 		}
