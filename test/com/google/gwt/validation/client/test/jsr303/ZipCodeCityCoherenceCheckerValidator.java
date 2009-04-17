@@ -20,21 +20,27 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import java.util.Map;
-
 import com.google.gwt.validation.client.interfaces.IConstraint;
 
 public class ZipCodeCityCoherenceCheckerValidator implements IConstraint<ZipCodeCityCoherenceChecker> {
+    
+    public  interface ZipCodeCityCoherenceChecker {
+        String[] groups();
+        String message();
+    }
+    
+    
+	/** {@inheritDoc} */
+    public void initialize(final com.google.gwt.validation.client.test.jsr303.ZipCodeCityCoherenceChecker constraintAnnotation) {
+        // TODO Auto-generated method stub
+        
+    }
 
-	public void initialize(ZipCodeCityCoherenceChecker constraintAnnotation) {
+	public void initialize(final ZipCodeCityCoherenceChecker constraintAnnotation) {
 		
 	}
 
-	public void initialize(Map<String, String> propertyMap) {
-		
-	}
-
-	public boolean isValid(Object value) {
+    public boolean isValid(final Object value) {
 		return true;
 	}
 
