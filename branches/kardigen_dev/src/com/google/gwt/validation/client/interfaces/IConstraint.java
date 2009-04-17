@@ -21,7 +21,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 import java.lang.annotation.Annotation;
-import java.util.Map;
 
 /**
  * Define the logic to validate a given constraint
@@ -37,12 +36,6 @@ public interface IConstraint<A extends Annotation> {
 	 */
 	void initialize(A constraintAnnotation);
 	
-	/**
-	 * Initialize the constraint validator, this is a "hack" for GWT initialization
-	 * 
-	 * @param propertyMap
-	 */
-	void initialize(Map<String, String> propertyMap);
 	
 	/**
  	 * Evaluates the constraint against a value. This method
