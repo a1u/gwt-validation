@@ -20,8 +20,6 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import java.util.Map;
-
 import com.google.gwt.validation.client.interfaces.IConstraint;
 
 /**
@@ -32,16 +30,25 @@ import com.google.gwt.validation.client.interfaces.IConstraint;
  */
 public class NotNullValidator implements IConstraint<NotNull> {
 
-	public void initialize(NotNull constraintAnnotation) {
-		//nothing
+    public interface NotNull {
+
+        String[] groups();
+        String message();
+}
+    
+	/** {@inheritDoc} */
+    public void initialize(final com.google.gwt.validation.client.NotNull constraintAnnotation) {
+        
+    }
+
+	public void initialize(final NotNull constraintAnnotation) {
+		
 	}
 
-	public void initialize(Map<String, String> propertyMap) {
-		//nothing		
-	}
-
-	public boolean isValid(Object value) {
+    public boolean isValid(final Object value) {
 		return (value != null);
 	}
+
+   
 
 }

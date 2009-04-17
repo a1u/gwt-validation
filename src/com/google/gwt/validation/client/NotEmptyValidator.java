@@ -20,8 +20,6 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import java.util.Map;
-
 import com.google.gwt.validation.client.interfaces.IConstraint;
 
 /**
@@ -32,15 +30,21 @@ import com.google.gwt.validation.client.interfaces.IConstraint;
  */
 public class NotEmptyValidator implements IConstraint<NotEmpty> {
 
-	public void initialize(NotEmpty constraintAnnotation) {
+	public interface NotEmpty {
+	    String[] groups();
+        String message();
+	}
+	
+	/** {@inheritDoc} */
+    public void initialize(final com.google.gwt.validation.client.NotEmpty constraintAnnotation) {
+        
+    }
+	
+	public void initialize(final NotEmpty constraintAnnotation) {
 				
 	}
 
-	public void initialize(Map<String, String> propertyMap) {
-		
-	}
-	
-	public boolean isValid(Object value) {
+    public boolean isValid(final Object value) {
 		//per discussion with JSR-303 specification members
 		if(value == null) return false;
 		

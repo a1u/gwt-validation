@@ -20,8 +20,6 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import java.util.Map;
-
 import com.google.gwt.validation.client.interfaces.IConstraint;
 
 /**
@@ -32,25 +30,26 @@ import com.google.gwt.validation.client.interfaces.IConstraint;
  */
 public class PatternValidator implements IConstraint<Pattern> {
 
+	public interface Pattern {
+	    String[] groups();
+        String message();
+        String pattern();
+	}
+	
 	private String pattern;
 	
-	public void initialize(Pattern constraintAnnotation) {
+	/** {@inheritDoc} */
+    public void initialize(final com.google.gwt.validation.client.Pattern constraintAnnotation) {
+        this.pattern = constraintAnnotation.pattern();
+    }
+
+	
+	public void initialize(final Pattern constraintAnnotation) {
 		this.pattern = constraintAnnotation.pattern();
 	}
 
-	public void initialize(Map<String, String> propertyMap) {
-	
-		/*
-		 * !!!!
-		 * Notice that these keys are exactly the same as the method names on the annotation
-		 * !!!!
-		 */
-		
-		
-		this.pattern = propertyMap.get("pattern");		
-	}
-	
-	public boolean isValid(Object value) {
+
+    public boolean isValid(final Object value) {
 		if(value == null) return true;
 		if(this.pattern == null || this.pattern.trim().length() == 0) return true;
 		
@@ -59,7 +58,7 @@ public class PatternValidator implements IConstraint<Pattern> {
 		if(value.getClass().toString().equals(String.class.toString())) {
 			valid = ((String)value).matches(this.pattern);
 		} else {
-			valid = ((Object)value).toString().matches(this.pattern);
+			valid = (value).toString().matches(this.pattern);
 		}
 
 		return valid;

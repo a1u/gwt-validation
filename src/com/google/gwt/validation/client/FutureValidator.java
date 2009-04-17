@@ -21,39 +21,43 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 import java.util.Date;
-import java.util.Map;
-
 import com.google.gwt.validation.client.interfaces.IConstraint;
 
 /**
  * Validator that implements the <code>@Future</code> annotation
  * 
  * @author chris
- *
+ * 
  */
 public class FutureValidator implements IConstraint<Future> {
 
-    public boolean isValid(Object value) {
+    public interface Future {
+        String[] groups();
+        String message();
+    }
+
+    /** {@inheritDoc} */
+    public void initialize(final com.google.gwt.validation.client.Future constraintAnnotation) {
+        
+    }
+
+    public void initialize(final Future parameters) {
+
+    }
+
+    public boolean isValid(final Object value) {
         if (value == null) return true;
 
         boolean isvalid = false;
         
         try {
-        	Date date = (Date)value;
+        	final Date date = (Date)value;
         	isvalid = date.after(new Date());        	
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
         	
         }
         
         return isvalid;
     }
-
-    public void initialize(Future parameters) {
-
-    }
-
-	public void initialize(Map<String, String> propertyMap) {
-		
-	}
 
 }

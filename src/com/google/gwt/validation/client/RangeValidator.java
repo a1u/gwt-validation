@@ -20,8 +20,6 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import java.util.Map;
-
 import com.google.gwt.validation.client.interfaces.IConstraint;
 
 /**
@@ -32,28 +30,28 @@ import com.google.gwt.validation.client.interfaces.IConstraint;
  */
 public class RangeValidator implements IConstraint<Range> {
 
+	public interface Range {
+	    String[] groups();
+	    int maximum();
+        String message();
+        int minimum();
+	}
+	
 	private int minimum;
 	private int maximum;
-	
-	public void initialize(Range constraintAnnotation) {
+
+	/** {@inheritDoc} */
+    public void initialize(final com.google.gwt.validation.client.Range constraintAnnotation) {
+        this.maximum = constraintAnnotation.maximum();
+        this.minimum = constraintAnnotation.minimum();
+    }
+
+	public void initialize(final Range constraintAnnotation) {
 		this.maximum = constraintAnnotation.maximum();
 		this.minimum = constraintAnnotation.minimum();
-		
 	}
 
-	public void initialize(Map<String, String> propertyMap) {
-		/*
-		 * !!!!
-		 * Notice that these keys are exactly the same as the method names on the annotation
-		 * !!!!
-		 */
-		
-		
-		this.minimum = Integer.parseInt(propertyMap.get("minimum"));
-		this.maximum = Integer.parseInt(propertyMap.get("maximum"));		
-	}
-
-	public boolean isValid(Object value) {
+    public boolean isValid(final Object value) {
 		
 		if(value == null) return true;
 		
@@ -83,5 +81,4 @@ public class RangeValidator implements IConstraint<Range> {
 		
 		return (maxValid && minValid);
 	}
-
 }
