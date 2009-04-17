@@ -59,14 +59,13 @@ public class SourceWriterProxy implements SourceWriter {
     /** {@inheritDoc} */
     public void indent() {
         m_ident += "  ";
-        System.out.println(m_ident);
+        //System.out.println(m_ident);
         m_delgee.indent();
     }
 
     /** {@inheritDoc} */
     public void indentln(final String s) {
-        m_ident += "  ";
-        System.out.println(m_ident + s);
+        System.out.println(m_ident + "  " + s);
         m_delgee.indentln(s);
     }
 
@@ -87,14 +86,12 @@ public class SourceWriterProxy implements SourceWriter {
     /** {@inheritDoc} */
     public void println() {
         System.out.println();
-        System.out.print(m_ident);
         m_delgee.println();
     }
 
     /** {@inheritDoc} */
     public void println(final String s) {
-        System.out.println(s);
-        System.out.print(m_ident);
+        System.out.println(m_ident + s);
         m_delgee.println(s);
     }
 
