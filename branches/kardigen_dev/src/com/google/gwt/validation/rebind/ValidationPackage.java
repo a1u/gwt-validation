@@ -24,9 +24,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.gwt.validation.client.InvalidConstraint;
 import com.google.gwt.validation.client.interfaces.IConstraint;
 
@@ -62,9 +59,9 @@ public class ValidationPackage {
 	 * @param method the method to invoke for validation
 	 * @param field the field that the method maps to (if applicable)
 	 * @param groups the groups that the validation should be performed under
-	 * @param propertyMap the properties to be used to initialize the constraint
+	 * @param annotation the properties to be used to initialize the constraint
 	 */
-	public ValidationPackage(IConstraint<Annotation> constraint, String message, Method method, Field field, String[] groups, Map<String,String> propertyMap) {
+	public ValidationPackage(final IConstraint<Annotation> constraint, final String message, final Method method, final Field field, final String[] groups, final Annotation annotation) {
 	
 		//construct
 		this();
@@ -77,7 +74,7 @@ public class ValidationPackage {
 	
 		//convert groups[] to arraylist
 		this.groups = new ArrayList<String>();
-		for(String g : groups) {
+		for(final String g : groups) {
 			this.groups.add(g);
 		}
 		//add default group if no groups specified
@@ -98,8 +95,7 @@ public class ValidationPackage {
 		}
 		
 		//set property map
-		this.validationPropertyMap = propertyMap;
-		if(this.validationPropertyMap == null) this.validationPropertyMap = new HashMap<String, String>();
+		this.annotation = annotation;
 		
 	}
 	
@@ -108,7 +104,7 @@ public class ValidationPackage {
 	private Method method;
 	private Field field;
 	private String itemName;
-	private Map<String, String> validationPropertyMap;
+	private Annotation annotation;
 	private IConstraint<Annotation> implementingConstraint;
 	private boolean isField;
 	
@@ -118,9 +114,9 @@ public class ValidationPackage {
 	 * 
 	 * @return
 	 */
-	public <T> InvalidConstraint<T> buildInvalidConstraint(T object) {
+	public <T> InvalidConstraint<T> buildInvalidConstraint(final T object) {
 	
-		InvalidConstraint<T> ic = new InvalidConstraint<T>(this.itemName, this.message);
+		final InvalidConstraint<T> ic = new InvalidConstraint<T>(this.itemName, this.message);
 		
 		//set object
 		ic.setInvalidObject(object);
@@ -142,8 +138,8 @@ public class ValidationPackage {
 	 * 
 	 * @return
 	 */
-	public Map<String, String> getValidationPropertyMap() {
-		return this.validationPropertyMap;
+	public Annotation getAnnotation() {
+		return this.annotation;
 	}
 	
 	/**

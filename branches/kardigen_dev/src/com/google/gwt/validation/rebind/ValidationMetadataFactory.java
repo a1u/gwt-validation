@@ -314,9 +314,6 @@ public class ValidationMetadataFactory {
                     // process annotations
                     for (final Annotation annotation : annotationListForMethod) {
 
-                        // get property map
-                        final HashMap<String, String> propertyMap = new HashMap<String, String>();
-
                         // get ConstraintValidator
                         ConstraintValidator cv = null;
                         IConstraint<Annotation> constraint = null;
@@ -354,13 +351,16 @@ public class ValidationMetadataFactory {
                             // e.printStackTrace();
                         }
 
-                        // group holder
+                        // group and message holders
                         String[] groups = new String[] {};
+                        String message = "";
 
-                        // get groups
+                        // get groups and message
                         try {
                             final Method groupMethod = annotation.annotationType().getDeclaredMethod("groups");
                             groups = (String[]) groupMethod.invoke(annotation, new Object[] {});
+                            final Method messageMethod = annotation.annotationType().getDeclaredMethod("message");
+                            message = (String) messageMethod.invoke(annotation, new Object[] {});
                         } catch (final SecurityException e) {
                             // e.printStackTrace();
                         } catch (final NoSuchMethodException e) {
@@ -372,41 +372,7 @@ public class ValidationMetadataFactory {
                         } catch (final InvocationTargetException e) {
                             // e.printStackTrace();
                         }
-
-                        // process methods for properties
-                        for (final Method annotationMethod : annotation.annotationType().getDeclaredMethods()) {
-
-                            // only get properties that aren't "groups"
-                            if (!annotationMethod.getName().equals("groups")) {
-
-                                // get value
-                                try {
-                                    // get object for method invocation
-                                    final Object o = annotationMethod.invoke(annotation);
-
-                                    // coerce to string (invoke toString through
-                                    // tricky means)
-                                    final String value = "" + o;
-
-                                    // set to propery map
-                                    if (o != null) {
-                                        propertyMap.put(annotationMethod.getName(), value);
-                                    }
-
-                                } catch (final IllegalArgumentException e) {
-                                    // e.printStackTrace();
-                                } catch (final IllegalAccessException e) {
-                                    // e.printStackTrace();
-                                } catch (final InvocationTargetException e) {
-                                    // e.printStackTrace();
-                                }
-
-                            }
-                        }
-
-                        // once property map is finished
-                        final String message = propertyMap.get("message");
-
+                        
                         // we need to have a constraint for this to finish and
                         // make the appropriate package
                         if (constraint != null) {
@@ -415,7 +381,7 @@ public class ValidationMetadataFactory {
                             constraint.initialize(annotation);
 
                             // build the validation package
-                            final ValidationPackage vPackage = new ValidationPackage(constraint, message, method, field, groups, propertyMap);
+                            final ValidationPackage vPackage = new ValidationPackage(constraint, message, method, field, groups, annotation);
 
                             // a constraint was found, so add to validation list
                             // thing
@@ -494,19 +460,17 @@ public class ValidationMetadataFactory {
             // if a constraint was found, build validation package
             if (constraint != null) {
 
-                // build property map
-                final HashMap<String, String> propertyMap = new HashMap<String, String>();
-
                 // initialize constraint
                 constraint.initialize(classAnnotation);
 
-                // group holder
                 String[] groups = new String[] {};
-
-                // get groups
+                String message = "";
+                // get groups and messages
                 try {
                     final Method groupMethod = classAnnotation.annotationType().getDeclaredMethod("groups");
                     groups = (String[]) groupMethod.invoke(classAnnotation, new Object[] {});
+                    final Method messageMethod = classAnnotation.annotationType().getDeclaredMethod("message");
+                    message = (String) messageMethod.invoke(classAnnotation, new Object[] {});
                 } catch (final SecurityException e) {
                     // e.printStackTrace();
                 } catch (final NoSuchMethodException e) {
@@ -518,43 +482,10 @@ public class ValidationMetadataFactory {
                 } catch (final InvocationTargetException e) {
                     // e.printStackTrace();
                 }
-
-                // process methods for properties
-                for (final Method annotationMethod : classAnnotation.annotationType().getDeclaredMethods()) {
-
-                    // only get properties that aren't "groups"
-                    if (!annotationMethod.getName().equals("groups")) {
-
-                        // get value
-                        try {
-                            // get object for method invocation
-                            final Object o = annotationMethod.invoke(classAnnotation);
-
-                            // coerce to string (invoke toString through tricky
-                            // means)
-                            final String value = "" + o;
-
-                            // set to propery map
-                            if (o != null) {
-                                propertyMap.put(annotationMethod.getName(), value);
-                            }
-
-                        } catch (final IllegalArgumentException e) {
-                            // e.printStackTrace();
-                        } catch (final IllegalAccessException e) {
-                            // e.printStackTrace();
-                        } catch (final InvocationTargetException e) {
-                            // e.printStackTrace();
-                        }
-
-                    }
-                }
-
-                // once property map is finished
-                final String message = propertyMap.get("message");
+                
 
                 // build validation package
-                final ValidationPackage vp = new ValidationPackage(constraint, message, null, null, groups, propertyMap);
+                final ValidationPackage vp = new ValidationPackage(constraint, message, null, null, groups,classAnnotation);
 
                 // add validation package to list
                 classValidationPackageList.add(vp);
@@ -562,18 +493,6 @@ public class ValidationMetadataFactory {
 
         }
 
-        // do the same for superclass
-        // final Class<?> superClass = inputClass.getSuperclass();
-        // if(superClass != null) {
-        // classValidationPackageList.addAll(ValidationMetadataFactory.getClassLevelValidatorsForClass(superClass));
-        // }
-        //		
-        // //do the same for each interface
-        // for(final Class<?> interfaceClass : inputClass.getInterfaces()) {
-        // classValidationPackageList.addAll(ValidationMetadataFactory.getClassLevelValidatorsForClass(interfaceClass));
-        // }
-
-        // return list
         return classValidationPackageList;
     }
 
@@ -685,7 +604,7 @@ public class ValidationMetadataFactory {
                     }
 
                     // create package and add
-                    final ValidationPackage vp = new ValidationPackage(null, "{message.cascadingvalidator}", method, field, groups, new HashMap<String, String>());
+                    final ValidationPackage vp = new ValidationPackage(null, "{message.cascadingvalidator}", method, field, groups, null);
 
                     // add validation package to list
                     validAnnotationPackageList.add(vp);
