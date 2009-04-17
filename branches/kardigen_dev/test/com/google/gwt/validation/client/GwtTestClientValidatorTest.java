@@ -42,6 +42,7 @@ import com.google.gwt.validation.client.test.ParametrizedTypes;
 import com.google.gwt.validation.client.test.RecursiveValidationTest;
 import com.google.gwt.validation.client.test.SimpleClass;
 import com.google.gwt.validation.client.test.TestModel;
+import com.google.gwt.validation.client.test.Validators;
 import com.google.gwt.validation.client.test.jsr303.Address1;
 import com.google.gwt.validation.client.test.jsr303.Author;
 import com.google.gwt.validation.client.test.jsr303.Book;
@@ -336,11 +337,6 @@ public class GwtTestClientValidatorTest extends GWTTestCase {
         // no validate value as of yet
     }
 
-    @Test
-    public void emptyTest() {
-        // so that junit won't complain about an empty test
-    }
-
     public void testInvalidConstraintPath() {
 
         // object graph thingy
@@ -393,14 +389,14 @@ public class GwtTestClientValidatorTest extends GWTTestCase {
     }
 
     public void testParametrizedTypes() {
-        //create simple hierarchy
+        // create simple hierarchy
         final ParametrizedTypes obj = new ParametrizedTypes();
         final ArrayList<SimpleClass> list = new ArrayList<SimpleClass>();
         list.add(new SimpleClass());
         list.add(new SimpleClass());
         obj.setParametrizedCollection(list);
 
-        //create validator
+        // create validator
         final IValidator<ParametrizedTypes> validator = GWT.create(ParametrizedTypes.class);
 
         // get invalid constraints
@@ -408,6 +404,18 @@ public class GwtTestClientValidatorTest extends GWTTestCase {
 
         assertEquals("Should be 4 not null invalid constraints.", 4, icSet.size());
 
+    }
+    
+    public void testValidators() {
+        //create object
+        final Validators obj = new Validators();
+        
+        //create validator
+        final IValidator<Validators> validator = GWT.create(Validators.class);
+        
+        final Set<InvalidConstraint<Validators>> icSet = validator.validate(obj);
+        
+        assertEquals("Should be 16 invalid constraints.", 16, icSet.size());
     }
 
 }
