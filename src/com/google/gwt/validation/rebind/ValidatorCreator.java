@@ -21,6 +21,8 @@ package com.google.gwt.validation.rebind;
  */
 
 import java.io.PrintWriter;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -267,14 +269,11 @@ public class ValidatorCreator {
             sw.println("if(" + ifTest + ") {");
             sw.indent();
 
-            // create property map output
-            this.writeMapToCode(vPack.getValidationPropertyMap(), sw);
-
             // create validator instace from implementing validator
             sw.println(impl + " validator = new " + impl + "();");
 
-            // initialize validator with property map
-            sw.println("validator.initialize(propertyMap);");
+			//initailize validator
+            this.writeValidatorInitializator("validator",impl,vPack.getAnnotation(), sw);
 
             // do object method in if test
             sw.println("if(!validator.isValid(((" + inputClass.getName() + ")object)." + vPack.getMethod().getName() + "())) {");
@@ -343,13 +342,12 @@ public class ValidatorCreator {
             sw.indent();
 
             // create property map output
-            this.writeMapToCode(vPack.getValidationPropertyMap(), sw);
 
             // create validator instace from implementing validator
             sw.println(impl + " validator = new " + impl + "();");
 
-            // initialize validator with property map
-            sw.println("validator.initialize(propertyMap);");
+            // initialize validator
+            this.writeValidatorInitializator("validator",impl,vPack.getAnnotation(), sw);
 
             // do object method in if test
             sw.println("if(!validator.isValid(object)) {");
@@ -748,9 +746,7 @@ public class ValidatorCreator {
         // ensure a valid print writer
         if (printWriter != null) {
             // create sourcewriter
-            // sw = new
-            // SourceWriterProxy(composer.createSourceWriter(this.context,
-            // printWriter));
+            //sw = new SourceWriterProxy(composer.createSourceWriter(this.context,printWriter));
             sw = composer.createSourceWriter(this.context, printWriter);
             // this.logger.log(TreeLogger.INFO,
             // "SourceWriter intialized from a non-null printwriter.");
@@ -768,34 +764,103 @@ public class ValidatorCreator {
     }
 
     /**
-     * A helper method that writes a hashmap of properties for use in constructing the constraint for use in validation.
+     * A helper method that writes validator initailizer for GWT
+     * @param impl validator class
+     * @param validatorCalss 
      * 
-     * @param propertyMap
+     * @param annotation
      * @param sw
      */
-    private void writeMapToCode(final Map<String, String> propertyMap, final SourceWriter sw) {
+    private void writeValidatorInitializator(final String validatorVariable, final String validatorClassName, final Annotation annotation, final SourceWriter sw) {
 
-        // create empty object, regardless
-        sw.println("HashMap<String,String> propertyMap = new HashMap<String,String>();");
+        if (annotation == null )
+            return; //FIXME throw something - should never happen
+        
+        //initailize validator with anonymous interface implementation
+        sw.println(validatorVariable + ".initialize( new "+ validatorClassName + "." + annotation.annotationType().getSimpleName() + "() {");
+        
+        //get validator annotation methods
+        final Method[] methods = annotation.annotationType().getDeclaredMethods();
 
-        if (propertyMap == null || propertyMap.size() == 0)
-            return;
-
-        for (final String key : propertyMap.keySet()) {
-            // value
-            final String value = propertyMap.get(key);
-
-            // //fix for issue #3 -
-            // http://code.google.com/p/gwt-validation/issues/detail?id=3
-            // if(value != null && value.trim().length() > 0) {
-            // value = value.replaceAll("\\", "\\\\");
-            // }
-
-            // put out propertykey
-            // propertyMap.put(key, value);
-            sw.println("propertyMap.put(\"" + key + "\",\"" + value + "\");");
+        //for each method
+        for (final Method method : methods) {
+            final String methodReturnTypeName = method.getReturnType().getSimpleName();
+            
+            //create (override) method with the same name and return type 
+            sw.println("public " + methodReturnTypeName + " " + method.getName() + "() {");
+            sw.indent();
+            
+            //write annotation value to string
+            final String valueAsString = getAnnotatnionMethodValueAsString(method,annotation);
+            
+            //write result
+            sw.println(methodReturnTypeName + " result = " + valueAsString +";");
+            sw.println("return result;");
+            sw.outdent();
+            
+            //close method
+            sw.println("}");
         }
+        
+        //close initialize
+        sw.println("});");
 
     }
+
+    /** Helper method used to conversion annotation methods values according to type that they return.  
+     * @param method
+     * @param annotation
+     * @return
+     */
+    private String getAnnotatnionMethodValueAsString(final Method method, final Annotation annotation) {
+        //method result
+        String result = "";
+        
+        //get method value
+        final Object value;
+        try {
+            value = method.invoke(annotation);
+        } catch (final Exception e) {
+            throw new RuntimeException("Invoke annotatnion method failed.",e);
+        }
+        
+        //get return type
+        final Class<?> returnType = method.getReturnType();
+        
+        //check if return type is array of primitive wrappers 
+        Class<? extends Object[]> objectArrayType = null;
+        try {
+            objectArrayType = returnType.asSubclass(Object[].class);
+        } catch ( final ClassCastException e) {
+        }
+        
+        //return string representation according to return type (Class and Annotation are unsupported)
+        if( returnType.getName().equals(String[].class.getName()) ){
+            //for arrays of string - escape strings
+            final String[] array = (String[]) value;
+            result = "{";
+            for (final String string : array) {
+                result += "\""+string.replace("\\", "\\\\")+"\",";
+            }
+            result += "}";
+        } else if( objectArrayType != null ){
+            //for arrays of primitive wrappers or Class (Class not supported) 
+            final Object[] array = (Object[]) value;
+            result = "{";
+            for (final Object object : array) {
+                result += object+",";
+            }
+            result += "}";
+        } else if (returnType.getName().equals(String.class.getName() )) {
+            //for strings - escape strings
+            result = "\"" + value.toString().replace("\\", "\\\\") + "\"";
+        } else {
+            //for primitive wrappers or Class (Class is unsupported at the moment)
+            result = value.toString();
+        }
+        
+        return result ;
+    }
+
 
 }
