@@ -635,7 +635,7 @@ public class ValidationMetadataFactory {
 	 * @param inputField
 	 * @return
 	 */
-	private static Method convertFieldToGetter(Class<?> inputClass, Field inputField) {
+	static Method convertFieldToGetter(Class<?> inputClass, Field inputField) {
 		
 		//get field name
 		String name = inputField.getName();
@@ -693,7 +693,7 @@ public class ValidationMetadataFactory {
 	 * @param inputMethod
 	 * @return
 	 */
-	private static Field extrapolateFieldForGetter(Class<?> inputClass, Method inputMethod) {
+	final static Field extrapolateFieldForGetter(Class<?> inputClass, Method inputMethod) {
 		
 		//get field name
 		String name = "";
@@ -733,7 +733,7 @@ public class ValidationMetadataFactory {
 	 * @param inputClass
 	 * @return
 	 */
-	private static HashSet<Field> getAllFields(Class<?> inputClass) {
+	static HashSet<Field> getAllFields(Class<?> inputClass) {
 	
 		//condition to quit recursive search
 		if(inputClass == null || inputClass.equals(Object.class)) return new HashSet<Field>();
@@ -771,7 +771,7 @@ public class ValidationMetadataFactory {
 	 * @param inputClass
 	 * @return
 	 */
-	private static HashSet<Method> getAllMethods(Class<?> inputClass) {
+	final static HashSet<Method> getAllMethods(Class<?> inputClass) {
 		
 		//condition to quit recursive search
 		if(inputClass == null || inputClass.equals(Object.class)) return new HashSet<Method>();

@@ -21,11 +21,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 import java.io.PrintWriter;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.ext.GeneratorContext;
@@ -173,8 +177,30 @@ public class ValidatorCreator {
 				sw.println("}");
 				
 				//get the validation package list for that class
-				ArrayList<ValidationPackage> validationPackageList = ValidationMetadataFactory.getValidatorsForClass(inputClass);
+				
+				boolean isJsr303 = false;
+				for(Field field : ValidationMetadataFactory.getAllFields(inputClass)) {
+					Annotation[] annotations = field.getAnnotations();
+					isJsr303 = isjsr303(annotations);
+					if(isJsr303)
+						break;
+				}
 
+				if(!isJsr303){
+				for(Method method : ValidationMetadataFactory.getAllMethods(inputClass)){
+					Annotation[] annotations = method.getAnnotations();
+					isJsr303 = isjsr303(annotations);
+					if(isJsr303)
+						break;
+				}
+				}
+				List<ValidationPackage> validationPackageList = null;
+				if(!isJsr303){
+					validationPackageList = ValidationMetadataFactory.getValidatorsForClass(inputClass);
+				}
+				else{
+					validationPackageList = ValidationJsr303MetadataFactory.getValidatorsForClass(inputClass);
+				}
 				//do code output for each method
 				for(final ValidationPackage vPack : validationPackageList) {
 
@@ -610,6 +636,19 @@ public class ValidatorCreator {
 		return outputClassName;
 	}
 
+	private boolean isjsr303(Annotation[] annotations) {
+		boolean isJsr303 = false;
+		for (int i = 0; i < annotations.length; i++) {
+			Annotation annotation = annotations[i];
+			String pack = annotation.annotationType().getName();
+			if(pack.startsWith("javax.validation")){
+				isJsr303 = true;
+				break;
+			}
+		}
+		return isJsr303;
+	}
+
 	/**
 	 * Create a source writer for classType + "Validator".
 	 *
@@ -689,7 +728,7 @@ public class ValidatorCreator {
 
 			//fix for issue #3 - http://code.google.com/p/gwt-validation/issues/detail?id=3
 			if(value != null && value.trim().length() > 0) {
-				value = value.replaceAll("\\", "\\\\");
+				value = value.replaceAll("\\\\", "\\\\");
 			}
 			
 			//put out propertykey
