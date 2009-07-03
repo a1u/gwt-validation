@@ -32,7 +32,7 @@ import com.google.gwt.validation.client.interfaces.IConstraint;
  */
 public class MinValidator implements IConstraint<Min> {
 
-	private int minimum;
+	protected int minimum;
 	
 	public void initialize(Min constraintAnnotation) {
 		this.minimum = constraintAnnotation.minimum();
