@@ -33,15 +33,15 @@ import com.google.gwt.validation.client.interfaces.IConstraint;
  * 
  */
 public class SizeValidator implements
-		IConstraint<javax.validation.constraints.Size> {
+		IConstraint<Size> {
 
-	private int minimum;
-	private int maximum;
+	protected int minimum;
+	protected int maximum;
 
 	public void initialize(
-			javax.validation.constraints.Size constraintAnnotation) {
-		this.minimum = constraintAnnotation.min();
-		this.maximum = constraintAnnotation.max();
+			Size constraintAnnotation) {
+		this.minimum = constraintAnnotation.minimum();
+		this.maximum = constraintAnnotation.maximum();
 	}
 
 	public void initialize(Map<String, String> propertyMap) {
@@ -51,9 +51,25 @@ public class SizeValidator implements
 		 * on the annotation !!!!
 		 */
 
-		this.minimum = Integer.parseInt(propertyMap.get("min"));
-		this.maximum = Integer.parseInt(propertyMap.get("max"));
+		this.minimum = Integer.parseInt(getMin(propertyMap));
+		this.maximum = Integer.parseInt(getMax(propertyMap));
 
+	}
+
+	private String getMin(Map<String, String> propertyMap) {
+		String m = propertyMap.get("minimum");
+		if(m==null){
+			m = propertyMap.get("min");
+		}
+		return m;
+	}
+	
+	private String getMax(Map<String, String> propertyMap) {
+		String m = propertyMap.get("maximum");
+		if(m==null){
+			m = propertyMap.get("max");
+		}
+		return m;
 	}
 
 	public boolean isValid(Object value) {
