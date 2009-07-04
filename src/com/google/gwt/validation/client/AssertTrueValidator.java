@@ -20,8 +20,7 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import java.util.Map;
-
+import com.google.gwt.validation.client.common.AssertTrueValidatorAbstract;
 import com.google.gwt.validation.client.interfaces.IConstraint;
 
 /**
@@ -30,28 +29,11 @@ import com.google.gwt.validation.client.interfaces.IConstraint;
  * @author chris
  *
  */
-public class AssertTrueValidator implements IConstraint<AssertTrue> {
+public class AssertTrueValidator extends AssertTrueValidatorAbstract implements IConstraint<AssertTrue> {
 
-    public boolean isValid(Object value) {
-        if (value == null) return true;
-        
-        boolean isvalid = false;
-        
-        try {
-        	isvalid = (Boolean)value;
-        } catch (Exception ex) {
-        	//isn't boolean / can't be casted as such
-        }
-        
-        return isvalid;
-    }
 
     public void initialize(AssertTrue parameters) {
 
     }
-
-	public void initialize(Map<String, String> propertyMap) {
-		
-	}
 
 }

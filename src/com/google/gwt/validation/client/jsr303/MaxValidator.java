@@ -22,13 +22,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import javax.validation.constraints.Max;
 
+import com.google.gwt.validation.client.common.MaxValidatorAbstract;
+import com.google.gwt.validation.client.interfaces.IConstraint;
+
 /**
  * Implements the <code>@Max</code> annotation.
  * 
  * @author chris
  *
  */
-public class MaxValidator extends com.google.gwt.validation.client.MaxValidator {
+public class MaxValidator extends MaxValidatorAbstract implements IConstraint<Max> {
 
 
     public void initialize(Max parameters) {

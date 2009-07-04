@@ -22,13 +22,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import javax.validation.constraints.Pattern;
 
+import com.google.gwt.validation.client.common.PatternValidatorAbstract;
+import com.google.gwt.validation.client.interfaces.IConstraint;
+
 /**
  * Implements the <code>@Pattern</code> annotation.
  * 
  * @author chris
  *
  */
-public class PatternValidator extends com.google.gwt.validation.client.PatternValidator {
+public class PatternValidator extends PatternValidatorAbstract implements IConstraint<Pattern> {
 
 
     public void initialize(Pattern parameters) {
