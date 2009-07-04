@@ -22,13 +22,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import javax.validation.constraints.Past;
 
+import com.google.gwt.validation.client.common.PastValidatorAbstract;
+import com.google.gwt.validation.client.interfaces.IConstraint;
+
 /**
  * Validator that implements the <code>@Past</code> annotation
  * 
  * @author chris
  *
  */
-public class PastValidator extends com.google.gwt.validation.client.PastValidator {
+public class PastValidator extends PastValidatorAbstract implements IConstraint<Past> {
 
 
     public void initialize(Past parameters) {

@@ -2,6 +2,9 @@ package com.google.gwt.validation.client.jsr303;
 
 import javax.validation.constraints.NotNull;
 
+import com.google.gwt.validation.client.common.NotNullValidatorAbstract;
+import com.google.gwt.validation.client.interfaces.IConstraint;
+
 /*
 GWT-Validation Framework - Annotation based validation for the GWT Framework
 
@@ -29,7 +32,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  * @author chris
  *
  */
-public class NotNullValidator extends com.google.gwt.validation.client.NotNullValidator {
+public class NotNullValidator extends NotNullValidatorAbstract implements IConstraint<NotNull> {
 
     public void initialize(NotNull parameters) {
     	

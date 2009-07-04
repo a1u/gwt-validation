@@ -18,13 +18,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import javax.validation.constraints.AssertFalse;
 
+import com.google.gwt.validation.client.common.AssertFalseValidatorAbstract;
+import com.google.gwt.validation.client.interfaces.IConstraint;
+
 /**
  * Validator that implements the <code>@AssertFalse</code> annotation
  * 
  * @author chris
  *
  */
-public class AssertFalseValidator extends com.google.gwt.validation.client.AssertFalseValidator {
+public class AssertFalseValidator extends AssertFalseValidatorAbstract implements IConstraint<AssertFalse> {
 
 
     public void initialize(AssertFalse parameters) {

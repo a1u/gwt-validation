@@ -22,13 +22,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import javax.validation.constraints.Future;
 
+import com.google.gwt.validation.client.common.FutureValidatorAbstract;
+import com.google.gwt.validation.client.interfaces.IConstraint;
+
 /**
  * Validator that implements the <code>@Future</code> annotation
  * 
  * @author chris
  *
  */
-public class FutureValidator extends com.google.gwt.validation.client.FutureValidator {
+public class FutureValidator extends FutureValidatorAbstract implements IConstraint<Future> {
 
 
     public void initialize(Future parameters) {

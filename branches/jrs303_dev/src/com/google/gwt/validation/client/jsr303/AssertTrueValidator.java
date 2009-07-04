@@ -22,13 +22,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import javax.validation.constraints.AssertTrue;
 
+import com.google.gwt.validation.client.common.AssertTrueValidatorAbstract;
+import com.google.gwt.validation.client.interfaces.IConstraint;
+
 /**
  * Validator that implements the <code>@AssertTrue</code> annotation
  * 
  * @author chris
  *
  */
-public class AssertTrueValidator extends com.google.gwt.validation.client.AssertTrueValidator {
+public class AssertTrueValidator extends AssertTrueValidatorAbstract implements IConstraint<AssertTrue>{
 
 
     public void initialize(AssertTrue parameters) {

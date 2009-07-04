@@ -327,8 +327,7 @@ public class ValidationJsr303MetadataFactory {
 							String validImpl = validatorsImpl.getProperty(annotationName);
 							if (validImpl!=null) {
 								try {
-									//validatorClass = Class.forName(validImpl);
-									validatorClass = com.google.gwt.validation.client.jsr303.SizeValidator.class;
+									validatorClass = Class.forName(validImpl);
 								} catch (Exception e) {
 								}
 							}
@@ -433,9 +432,6 @@ public class ValidationJsr303MetadataFactory {
 						if (constraint != null) {
 
 							// initialize constraint with given annotation
-							System.err.println(constraint.getClass().getName());
-							System.err.println(annotation.getClass().getName());
-							
 							constraint.initialize(annotation);
 
 							// build the validation package
