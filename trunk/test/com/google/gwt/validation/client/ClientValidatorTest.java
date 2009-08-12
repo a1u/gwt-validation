@@ -35,6 +35,7 @@ import com.google.gwt.validation.client.interfaces.IValidator;
 import com.google.gwt.validation.client.test.AnnotatedClass;
 import com.google.gwt.validation.client.test.AnnotatedSuperClass;
 import com.google.gwt.validation.client.test.CyclicTestParent;
+import com.google.gwt.validation.client.test.EscapeTestModel;
 import com.google.gwt.validation.client.test.GroupSequenceClassTest;
 import com.google.gwt.validation.client.test.ObjectGraphTest;
 import com.google.gwt.validation.client.test.RecursiveValidationTest;
@@ -418,4 +419,31 @@ public class ClientValidatorTest extends GWTTestCase{
         assertTrue("All paths should be equals.", patternsPaths.equals(testablePaths));
                 
     }
+	
+	/**
+	 * Tests that the generated validator handles special characters and properly
+	 * escapes string literals.
+	 * 
+	 * @author nosnevelxela@gmail.com (Alex Levenson)
+	 */
+	
+	@Test
+	public void testProperEscapingInGenratedValidator() {
+	  EscapeTestModel test = new EscapeTestModel();
+	  IValidator<EscapeTestModel> validator = GWT.create(EscapeTestModel.class);
+	  
+	  Set<InvalidConstraint<EscapeTestModel>> icSet = validator.validateProperty(test, "height");
+	  assertEquals(1,icSet.size());
+	  assertEquals(icSet.iterator().next().getMessage(),"Must be at least 48\" to ride, and a \u2603 as well.");
+	  
+	  icSet = validator.validateProperty(test, "hasWhiteSpace");
+	  assertEquals(1,icSet.size());
+	  
+	  icSet = validator.validateProperty(test, "snowManAndWhiteSpace");
+	  assertEquals(1,icSet.size());
+	  
+	  test.setSnowManAndWhiteSpace("i am a \u2603 now!");
+	  icSet = validator.validateProperty(test, "snowManAndWhiteSpace");
+      assertTrue(icSet.isEmpty());    
+	}
 }
