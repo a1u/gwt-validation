@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
@@ -133,11 +134,11 @@ public class ValidatorCreator {
 					//for each group add to the thing
 					for(final String g : groupOrder) {
 						//add to a group
-						sw.println("groups.add(\"" + g + "\");");
+						sw.println("groups.add(\"" + Generator.escape(g) + "\");");
 					}
 					
 					//add groups to ordering map
-					sw.println("orderingMap.put(\"" + group + "\",groups);");
+					sw.println("orderingMap.put(\"" + Generator.escape(group) + "\",groups);");
 					
 					//close scope
 					sw.outdent();
@@ -186,7 +187,7 @@ public class ValidatorCreator {
 
 					//list all groups
 					for(final String group : vPack.getGroups()) {
-						ifTest += " || groups.contains(\"" + group + "\")";
+						ifTest += " || groups.contains(\"" + Generator.escape(group) + "\")";
 					}
 					//close if test
 					ifTest += ")";
@@ -196,7 +197,7 @@ public class ValidatorCreator {
 					
 					//do the same for processed groups
 					for(final String group : vPack.getGroups()) {
-						ifTest += "!processedGroups.contains(\"" + group + "\") && ";
+						ifTest += "!processedGroups.contains(\"" + Generator.escape(group) + "\") && ";
 					}
 					//close if test
 					ifTest += "))";
@@ -222,7 +223,7 @@ public class ValidatorCreator {
 					sw.indent();
 
 					//create invalid constraint
-					sw.println("InvalidConstraint<" + fullClass + "> ivc = new InvalidConstraint<" + fullClass + ">(\"" + vPack.getItemName() + "\",\"" + vPack.getMessage() + "\");");
+					sw.println("InvalidConstraint<" + fullClass + "> ivc = new InvalidConstraint<" + fullClass + ">(\"" + vPack.getItemName() + "\",\"" + Generator.escape(vPack.getMessage()) + "\");");
 
 					//add object
 					sw.println("ivc.setInvalidObject(object);");
@@ -256,7 +257,7 @@ public class ValidatorCreator {
 					String ifTest = "(propertyName == null || propertyName.equals(\"" + vPack.getItemName() + "\")) && (groups.size() == 0";
 
 					for(final String group : vPack.getGroups()) {
-						ifTest += " || groups.contains(\"" + group + "\")";
+						ifTest += " || groups.contains(\"" + Generator.escape(group) + "\")";
 					}
 					//close if test
 					ifTest += ")";
@@ -266,7 +267,7 @@ public class ValidatorCreator {
 					
 					//do the same for processed groups
 					for(final String group : vPack.getGroups()) {
-						ifTest += "!processedGroups.contains(\"" + group + "\") && ";
+						ifTest += "!processedGroups.contains(\"" + Generator.escape(group) + "\") && ";
 					}
 					//close if test
 					ifTest += "))";
@@ -292,7 +293,7 @@ public class ValidatorCreator {
 					sw.indent();
 					
 					//create invalid constraint
-					sw.println("InvalidConstraint<" + fullClass + "> ivc = new InvalidConstraint<" + fullClass + ">(\"" + vPack.getItemName() + "\",\"" + vPack.getMessage() + "\");");
+					sw.println("InvalidConstraint<" + fullClass + "> ivc = new InvalidConstraint<" + fullClass + ">(\"" + vPack.getItemName() + "\",\"" + Generator.escape(vPack.getMessage()) + "\");");
 
 					//add object
 					sw.println("ivc.setInvalidObject(object);");
@@ -686,17 +687,11 @@ public class ValidatorCreator {
 		for(final String key : propertyMap.keySet()) {
 			//value
 			String value = propertyMap.get(key);
-
-			//fix for issue #3 - http://code.google.com/p/gwt-validation/issues/detail?id=3
-			if(value != null && value.trim().length() > 0) {
-				value = value.replaceAll("\\", "\\\\");
-			}
 			
 			//put out propertykey
 			//propertyMap.put(key, value);
-			sw.println("propertyMap.put(\"" + key + "\",\"" + value + "\");");
+			sw.println("propertyMap.put(\"" + Generator.escape(key) + "\",\"" + Generator.escape(value) + "\");");
 		}
-
 
 	}
 
