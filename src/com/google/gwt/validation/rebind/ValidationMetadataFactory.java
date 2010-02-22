@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -29,10 +30,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import javax.validation.Valid;
+
 import com.google.gwt.validation.client.ConstraintValidator;
 import com.google.gwt.validation.client.GroupSequence;
 import com.google.gwt.validation.client.GroupSequences;
-import com.google.gwt.validation.client.Valid;
 import com.google.gwt.validation.client.interfaces.IConstraint;
 
 public class ValidationMetadataFactory {
@@ -533,7 +535,7 @@ public class ValidationMetadataFactory {
 			if(fieldGetter != null) {
 				
 			    //find a @Valid annotation on the given annotation type (for the annotation on the field)!
-				Annotation checkForValid = field.getAnnotation(Valid.class);
+				Annotation checkForValid = checkForValidAnnotation(field);
 			
 				//if the annotation is not null, add the annotation on field to the annotation mapping for the given method name
 				if(checkForValid != null) {
@@ -559,7 +561,7 @@ public class ValidationMetadataFactory {
 			if(!methodOrder.contains(method) && method.getParameterTypes().length == 0 && !Modifier.isPrivate(methodModifiers) && !Modifier.isProtected(methodModifiers)) {
 				
 			    //find a @Valid annotation on the given annotation type (for the annotation on the field)!
-				Annotation checkForValid = method.getAnnotation(Valid.class);
+				Annotation checkForValid = checkForValidAnnotation(method);
 			
 				//if the annotation is not null, add the annotation on field to the annotation mapping for the given method name
 				if(checkForValid != null) {
@@ -587,9 +589,9 @@ public class ValidationMetadataFactory {
 				String[] groups = new String[]{};
 				
 				//get valid annotation
-				Annotation annotation = method.getAnnotation(Valid.class);
+				Annotation annotation = checkForValidAnnotation(method);
 				if(annotation == null) {
-					annotation = field.getAnnotation(Valid.class);
+					annotation = checkForValidAnnotation(field);
 				}
 				
 				if(annotation != null) {
@@ -625,6 +627,21 @@ public class ValidationMetadataFactory {
 		
 		//return this list of annoated packages
 		return validAnnotationPackageList;
+	}
+
+	/**
+	 * Checks accessible object if it contains Valid annotation.
+	 * 
+	 * @param accessible
+	 * @return If null, there is no such annotation.
+	 */
+	private static Annotation checkForValidAnnotation(AccessibleObject accessible) {
+		Annotation valid = accessible.getAnnotation(Valid.class);
+		if(valid != null) {
+			return valid;
+		}
+		valid = accessible.getAnnotation(com.google.gwt.validation.client.Valid.class);
+		return valid;
 	}
 	
 	
@@ -693,7 +710,7 @@ public class ValidationMetadataFactory {
 	 * @param inputMethod
 	 * @return
 	 */
-	static Field extrapolateFieldForGetter(Class<?> inputClass, Method inputMethod) {
+	final static Field extrapolateFieldForGetter(Class<?> inputClass, Method inputMethod) {
 		
 		//get field name
 		String name = "";
@@ -771,7 +788,7 @@ public class ValidationMetadataFactory {
 	 * @param inputClass
 	 * @return
 	 */
-	static HashSet<Method> getAllMethods(Class<?> inputClass) {
+	final static HashSet<Method> getAllMethods(Class<?> inputClass) {
 		
 		//condition to quit recursive search
 		if(inputClass == null || inputClass.equals(Object.class)) return new HashSet<Method>();

@@ -29,10 +29,14 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import com.google.gwt.core.ext.Generator;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
@@ -40,6 +44,11 @@ import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
+import com.google.gwt.validation.client.AbstractValidator;
+import com.google.gwt.validation.client.InvalidConstraint;
+import com.google.gwt.validation.client.ValidationConfiguration;
+import com.google.gwt.validation.client.interfaces.IInternalValidator;
+import com.google.gwt.validation.client.interfaces.IValidator;
 
 /**
  * Class that creates the validator for the given input class
@@ -49,6 +58,7 @@ import com.google.gwt.user.rebind.SourceWriter;
  */
 public class ValidatorCreator {
 
+	private static final String PROPERTY_MAP_VAR = "propertyMap";
 	private TreeLogger logger;
 	private GeneratorContext context;
 	private String typeName;
@@ -80,7 +90,101 @@ public class ValidatorCreator {
 
 	}
 
+	private void generateValidationCheck(SourceWriter sw, List<ValidationPackage> validationPackageList, final String fullClass, boolean propertyMethodOrWholeObject) {
+		for(final ValidationPackage vPack : validationPackageList) {
 
+			//get implementing class name
+			final String impl = vPack.getImplementingConstraint().getClass().getName();
+
+			//create if string for the if block (includes propertyName and groups)
+			String ifTest = "(propertyName == null || propertyName.equals(\"" + vPack.getItemName() + "\")) && (groups.size() == 0";
+
+			//list all groups
+			for(final String group : vPack.getGroups()) {
+				ifTest += " || groups.contains(\"" + group + "\")";
+			}
+			//close if test
+			ifTest += ")";
+			
+			//processed groups
+			ifTest += " && (processedGroups.size() == 0 || (";
+			
+			//do the same for processed groups
+			for(final String group : vPack.getGroups()) {
+				ifTest += "!processedGroups.contains(\"" + group + "\") && ";
+			}
+			//close if test
+			ifTest += "))";
+			//replace ' && ))' with '))' because I can't think of a better
+			//way to not have an && at the end of the series.
+			ifTest = ifTest.replace(" && ))", "))");
+			
+			//create if block (used to break up scope and to test for propertyName / groups)
+			sw.println("if(" + ifTest + ") {");
+			sw.indent();
+
+			//create property map output
+			this.writeMapToCode(vPack.getValidationPropertyMap(), sw);
+
+			//create validator instace from implementing validator
+			sw.println(impl + " validator = new " + impl + "();");
+
+			//initialize validator with property map
+			sw.println("validator.initialize(propertyMap);");
+
+			// either it is whole object or a subobject accessible through object's method
+			String targetObject = (!propertyMethodOrWholeObject ? "object" : "object." + vPack.getMethod().getName() + "()");
+			
+			//do object method in if test
+			sw.println("if(!validator.isValid(" + targetObject + ")) {");
+			sw.indent();
+
+			//create invalid constraint
+			String message = vPack.getMessage();
+			generateConstraintMessage(sw, message, vPack);
+			sw.println(InvalidConstraint.class.getSimpleName() + "<" + fullClass + "> ivc = new " + InvalidConstraint.class.getSimpleName() + "<" + fullClass + ">(\"" + vPack.getItemName() + "\", message);");
+
+			//add object
+			sw.println("ivc.setInvalidObject(object);");
+			
+			//add value
+			sw.println("ivc.setValue(" + targetObject + ");");
+			
+			//add to iCSet
+			sw.println("iCSet.add(ivc);");
+
+			//end if test for validator
+			sw.outdent();
+			sw.println("}");
+
+			//end if block
+			sw.outdent();
+			sw.println("}");
+
+		}
+	}
+
+	private void generateConstraintMessage(SourceWriter sw, String messageTemplate, ValidationPackage vPack) {
+		Matcher m = Pattern.compile("\\{([^\\}]+)\\}").matcher(messageTemplate);
+		if(m.matches()) {
+			String key = m.group(1);
+			key = transformDotNotationToMethodNotation(key);
+			sw.println("javax.validation.ValidationMessages i18n = (javax.validation.ValidationMessages) GWT.create(javax.validation.ValidationMessages.class);");
+			sw.println("String message = i18n." + key + "();");
+			sw.println("message = " + ValidationConfiguration.class.getName() + ".getMessageInterpolator().interpolate(message, " + PROPERTY_MAP_VAR + ");");
+		} else {
+			sw.println("String message = " + PROPERTY_MAP_VAR + ".get(\"message\");");
+		}
+	}
+	
+	private String transformDotNotationToMethodNotation(String key) {
+		return key.replaceAll("\\.", "_");
+	}
+	
+	private void generateValidatorExceptionHandling(SourceWriter sw, String exceptionVariable) {
+		sw.println("logError(" + exceptionVariable + ");");
+	}
+	
 	/**
 	 * Uses a sourcecode writer to write the implementation of the
 	 * class's validator that was indicated at construction.  Returns
@@ -138,11 +242,11 @@ public class ValidatorCreator {
 					//for each group add to the thing
 					for(final String g : groupOrder) {
 						//add to a group
-						sw.println("groups.add(\"" + Generator.escape(g) + "\");");
+						sw.println("groups.add(\"" + g + "\");");
 					}
 					
 					//add groups to ordering map
-					sw.println("orderingMap.put(\"" + Generator.escape(group) + "\",groups);");
+					sw.println("orderingMap.put(\"" + group + "\",groups);");
 					
 					//close scope
 					sw.outdent();
@@ -157,7 +261,7 @@ public class ValidatorCreator {
 				sw.println("}");
 				
 				//write "Set<InvalidConstraint> performValidation(T object, String propertyName, String... groups);" method
-				sw.println("public Set<InvalidConstraint<" + fullClass + ">> performValidation(" + fullClass + " object, String propertyName, ArrayList<String> groups, HashSet<String> processedGroups, HashSet<String> processedObjects) {" );
+				sw.println("public Set<InvalidConstraint<" + fullClass + ">> performValidation(" + fullClass + " object, String propertyName, List<String> groups, Set<String> processedGroups, Set<String> processedObjects) {" );
 				sw.indent();
 				//create empty hashset of invalid constraints
 				sw.println("HashSet<InvalidConstraint<" + fullClass + ">> iCSet = new HashSet<InvalidConstraint<" + fullClass + ">>();");
@@ -178,7 +282,7 @@ public class ValidatorCreator {
 				sw.println("}");
 				
 				//get the validation package list for that class
-
+				
 				boolean isJsr303 = false;
 				for(Field field : ValidationMetadataFactory.getAllFields(inputClass)) {
 					Annotation[] annotations = field.getAnnotations();
@@ -203,142 +307,13 @@ public class ValidatorCreator {
 					validationPackageList = ValidationJsr303MetadataFactory.getValidatorsForClass(inputClass);
 				}
 				//do code output for each method
-				for(final ValidationPackage vPack : validationPackageList) {
-
-					//get implementing class name
-					final String impl = vPack.getImplementingConstraint().getClass().getName();
-
-					//create if string for the if block (includes propertyName and groups)
-					String ifTest = "(propertyName == null || propertyName.equals(\"" + vPack.getItemName() + "\")) && (groups.size() == 0";
-
-					//list all groups
-					for(final String group : vPack.getGroups()) {
-						ifTest += " || groups.contains(\"" + Generator.escape(group) + "\")";
-					}
-					//close if test
-					ifTest += ")";
-					
-					//processed groups
-					ifTest += " && (processedGroups.size() == 0 || (";
-					
-					//do the same for processed groups
-					for(final String group : vPack.getGroups()) {
-						ifTest += "!processedGroups.contains(\"" + Generator.escape(group) + "\") && ";
-					}
-					//close if test
-					ifTest += "))";
-					//replace ' && ))' with '))' because I can't think of a better
-					//way to not have an && at the end of the series.
-					ifTest = ifTest.replace(" && ))", "))");
-					
-					//create if block (used to break up scope and to test for propertyName / groups)
-					sw.println("if(" + ifTest + ") {");
-					sw.indent();
-
-					//create property map output
-					this.writeMapToCode(vPack.getValidationPropertyMap(), sw);
-
-					//create validator instace from implementing validator
-					sw.println(impl + " validator = new " + impl + "();");
-
-					//initialize validator with property map
-					sw.println("validator.initialize(propertyMap);");
-
-					//do object method in if test
-					sw.println("if(!validator.isValid(object." + vPack.getMethod().getName() + "())) {");
-					sw.indent();
-
-					//create invalid constraint
-					sw.println("InvalidConstraint<" + fullClass + "> ivc = new InvalidConstraint<" + fullClass + ">(\"" + vPack.getItemName() + "\",\"" + Generator.escape(vPack.getMessage()) + "\");");
-
-					//add object
-					sw.println("ivc.setInvalidObject(object);");
-					
-					//add value
-					sw.println("ivc.setValue(object." + vPack.getMethod().getName() + "());");
-					
-					//add to iCSet
-					sw.println("iCSet.add(ivc);");
-
-					//end if test for validator
-					sw.outdent();
-					sw.println("}");
-
-					//end if block
-					sw.outdent();
-					sw.println("}");
-
-				}
-
+				generateValidationCheck(sw, validationPackageList, fullClass, true);
+				
 				//get list of packages for class level
 				validationPackageList = ValidationMetadataFactory.getClassLevelValidatorsForClass(inputClass);
 
 				//do code output for each class level validator
-				for(final ValidationPackage vPack : validationPackageList) {
-
-					//get implementing class name
-					final String impl = vPack.getImplementingConstraint().getClass().getName();
-
-					//create if string for the if block (includes propertyName and groups)
-					String ifTest = "(propertyName == null || propertyName.equals(\"" + vPack.getItemName() + "\")) && (groups.size() == 0";
-
-					for(final String group : vPack.getGroups()) {
-						ifTest += " || groups.contains(\"" + Generator.escape(group) + "\")";
-					}
-					//close if test
-					ifTest += ")";
-					
-					//processed groups
-					ifTest += " && (processedGroups.size() == 0 || (";
-					
-					//do the same for processed groups
-					for(final String group : vPack.getGroups()) {
-						ifTest += "!processedGroups.contains(\"" + Generator.escape(group) + "\") && ";
-					}
-					//close if test
-					ifTest += "))";
-					//replace ' && ))' with '))' because I can't think of a better
-					//way to not have an && at the end of the series.
-					ifTest = ifTest.replace(" && ))", "))");
-
-					//create if block (used to break up scope and to test for propertyName / groups)
-					sw.println("if(" + ifTest + ") {");
-					sw.indent();
-
-					//create property map output
-					this.writeMapToCode(vPack.getValidationPropertyMap(), sw);
-
-					//create validator instace from implementing validator
-					sw.println(impl + " validator = new " + impl + "();");
-
-					//initialize validator with property map
-					sw.println("validator.initialize(propertyMap);");
-
-					//do object method in if test
-					sw.println("if(!validator.isValid(object)) {");
-					sw.indent();
-					
-					//create invalid constraint
-					sw.println("InvalidConstraint<" + fullClass + "> ivc = new InvalidConstraint<" + fullClass + ">(\"" + vPack.getItemName() + "\",\"" + Generator.escape(vPack.getMessage()) + "\");");
-
-					//add object
-					sw.println("ivc.setInvalidObject(object);");
-					
-					//add value
-					sw.println("ivc.setValue(object);");
-					
-					//add to iCSet
-					sw.println("iCSet.add(ivc);");
-
-					//end if test for validator
-					sw.outdent();
-					sw.println("}");
-
-					//end if block
-					sw.outdent();
-					sw.println("}");
-				}
-
+				generateValidationCheck(sw, validationPackageList, fullClass, false);				
 
 				//get @Valid package list
 				final ArrayList<ValidationPackage> vpValidList = ValidationMetadataFactory.getValidAnnotedPackages(inputClass);
@@ -373,7 +348,7 @@ public class ValidatorCreator {
 									sw.indent();
 
 									//GWT.create() validator
-									sw.println("AbstractValidator<" + typeName + "> subValidator = GWT.create(" + typeName + ".class);");
+									sw.println(IInternalValidator.class.getSimpleName() + "<" + typeName + "> subValidator = GWT.create(" + typeName + ".class);");
 
 									//get the object array
 									sw.println("" + typeName + "[] objectArray = object." + vPack.getMethod().getName() + "();");
@@ -410,6 +385,7 @@ public class ValidatorCreator {
 									sw.println("} catch (Exception ex) {");
 									sw.indent();
 									sw.println("//error handling goes here");
+									generateValidatorExceptionHandling(sw, "ex");
 									sw.outdent();
 									sw.println("}");
 									
@@ -437,7 +413,7 @@ public class ValidatorCreator {
 										sw.indent();
 
 										//GWT.create() validator
-										sw.println("AbstractValidator<" + typeName + "> subValidator = GWT.create(" + typeName + ".class);");
+										sw.println(IInternalValidator.class.getSimpleName() + "<" + typeName + "> subValidator = GWT.create(" + typeName + ".class);");
 
 										//get object instance
 										sw.println("Collection<" + typeName + "> objectCollection = (Collection<" + typeName + ">) object." + vPack.getMethod().getName() + "();");
@@ -479,6 +455,7 @@ public class ValidatorCreator {
 										sw.println("} catch (Exception ex) {");
 										sw.indent();
 										sw.println("//error handling goes here");
+										generateValidatorExceptionHandling(sw, "ex");
 										sw.outdent();
 										sw.println("}");
 
@@ -512,7 +489,7 @@ public class ValidatorCreator {
 										sw.indent();
 
 										//GWT.create() validator
-										sw.println("AbstractValidator<" + typeName + "> subValidator = GWT.create(" + typeName + ".class);");
+										sw.println(IInternalValidator.class.getSimpleName() + "<" + typeName + "> subValidator = GWT.create(" + typeName + ".class);");
 
 										sw.println("Map<" + keyTypeName + "," + typeName + "> objectMap = (Map<" + keyTypeName + "," + typeName + ">) object." + vPack.getMethod().getName() + "();");
 
@@ -548,6 +525,7 @@ public class ValidatorCreator {
 										sw.println("} catch (Exception ex) {");
 										sw.indent();
 										sw.println("//error handling goes here");
+										generateValidatorExceptionHandling(sw, "ex");										
 										sw.outdent();
 										sw.println("}");
 
@@ -571,7 +549,7 @@ public class ValidatorCreator {
 								final String typeName = returnType.getCanonicalName();
 
 								//GWT.create() validator
-								sw.println("AbstractValidator<" + typeName + "> subValidator = GWT.create(" + typeName + ".class);");
+								sw.println(IInternalValidator.class.getSimpleName() + "<" + typeName + "> subValidator = GWT.create(" + typeName + ".class);");
 
 								//get object
 								sw.println("" + typeName + " innerObject = object." + vPack.getMethod().getName() + "();");
@@ -598,6 +576,7 @@ public class ValidatorCreator {
 								sw.println("} catch (Exception ex) {");
 								sw.indent();
 								sw.println("//error handling goes here");
+								generateValidatorExceptionHandling(sw, "ex");
 								sw.outdent();
 								sw.println("}");
 							}
@@ -669,19 +648,20 @@ public class ValidatorCreator {
 		final ClassSourceFileComposerFactory composer = new ClassSourceFileComposerFactory(packageName, simpleName);
 
 		//add the abstract validator method
-		composer.setSuperclass("com.google.gwt.validation.client.AbstractValidator<" + classType.getSimpleSourceName() + ">");
+		composer.setSuperclass(AbstractValidator.class.getCanonicalName() + "<" + classType.getSimpleSourceName() + ">");
 
 		//add imports (other classes will be referenced by FULL class name)
-		composer.addImport("java.util.HashSet");
-		composer.addImport("java.util.HashMap");
-		composer.addImport("java.util.Set");
-		composer.addImport("java.util.Map");
-		composer.addImport("java.util.Collection");
-		composer.addImport("java.util.ArrayList");
-		composer.addImport("com.google.gwt.validation.client.AbstractValidator");
-		composer.addImport("com.google.gwt.validation.client.InvalidConstraint");
-		composer.addImport("com.google.gwt.validation.client.interfaces.IValidator");
-		composer.addImport("com.google.gwt.core.client.GWT");
+		composer.addImport(List.class.getCanonicalName());
+		composer.addImport(HashSet.class.getCanonicalName());
+		composer.addImport(HashMap.class.getCanonicalName());
+		composer.addImport(Set.class.getCanonicalName());
+		composer.addImport(Map.class.getCanonicalName());
+		composer.addImport(Collection.class.getCanonicalName());
+		composer.addImport(ArrayList.class.getCanonicalName());
+		composer.addImport(InvalidConstraint.class.getCanonicalName());
+		composer.addImport(IValidator.class.getCanonicalName());
+		composer.addImport(IInternalValidator.class.getCanonicalName());
+		composer.addImport(GWT.class.getCanonicalName());
 
 		//create print writer for the given source, if the print writer is null it either indicates
 		//a problem with the filesystem or a that the class had already been created and does not
@@ -719,7 +699,7 @@ public class ValidatorCreator {
 	private void writeMapToCode(final Map<String, String> propertyMap, final SourceWriter sw) {
 
 		//create empty object, regardless
-		sw.println("HashMap<String,String> propertyMap = new HashMap<String,String>();");
+		sw.println("HashMap<String,String> " + PROPERTY_MAP_VAR + " = new HashMap<String,String>();");
 
 		if(propertyMap == null || propertyMap.size() == 0) return;
 
@@ -734,7 +714,7 @@ public class ValidatorCreator {
 			
 			//put out propertykey
 			//propertyMap.put(key, value);
-			sw.println("propertyMap.put(\"" + Generator.escape(key) + "\",\"" + Generator.escape(value) + "\");");
+			sw.println(PROPERTY_MAP_VAR + ".put(\"" + key + "\",\"" + value + "\");");
 		}
 
 

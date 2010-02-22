@@ -26,7 +26,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.validation.client.interfaces.IValidator;
+import com.google.gwt.validation.client.interfaces.IInternalValidator;
 
 /**
  * Wrapper for IValidator that contains utility methods for validation
@@ -35,7 +37,7 @@ import com.google.gwt.validation.client.interfaces.IValidator;
  *
  * @param <IValidatable> the validatable class to validate
  */
-public abstract class AbstractValidator<T> implements IValidator<T> {
+public abstract class AbstractValidator<T> implements IValidator<T>, IInternalValidator<T> {
 	
 	/**
 	 * Gets the group sequence mapping from the implementing class
@@ -44,18 +46,6 @@ public abstract class AbstractValidator<T> implements IValidator<T> {
 	 * @return
 	 */
 	protected abstract HashMap<String, ArrayList<String>> getGroupSequenceMapping(Class<?> inputClass);
-	
-	/**
-	 * Actual validation engine class that performs validation internally
-	 * 
-	 * @param object
-	 * @param propertyName
-	 * @param groups
-	 * @param processedGroups
-	 * @param processedObjects
-	 * @return
-	 */
-	public abstract Set<InvalidConstraint<T>> performValidation(T object, String propertyName, ArrayList<String> groups, HashSet<String> processedGroups, HashSet<String> processedObjects);
 	
 	public Set<InvalidConstraint<T>> validate(T object, String... groups) {
 		//call validate property with null property
@@ -282,4 +272,7 @@ public abstract class AbstractValidator<T> implements IValidator<T> {
 		return icSet;
 	}
 	
+	protected void logError(Throwable ex) {
+		GWT.log("Error while checking constraint", ex);
+	}
 }
