@@ -435,7 +435,7 @@ public class ValidationJsr303MetadataFactory {
 							constraint.initialize(annotation);
 
 							// build the validation package
-							String[] groups2 = new String[] {};
+							String[] groups2 = new String[groups.length];
 							for (int i = 0; i < groups.length; i++) {
 								Class class1 = groups[i];
 								groups2[i] = class1.getName();
