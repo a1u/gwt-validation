@@ -10,7 +10,7 @@ public abstract class MinValidatorAbstract {
 		/*
 		 *	Note that the key is the same as the method name on the constraint 
 		 */		
-		this.minimum = Integer.parseInt(propertyMap.get("minimum"));		
+		this.minimum = Integer.parseInt(propertyMap.get("value"));		
 	}
 
 	public boolean isValid(Object value) {
