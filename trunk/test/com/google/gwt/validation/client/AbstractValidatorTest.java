@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.Test;
@@ -74,8 +74,8 @@ public class AbstractValidatorTest extends GWTTestCase {
 			@Override
 			public Set<InvalidConstraint<IValidatable>> performValidation(
 					IValidatable object, String propertyName, 
-					ArrayList<String> groups, HashSet<String> processedGroups,
-					HashSet<String> processedObjects) {
+					List<String> groups, Set<String> processedGroups,
+					Set<String> processedObjects) {
 				return null;
 			}
 			
@@ -122,8 +122,8 @@ public class AbstractValidatorTest extends GWTTestCase {
 			@Override
 			public Set<InvalidConstraint<IValidatable>> performValidation(
 					IValidatable object, String propertyName, 
-					ArrayList<String> groups, HashSet<String> processedGroups,
-					HashSet<String> processedObjects) {
+					List<String> groups, Set<String> processedGroups,
+					Set<String> processedObjects) {
 				return null;
 			}			
 			
