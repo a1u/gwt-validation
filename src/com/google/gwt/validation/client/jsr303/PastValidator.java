@@ -1,4 +1,4 @@
-package com.google.gwt.validation.client;
+package com.google.gwt.validation.client.jsr303;
 
 /*
 GWT-Validation Framework - Annotation based validation for the GWT Framework
@@ -20,19 +20,23 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import com.google.gwt.validation.client.common.FutureValidatorAbstract;
+import javax.validation.constraints.Past;
+
+import com.google.gwt.validation.client.common.PastValidatorAbstract;
 import com.google.gwt.validation.client.interfaces.IConstraint;
 
 /**
- * Validator that implements the <code>@Future</code> annotation
+ * Validator that implements the <code>@Past</code> annotation
  * 
  * @author chris
  *
  */
-public class FutureValidator extends FutureValidatorAbstract implements IConstraint<Future> {
+public class PastValidator extends PastValidatorAbstract implements IConstraint<Past> {
 
-    public void initialize(Future parameters) {
+
+    public void initialize(Past parameters) {
 
     }
+
 
 }

@@ -1,4 +1,9 @@
-package com.google.gwt.validation.client;
+package com.google.gwt.validation.client.jsr303;
+
+import javax.validation.constraints.NotNull;
+
+import com.google.gwt.validation.client.common.NotNullValidatorAbstract;
+import com.google.gwt.validation.client.interfaces.IConstraint;
 
 /*
 GWT-Validation Framework - Annotation based validation for the GWT Framework
@@ -20,19 +25,16 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import com.google.gwt.validation.client.common.FutureValidatorAbstract;
-import com.google.gwt.validation.client.interfaces.IConstraint;
 
 /**
- * Validator that implements the <code>@Future</code> annotation
+ * Implements the <code>@NotNull</code> annotation.
  * 
  * @author chris
  *
  */
-public class FutureValidator extends FutureValidatorAbstract implements IConstraint<Future> {
+public class NotNullValidator extends NotNullValidatorAbstract implements IConstraint<NotNull> {
 
-    public void initialize(Future parameters) {
-
+    public void initialize(NotNull parameters) {
+    	
     }
-
 }

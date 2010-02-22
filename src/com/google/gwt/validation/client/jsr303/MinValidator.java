@@ -1,4 +1,4 @@
-package com.google.gwt.validation.client;
+package com.google.gwt.validation.client.jsr303;
 
 /*
  GWT-Validation Framework - Annotation based validation for the GWT Framework
@@ -20,20 +20,22 @@ package com.google.gwt.validation.client;
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-import com.google.gwt.validation.client.common.PastValidatorAbstract;
+import javax.validation.constraints.Min;
+
+import com.google.gwt.validation.client.common.MinValidatorAbstract;
 import com.google.gwt.validation.client.interfaces.IConstraint;
 
 /**
- * Validator that implements the <code>@Past</code> annotation
+ * Implements the <code>@Min</code> annotation.
  * 
  * @author chris
- *
+ * 
  */
-public class PastValidator extends PastValidatorAbstract implements
-		IConstraint<Past> {
+public class MinValidator extends MinValidatorAbstract implements
+		IConstraint<Min> {
 
-	public void initialize(Past parameters) {
-
+	public void initialize(Min parameters) {
+		this.minimum = (int) parameters.value();
 	}
 
 }
