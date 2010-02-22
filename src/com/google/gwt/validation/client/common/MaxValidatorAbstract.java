@@ -10,7 +10,7 @@ public abstract class MaxValidatorAbstract {
 		/*
 		 * Note that the key is the same as the method name on the constraint
 		 */
-		this.maximum = Integer.parseInt(propertyMap.get("maximum"));
+		this.maximum = Integer.parseInt(propertyMap.get("value"));
 	}
 
 	public boolean isValid(Object value) {
