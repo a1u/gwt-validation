@@ -15,4 +15,10 @@ public interface ValidationMessagesBase extends Constants {
 	String javax_validation_constraints_Size_message();
 	String javax_validation_constraints_Min_message();
 	String javax_validation_constraints_Max_message();
+	
+	String constraint_notNull();
+	String constraint_size();
+	String constraint_min();
+	String constraint_max();
+	String constraint_pattern();
 }
