@@ -1,7 +1,7 @@
-// $Id: Null.java 16368 2009-04-21 09:51:00Z epbernard $
+// $Id: AssertFalse.java 17620 2009-10-04 19:19:28Z hardy.ferentschik $
 /*
 * JBoss, Home of Professional Open Source
-* Copyright 2008, Red Hat Middleware LLC, and individual contributors
+* Copyright 2009, Red Hat, Inc. and/or its affiliates, and individual contributors
 * by the @authors tag. See the copyright.txt in the distribution for a
 * full listing of individual contributors.
 *
@@ -21,37 +21,43 @@ import java.lang.annotation.Documented;
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.CONSTRUCTOR;
+import static java.lang.annotation.ElementType.PARAMETER;
 import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
 import javax.validation.Constraint;
+import javax.validation.Payload;
 
 /**
- * The annotated element must be null.
- * Accepts any type.
+ * The annotated element must be false.
+ * Supported types are <code>boolean</code> and <code>Boolean</code>
+ * <p/>
+ * <code>null</code> elements are considered valid.
  *
  * @author Emmanuel Bernard
  */
-@Target({ METHOD, FIELD, ANNOTATION_TYPE })
+@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER })
 @Retention(RUNTIME)
 @Documented
 @Constraint(validatedBy = {})
-public @interface Null {
-	String message() default "{constraint.null}";
+public @interface AssertFalse {
+	String message() default "{javax.validation.constraints.AssertFalse.message}";
 
 	Class<?>[] groups() default { };
 
+	Class<? extends Payload>[] payload() default {};
+
 	/**
-	 * Defines several @Null annotations on the same element
-	 * @see javax.validation.constraints.Null
+	 * Defines several <code>@AssertFalse</code> annotations on the same element
+	 * @see javax.validation.constraints.AssertFalse
 	 *
 	 * @author Emmanuel Bernard
 	 */
-	@Target({ METHOD, FIELD, ANNOTATION_TYPE })
+	@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER })
 	@Retention(RUNTIME)
 	@Documented
 	@interface List {
-		Null[] value();
+		AssertFalse[] value();
 	}
 }
-

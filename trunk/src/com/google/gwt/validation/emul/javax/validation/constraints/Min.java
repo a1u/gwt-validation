@@ -1,7 +1,7 @@
-// $Id: Max.java 16368 2009-04-21 09:51:00Z epbernard $
+// $Id: Min.java 17620 2009-10-04 19:19:28Z hardy.ferentschik $
 /*
 * JBoss, Home of Professional Open Source
-* Copyright 2008, Red Hat Middleware LLC, and individual contributors
+* Copyright 2009, Red Hat, Inc. and/or its affiliates, and individual contributors
 * by the @authors tag. See the copyright.txt in the distribution for a
 * full listing of individual contributors.
 *
@@ -18,23 +18,23 @@
 package javax.validation.constraints;
 
 import java.lang.annotation.Documented;
-import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
 import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.ElementType.PARAMETER;
 import javax.validation.Constraint;
+import javax.validation.Payload;
 
 /**
- * The annotated element must be a number whose value must be lower or
- * equal to the specified maximum.
+ * The annotated element must be a number whose value must be higher or
+ * equal to the specified minimum.
  * <p/>
  * Supported types are:
  * <ul>
  * <li><code>BigDecimal</code></li>
  * <li><code>BigInteger</code></li>
- * <li><code>byte</code>, <code>short</code>, <code>int</code>, <code>long</code>, 
+ * <li><code>byte</code>, <code>short</code>, <code>int</code>, <code>long</code>,
  * and their respective wrappers</li>
  * </ul>
  * Note that <code>double</code> and <code>float</code> are not supported due to rounding errors
@@ -44,30 +44,32 @@ import javax.validation.Constraint;
  *
  * @author Emmanuel Bernard
  */
-@Target({ METHOD, FIELD, ANNOTATION_TYPE })
+@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER })
 @Retention(RUNTIME)
 @Documented
 @Constraint(validatedBy = {})
-public @interface Max {
-	String message() default "{constraint.max}";
+public @interface Min {
+	String message() default "{javax.validation.constraints.Min.message}";
 
 	Class<?>[] groups() default { };
 
+	Class<? extends Payload>[] payload() default {};
+
 	/**
-	 * @return value the element must be lower or equal to
+	 * @return value the element must be higher or equal to
 	 */
 	long value();
 
 	/**
-	 * Defines several @Max annotations on the same element
-	 * @see {@link Max}
+	 * Defines several <code>@Min</code> annotations on the same element
+	 * @see Min
 	 *
 	 * @author Emmanuel Bernard
 	 */
-	@Target({ METHOD, FIELD, ANNOTATION_TYPE })
+	@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER })
 	@Retention(RUNTIME)
 	@Documented
 	@interface List {
-		Max[] value();
+		Min[] value();
 	}
 }

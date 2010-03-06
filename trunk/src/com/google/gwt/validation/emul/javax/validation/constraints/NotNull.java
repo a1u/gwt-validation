@@ -1,7 +1,7 @@
-// $Id: Future.java 16368 2009-04-21 09:51:00Z epbernard $
+// $Id: NotNull.java 17620 2009-10-04 19:19:28Z hardy.ferentschik $
 /*
 * JBoss, Home of Professional Open Source
-* Copyright 2008, Red Hat Middleware LLC, and individual contributors
+* Copyright 2009, Red Hat, Inc. and/or its affiliates, and individual contributors
 * by the @authors tag. See the copyright.txt in the distribution for a
 * full listing of individual contributors.
 *
@@ -18,49 +18,41 @@
 package javax.validation.constraints;
 
 import java.lang.annotation.Documented;
-import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
 import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.ElementType.PARAMETER;
 import javax.validation.Constraint;
+import javax.validation.Payload;
 
 /**
- * The annotated element must be a date in the future.
- * Now is defined as the current time according to the virtual machine
- * The calendar used if the compared type is of type <code>Calendar</code>
- * is the calendar based on the current timezone and the current locale.
- * <p/>
- * Supported types are:
- * <ul>
- * <li><code>java.util.Date</code></li>
- * <li><code>java.util.Calendar</code></li>
- * </ul>
- * <p/>
- * <code>null</code> elements are considered valid.
+ * The annotated element must not be <code>null</code>.
+ * Accepts any type.
  *
  * @author Emmanuel Bernard
  */
-@Target({ METHOD, FIELD, ANNOTATION_TYPE })
+@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER })
 @Retention(RUNTIME)
 @Documented
 @Constraint(validatedBy = {})
-public @interface Future {
-	String message() default "{constraint.future}";
+public @interface NotNull {
+	String message() default "{javax.validation.constraints.NotNull.message}";
 
 	Class<?>[] groups() default { };
 
+	Class<? extends Payload>[] payload() default {};
+
 	/**
-	 * Defines several @Future annotations on the same element
-	 * @see {@link Future}
+	 * Defines several <code>@NotNull</code> annotations on the same element
+	 * @see javax.validation.constraints.NotNull
 	 *
 	 * @author Emmanuel Bernard
 	 */
-	@Target({ METHOD, FIELD, ANNOTATION_TYPE })
+	@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER })
 	@Retention(RUNTIME)
 	@Documented
 	@interface List {
-		Future[] value();
+		NotNull[] value();
 	}
 }

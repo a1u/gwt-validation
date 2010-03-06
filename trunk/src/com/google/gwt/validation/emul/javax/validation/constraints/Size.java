@@ -1,7 +1,7 @@
-// $Id: Size.java 16368 2009-04-21 09:51:00Z epbernard $
+// $Id: Size.java 17620 2009-10-04 19:19:28Z hardy.ferentschik $
 /*
 * JBoss, Home of Professional Open Source
-* Copyright 2008, Red Hat Middleware LLC, and individual contributors
+* Copyright 2009, Red Hat, Inc. and/or its affiliates, and individual contributors
 * by the @authors tag. See the copyright.txt in the distribution for a
 * full listing of individual contributors.
 *
@@ -20,11 +20,11 @@ package javax.validation.constraints;
 import java.lang.annotation.Target;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Documented;
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import javax.validation.Constraint;
+import javax.validation.Payload;
 
 /**
  * The annotated element size must be between the specified boundaries (included).
@@ -40,13 +40,16 @@ import javax.validation.Constraint;
  *
  * @author Emmanuel Bernard
  */
-@Target({ METHOD, FIELD, ANNOTATION_TYPE })
+@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER })
 @Retention(RUNTIME)
 @Documented
 @Constraint(validatedBy = {})
 public @interface Size {
-	String message() default "{constraint.size}";
+	String message() default "{javax.validation.constraints.Size.message}";
+	
 	Class<?>[] groups() default {};
+
+	Class<? extends Payload>[] payload() default {};
 
 	/**
 	 * @return size the element must be higher or equal to
@@ -59,12 +62,12 @@ public @interface Size {
 	int max() default Integer.MAX_VALUE;
 
 	/**
-	 * Defines several @Size annotations on the same element
-	 * @see {@link Size}
+	 * Defines several <code>@Size</code> annotations on the same element
+	 * @see Size
 	 *
 	 * @author Emmanuel Bernard
 	 */
-	@Target({ METHOD, FIELD, ANNOTATION_TYPE })
+	@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER })
 	@Retention(RUNTIME)
 	@Documented
 	@interface List {
