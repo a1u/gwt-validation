@@ -1,7 +1,7 @@
-// $Id: AssertFalse.java 16368 2009-04-21 09:51:00Z epbernard $
+// $Id: Valid.java 17620 2009-10-04 19:19:28Z hardy.ferentschik $
 /*
 * JBoss, Home of Professional Open Source
-* Copyright 2008, Red Hat Middleware LLC, and individual contributors
+* Copyright 2009, Red Hat, Inc. and/or its affiliates, and individual contributors
 * by the @authors tag. See the copyright.txt in the distribution for a
 * full listing of individual contributors.
 *
@@ -15,44 +15,24 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package javax.validation.constraints;
+package javax.validation;
 
-import java.lang.annotation.Documented;
-import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.CONSTRUCTOR;
+import static java.lang.annotation.ElementType.PARAMETER;
 import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
-import javax.validation.Constraint;
 
 /**
- * The annotated element must be false.
- * Supported types are <code>boolean</code> and <code>Boolean</code>
- * <p/>
- * <code>null</code> elements are considered valid.
+ * Mark an association as cascaded.
+ * The associated object will be validated by cascade.
  *
  * @author Emmanuel Bernard
+ * @author Hardy Ferentschik
  */
-@Target({ METHOD, FIELD, ANNOTATION_TYPE })
+@Target({ METHOD, FIELD, CONSTRUCTOR, PARAMETER })
 @Retention(RUNTIME)
-@Documented
-@Constraint(validatedBy = {})
-public @interface AssertFalse {
-	String message() default "{constraint.assertFalse}";
-
-	Class<?>[] groups() default { };
-
-	/**
-	 * Defines several @AssertFalse annotations on the same element
-	 * @see javax.validation.constraints.AssertFalse
-	 *
-	 * @author Emmanuel Bernard
-	 */
-	@Target({ METHOD, FIELD, ANNOTATION_TYPE })
-	@Retention(RUNTIME)
-	@Documented
-	@interface List {
-		AssertFalse[] value();
-	}
+public @interface Valid {
 }

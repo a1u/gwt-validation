@@ -1,7 +1,7 @@
-// $Id: DecimalMax.java 16368 2009-04-21 09:51:00Z epbernard $
+// $Id: Max.java 17620 2009-10-04 19:19:28Z hardy.ferentschik $
 /*
 * JBoss, Home of Professional Open Source
-* Copyright 2008, Red Hat Middleware LLC, and individual contributors
+* Copyright 2009, Red Hat, Inc. and/or its affiliates, and individual contributors
 * by the @authors tag. See the copyright.txt in the distribution for a
 * full listing of individual contributors.
 *
@@ -18,13 +18,13 @@
 package javax.validation.constraints;
 
 import java.lang.annotation.Documented;
-import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
 import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.ElementType.PARAMETER;
 import javax.validation.Constraint;
+import javax.validation.Payload;
 
 /**
  * The annotated element must be a number whose value must be lower or
@@ -34,43 +34,42 @@ import javax.validation.Constraint;
  * <ul>
  * <li><code>BigDecimal</code></li>
  * <li><code>BigInteger</code></li>
- * <li><code>String</code></li>
- * <li><code>byte</code>, <code>short</code>, <code>int</code>, <code>long</code>,
+ * <li><code>byte</code>, <code>short</code>, <code>int</code>, <code>long</code>, 
  * and their respective wrappers</li>
  * </ul>
- * Note that <code>double</code> and <code>float</code> are not supported due to rounding errors 
+ * Note that <code>double</code> and <code>float</code> are not supported due to rounding errors
  * (some providers might provide some approximative support)
  * <p/>
  * <code>null</code> elements are considered valid
  *
  * @author Emmanuel Bernard
  */
-@Target({ METHOD, FIELD, ANNOTATION_TYPE })
+@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER })
 @Retention(RUNTIME)
 @Documented
 @Constraint(validatedBy = {})
-public @interface DecimalMax {
-	String message() default "{constraint.decimalmax}";
+public @interface Max {
+	String message() default "{javax.validation.constraints.Max.message}";
 
 	Class<?>[] groups() default { };
 
-	/**
-	 * The String representation of the max value according to the
-	 * BigDecimal string representation
-	 * @return value the element must be lower or equal to
-	 */
-	String value();
+	Class<? extends Payload>[] payload() default {};
 
 	/**
-	 * Defines several @DecimalMax annotations on the same element
-	 * @see {@link DecimalMax}
+	 * @return value the element must be lower or equal to
+	 */
+	long value();
+
+	/**
+	 * Defines several <code>@Max</code> annotations on the same element
+	 * @see Max
 	 *
 	 * @author Emmanuel Bernard
 	 */
-	@Target({ METHOD, FIELD, ANNOTATION_TYPE })
+	@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER })
 	@Retention(RUNTIME)
 	@Documented
 	@interface List {
-		DecimalMax[] value();
+		Max[] value();
 	}
 }

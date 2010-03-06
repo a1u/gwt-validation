@@ -1,7 +1,7 @@
-// $Id: Max.java 16152 2009-03-12 21:33:48Z epbernard $
+// $Id: DecimalMin.java 17620 2009-10-04 19:19:28Z hardy.ferentschik $
 /*
 * JBoss, Home of Professional Open Source
-* Copyright 2008, Red Hat Middleware LLC, and individual contributors
+* Copyright 2009, Red Hat, Inc. and/or its affiliates, and individual contributors
 * by the @authors tag. See the copyright.txt in the distribution for a
 * full listing of individual contributors.
 *
@@ -18,13 +18,13 @@
 package javax.validation.constraints;
 
 import java.lang.annotation.Documented;
-import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
 import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.ElementType.PARAMETER;
 import javax.validation.Constraint;
+import javax.validation.Payload;
 
 /**
  * The annotated element must be a number whose value must be higher or
@@ -45,29 +45,31 @@ import javax.validation.Constraint;
  *
  * @author Emmanuel Bernard
  */
-@Target({ METHOD, FIELD, ANNOTATION_TYPE })
+@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER })
 @Retention(RUNTIME)
 @Documented
 @Constraint(validatedBy = {})
 public @interface DecimalMin {
-	String message() default "{constraint.decimalmin}";
+	String message() default "{javax.validation.constraints.DecimalMin.message}";
 
 	Class<?>[] groups() default { };
 
+	Class<? extends Payload>[] payload() default {};
+
 	/**
-	 * The String representation of the min value according to the
-	 * BigDecimal string representation
+	 * The <code>String</code> representation of the min value according to the
+	 * <code>BigDecimal</code> string representation
 	 * @return value the element must be higher or equal to
 	 */
 	String value();
 
 	/**
-	 * Defines several @DecimalMin annotations on the same element
-	 * @see {@link DecimalMin}
+	 * Defines several <code>@DecimalMin</code> annotations on the same element
+	 * @see DecimalMin
 	 *
 	 * @author Emmanuel Bernard
 	 */
-	@Target({ METHOD, FIELD, ANNOTATION_TYPE })
+	@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER })
 	@Retention(RUNTIME)
 	@Documented
 	@interface List {

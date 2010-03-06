@@ -1,7 +1,7 @@
-// $Id: NotNull.java 16368 2009-04-21 09:51:00Z epbernard $
+// $Id: Null.java 17620 2009-10-04 19:19:28Z hardy.ferentschik $
 /*
 * JBoss, Home of Professional Open Source
-* Copyright 2008, Red Hat Middleware LLC, and individual contributors
+* Copyright 2009, Red Hat, Inc. and/or its affiliates, and individual contributors
 * by the @authors tag. See the copyright.txt in the distribution for a
 * full listing of individual contributors.
 *
@@ -18,39 +18,42 @@
 package javax.validation.constraints;
 
 import java.lang.annotation.Documented;
-import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
 import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.ElementType.PARAMETER;
 import javax.validation.Constraint;
+import javax.validation.Payload;
 
 /**
- * The annotated element must not be <code>null</code>.
+ * The annotated element must be <code>null</code>.
  * Accepts any type.
  *
  * @author Emmanuel Bernard
  */
-@Target({ METHOD, FIELD, ANNOTATION_TYPE })
+@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER })
 @Retention(RUNTIME)
 @Documented
 @Constraint(validatedBy = {})
-public @interface NotNull {
-	String message() default "{constraint.notNull}";
+public @interface Null {
+	String message() default "{javax.validation.constraints.Null.message}";
 
 	Class<?>[] groups() default { };
 
+	Class<? extends Payload>[] payload() default {};
+
 	/**
-	 * Defines several @NotNull annotations on the same element
-	 * @see javax.validation.constraints.NotNull
+	 * Defines several <code>@Null</code> annotations on the same element
+	 * @see javax.validation.constraints.Null
 	 *
 	 * @author Emmanuel Bernard
 	 */
-	@Target({ METHOD, FIELD, ANNOTATION_TYPE })
+	@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER })
 	@Retention(RUNTIME)
 	@Documented
 	@interface List {
-		NotNull[] value();
+		Null[] value();
 	}
 }
+
