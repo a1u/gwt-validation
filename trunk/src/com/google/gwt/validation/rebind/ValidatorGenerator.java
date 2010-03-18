@@ -35,26 +35,32 @@ import com.google.gwt.core.ext.typeinfo.TypeOracle;
  * @see com.google.gwt.validation.client.interfaces.IValidatable
  */
 public class ValidatorGenerator extends Generator {
-
+	/**
+	 * Might be overridden by constructor of inherited class.
+	 */
+	protected TypeStrategy typeStrategy = new BeanTypeNameStrategy();
+	
 	@Override
 	public String generate(TreeLogger logger, GeneratorContext context,	String typeName) throws UnableToCompleteException {
-
+		typeStrategy.setGeneratorContext(context);
+		
 		//get the type oracle
 		TypeOracle typeOracle = context.getTypeOracle();
 		
 		//assert that the type oracle is not null
 		assert(typeOracle != null);
 		
+		String beanTypeName = typeStrategy.getBeanTypeName(typeName);
 		//get type
-		JClassType vType = typeOracle.findType(typeName);
+		JClassType vType = typeOracle.findType(beanTypeName);
 		
 		//if vtype is null (the type incoming)
 		if(vType == null) {
-			logger.log(TreeLogger.ERROR, "Type oracle unable to find type for " + typeName + ".");
+			logger.log(TreeLogger.ERROR, "Type oracle unable to find type for " + beanTypeName + ".");
 			throw new UnableToCompleteException();
 		}
 		
-		ValidatorCreator validatorCreator = new ValidatorCreator(logger, context, typeName);
+		ValidatorCreator validatorCreator = new ValidatorCreator(logger, context, beanTypeName, typeStrategy, typeName);
 		
 		String className = validatorCreator.createValidatorImplementation();
 		

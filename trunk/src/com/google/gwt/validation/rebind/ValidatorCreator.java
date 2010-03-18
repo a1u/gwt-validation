@@ -64,6 +64,9 @@ public class ValidatorCreator {
 	private String typeName;
 	private TypeOracle typeOracle;
 
+	private TypeStrategy typeStrategy;
+	private String originalTypeName;
+	
 	private ValidatorCreator() {
 
 	}
@@ -75,7 +78,7 @@ public class ValidatorCreator {
 	 * @param context
 	 * @param typeName
 	 */
-	public ValidatorCreator(final TreeLogger logger, final GeneratorContext context, final String typeName) {
+	public ValidatorCreator(final TreeLogger logger, final GeneratorContext context, final String typeName, final TypeStrategy typeStrategy, final String originalTypeName) {
 
 		//super
 		this();
@@ -88,6 +91,8 @@ public class ValidatorCreator {
 		//get type oracle from context
 		this.typeOracle = this.context.getTypeOracle();
 
+		this.typeStrategy = typeStrategy;
+		this.originalTypeName = originalTypeName;
 	}
 
 	private void generateValidationCheck(SourceWriter sw, List<ValidationPackage> validationPackageList, final String fullClass, boolean propertyMethodOrWholeObject) {
@@ -198,15 +203,17 @@ public class ValidatorCreator {
 		String outputClassName = null;
 
 		try {
+			final JClassType originalClassType = this.typeOracle.getType(this.originalTypeName);
+			
 			//get class type
 			final JClassType classType = this.typeOracle.getType(this.typeName);
 
 			//write to string
-			final SourceWriter sw = this.getSourceWriter(classType);
+			final SourceWriter sw = this.getSourceWriter(originalClassType, classType);
 			
 			//if sourcewriter is null, prematurely return the classname
 			if(sw == null) {
-              return classType.getParameterizedQualifiedSourceName() + "Validator";
+              return originalClassType.getParameterizedQualifiedSourceName() + "Validator";
 			}
 
 			//fully qualified
@@ -348,7 +355,7 @@ public class ValidatorCreator {
 									sw.indent();
 
 									//GWT.create() validator
-									sw.println(IInternalValidator.class.getSimpleName() + "<" + typeName + "> subValidator = GWT.create(" + typeName + ".class);");
+									sw.println(IInternalValidator.class.getSimpleName() + "<" + typeName + "> subValidator = GWT.create(" + typeStrategy.getValidatorTypeName(typeName) + ".class);");
 
 									//get the object array
 									sw.println("" + typeName + "[] objectArray = object." + vPack.getMethod().getName() + "();");
@@ -413,7 +420,7 @@ public class ValidatorCreator {
 										sw.indent();
 
 										//GWT.create() validator
-										sw.println(IInternalValidator.class.getSimpleName() + "<" + typeName + "> subValidator = GWT.create(" + typeName + ".class);");
+										sw.println(IInternalValidator.class.getSimpleName() + "<" + typeName + "> subValidator = GWT.create(" + typeStrategy.getValidatorTypeName(typeName) + ".class);");
 
 										//get object instance
 										sw.println("Collection<" + typeName + "> objectCollection = (Collection<" + typeName + ">) object." + vPack.getMethod().getName() + "();");
@@ -489,7 +496,7 @@ public class ValidatorCreator {
 										sw.indent();
 
 										//GWT.create() validator
-										sw.println(IInternalValidator.class.getSimpleName() + "<" + typeName + "> subValidator = GWT.create(" + typeName + ".class);");
+										sw.println(IInternalValidator.class.getSimpleName() + "<" + typeName + "> subValidator = GWT.create(" + typeStrategy.getValidatorTypeName(typeName) + ".class);");
 
 										sw.println("Map<" + keyTypeName + "," + typeName + "> objectMap = (Map<" + keyTypeName + "," + typeName + ">) object." + vPack.getMethod().getName() + "();");
 
@@ -549,7 +556,7 @@ public class ValidatorCreator {
 								final String typeName = returnType.getCanonicalName();
 
 								//GWT.create() validator
-								sw.println(IInternalValidator.class.getSimpleName() + "<" + typeName + "> subValidator = GWT.create(" + typeName + ".class);");
+								sw.println(IInternalValidator.class.getSimpleName() + "<" + typeName + "> subValidator = GWT.create(" + typeStrategy.getValidatorTypeName(typeName) + ".class);");
 
 								//get object
 								sw.println("" + typeName + " innerObject = object." + vPack.getMethod().getName() + "();");
@@ -606,7 +613,7 @@ public class ValidatorCreator {
 			sw.commit(this.logger);
 			
 			//output class name
-			outputClassName = classType.getParameterizedQualifiedSourceName() + "Validator";
+			outputClassName = originalClassType.getParameterizedQualifiedSourceName() + "Validator";
 
 		} catch (final NotFoundException e) {
 			this.logger.log(TreeLogger.ERROR, "Type " + this.typeName + " not found.");
@@ -635,7 +642,7 @@ public class ValidatorCreator {
 	 * @param classType
 	 * @return
 	 */
-	private SourceWriter getSourceWriter(final JClassType classType) {
+	private SourceWriter getSourceWriter(final JClassType classType, final JClassType beanClassType) {
 
 		//get package
 		final String packageName = classType.getPackage().getName();
@@ -648,7 +655,7 @@ public class ValidatorCreator {
 		final ClassSourceFileComposerFactory composer = new ClassSourceFileComposerFactory(packageName, simpleName);
 
 		//add the abstract validator method
-		composer.setSuperclass(AbstractValidator.class.getCanonicalName() + "<" + classType.getSimpleSourceName() + ">");
+		composer.setSuperclass(AbstractValidator.class.getCanonicalName() + "<" + beanClassType.getSimpleSourceName() + ">");
 
 		//add imports (other classes will be referenced by FULL class name)
 		composer.addImport(List.class.getCanonicalName());
