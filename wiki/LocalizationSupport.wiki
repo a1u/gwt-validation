@@ -1,0 +1,28 @@
+#summary Localization of constraint messages.
+#labels i18n
+
+= Localized messages support =
+
+Trying to mimic the support of i18n in JSR-303 (which is not possible to the extend and beauty yet) new way of localizing messages was introduced.
+
+Each constraint has usually a i18n key, not message directly. Because GWT provides a mechanism of static checking of localization keys based on Java methods there exists base interface for it - ValidationMessagesBase. The interface contains all basic constraint messages in form of methods where *dots are replaced with underscores*.
+
+Validation generator expects your project specific validation interface - javax.validation.ValidationMessages - which must extend ValidationMessagesBase. That means if you implement own constraint with default message you can put it there. Also if want to override default message using constraint's annotation you may specify it in *message* attribute. If you provide a key instead of message itself, it will resolve it using message interpolation algorithm and ask ValidationMessages interface for translation.
+
+There is one additional step - copying content of ValidationMessagesBase.properties - because GWT i18n support doesn't inherit it automatically. On the other hand it allows you to customize these messages.
+
+In the value of the message you can use attributes of the constraint, e.g.:
+
+javax_validation_constraints_Size_message = Size must be between \{min\} and \{max\}
+
+where @Size has *min* and *max* attributes defined.
+
+== Summary of steps ==
+
+Example key: {my.localized.constraint.message}
+
+  * In your project create:
+    * interface javax.validation.ValidationMessages extends ValidationMessagesBase?
+    * properties file ValidationMessages.properties
+    * Fill it with default values from ValidationMessagesBase.properties (located in gwt-validation.jar)
+  * Optionally add your key + value pairs
