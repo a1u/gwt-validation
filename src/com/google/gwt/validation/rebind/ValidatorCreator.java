@@ -37,6 +37,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
@@ -66,7 +67,7 @@ public class ValidatorCreator {
 
 	private TypeStrategy typeStrategy;
 	private String originalTypeName;
-	
+
 	private ValidatorCreator() {
 
 	}
@@ -110,10 +111,10 @@ public class ValidatorCreator {
 			}
 			//close if test
 			ifTest += ")";
-			
+
 			//processed groups
 			ifTest += " && (processedGroups.size() == 0 || (";
-			
+
 			//do the same for processed groups
 			for(final String group : vPack.getGroups()) {
 				ifTest += "!processedGroups.contains(\"" + group + "\") && ";
@@ -123,7 +124,7 @@ public class ValidatorCreator {
 			//replace ' && ))' with '))' because I can't think of a better
 			//way to not have an && at the end of the series.
 			ifTest = ifTest.replace(" && ))", "))");
-			
+
 			//create if block (used to break up scope and to test for propertyName / groups)
 			sw.println("if(" + ifTest + ") {");
 			sw.indent();
@@ -139,7 +140,7 @@ public class ValidatorCreator {
 
 			// either it is whole object or a subobject accessible through object's method
 			String targetObject = (!propertyMethodOrWholeObject ? "object" : "object." + vPack.getMethod().getName() + "()");
-			
+
 			//do object method in if test
 			sw.println("if(!validator.isValid(" + targetObject + ")) {");
 			sw.indent();
@@ -151,10 +152,10 @@ public class ValidatorCreator {
 
 			//add object
 			sw.println("ivc.setInvalidObject(object);");
-			
+
 			//add value
 			sw.println("ivc.setValue(" + targetObject + ");");
-			
+
 			//add to iCSet
 			sw.println("iCSet.add(ivc);");
 
@@ -181,15 +182,15 @@ public class ValidatorCreator {
 			sw.println("String message = " + PROPERTY_MAP_VAR + ".get(\"message\");");
 		}
 	}
-	
+
 	private String transformDotNotationToMethodNotation(String key) {
 		return key.replaceAll("\\.", "_");
 	}
-	
+
 	private void generateValidatorExceptionHandling(SourceWriter sw, String exceptionVariable) {
 		sw.println("logError(" + exceptionVariable + ");");
 	}
-	
+
 	/**
 	 * Uses a sourcecode writer to write the implementation of the
 	 * class's validator that was indicated at construction.  Returns
@@ -204,13 +205,13 @@ public class ValidatorCreator {
 
 		try {
 			final JClassType originalClassType = this.typeOracle.getType(this.originalTypeName);
-			
+
 			//get class type
 			final JClassType classType = this.typeOracle.getType(this.typeName);
 
 			//write to string
 			final SourceWriter sw = this.getSourceWriter(originalClassType, classType);
-			
+
 			//if sourcewriter is null, prematurely return the classname
 			if(sw == null) {
               return originalClassType.getParameterizedQualifiedSourceName() + "Validator";
@@ -230,10 +231,10 @@ public class ValidatorCreator {
 				sw.indent();
 				sw.println("if(inputClass == null || Object.class.equals(inputClass)) return new HashMap<String, ArrayList<String>>();");
 				sw.println("HashMap<String, ArrayList<String>> orderingMap = new HashMap<String, ArrayList<String>>();");
-				
+
 				//get list
 				final HashMap<String, ArrayList<String>> groupSequenceMap = ValidationMetadataFactory.getGroupSequenceMap(inputClass);
-				
+
 				//for each thing thing create an ArrayList<String> of the order
 				for(final String group : groupSequenceMap.keySet()) {
 					//output (using scope trick)
@@ -251,10 +252,10 @@ public class ValidatorCreator {
 						//add to a group
 						sw.println("groups.add(\"" + g + "\");");
 					}
-					
+
 					//add groups to ordering map
 					sw.println("orderingMap.put(\"" + group + "\",groups);");
-					
+
 					//close scope
 					sw.outdent();
 					sw.println("}");
@@ -262,11 +263,11 @@ public class ValidatorCreator {
 
 				//return
 				sw.println("return orderingMap;");
-				
+
 				//close the HashMap
 				sw.outdent();
 				sw.println("}");
-				
+
 				//write "Set<InvalidConstraint> performValidation(T object, String propertyName, String... groups);" method
 				sw.println("public Set<InvalidConstraint<" + fullClass + ">> performValidation(" + fullClass + " object, String propertyName, List<String> groups, Set<String> processedGroups, Set<String> processedObjects) {" );
 				sw.indent();
@@ -278,8 +279,8 @@ public class ValidatorCreator {
 				sw.indent();
 				sw.println("propertyName = null;");
 				sw.outdent();
-				sw.println("}");				
-				
+				sw.println("}");
+
 				//groups listing
 				sw.println("String grouplisting = \"\";");
 				sw.println("for(String group : groups) {");
@@ -287,9 +288,9 @@ public class ValidatorCreator {
 				sw.println("grouplisting += \":\" + group;");
 				sw.outdent();
 				sw.println("}");
-				
+
 				//get the validation package list for that class
-				
+
 				boolean isJsr303 = false;
 				for(Field field : ValidationMetadataFactory.getAllFields(inputClass)) {
 					Annotation[] annotations = field.getAnnotations();
@@ -315,12 +316,12 @@ public class ValidatorCreator {
 				}
 				//do code output for each method
 				generateValidationCheck(sw, validationPackageList, fullClass, true);
-				
+
 				//get list of packages for class level
 				validationPackageList = ValidationMetadataFactory.getClassLevelValidatorsForClass(inputClass);
 
 				//do code output for each class level validator
-				generateValidationCheck(sw, validationPackageList, fullClass, false);				
+				generateValidationCheck(sw, validationPackageList, fullClass, false);
 
 				//get @Valid package list
 				final ArrayList<ValidationPackage> vpValidList = ValidationMetadataFactory.getValidAnnotedPackages(inputClass);
@@ -366,12 +367,12 @@ public class ValidatorCreator {
 									sw.indent();
 
 									//create object identifier
-									sw.println("String objIdent = innerObject.hashCode() + \":\" + grouplisting.hashCode();");
-																		
+									sw.println("String objIdent = System.identityHashCode(innerObject) + \":\" + System.identityHashCode(grouplisting);");
+
 									//make sure it isn't part of the processed objects list
 									sw.println("if(!processedObjects.contains(objIdent)) {");
 									sw.indent();
-									
+
 									//add to the processed list
 									sw.println("processedObjects.add(objIdent);");
 
@@ -379,11 +380,11 @@ public class ValidatorCreator {
 									sw.println("iCSet.addAll(this.unrollConstraintSet(object," +
 											"\"" + vPack.getItemName() + "[\" + String.valueOf(it) + \"]\"" + //insert sequence no from collection in []
 											",subValidator.performValidation(innerObject, null, groups, processedGroups, processedObjects)));");
-									
+
 									//done checking
 									sw.outdent();
 									sw.println("}");
-									
+
 									//end for loop
 									sw.outdent();
 									sw.println("}");
@@ -395,7 +396,7 @@ public class ValidatorCreator {
 									generateValidatorExceptionHandling(sw, "ex");
 									sw.outdent();
 									sw.println("}");
-									
+
 									//has been validated somehow, no other method needed
 									validated = true;
 								}
@@ -427,33 +428,33 @@ public class ValidatorCreator {
 
 										//we need the counter
 										sw.println("int it = 0;");
-										
+
 										//go through the collection
 										sw.println("for(" + typeName + " innerObject : objectCollection) {");
 										sw.indent();
 
 										//create object identifier
-										sw.println("String objIdent = innerObject.hashCode() + \":\" + grouplisting.hashCode();");
+										sw.println("String objIdent = System.identityHashCode(innerObject) + \":\" + System.identityHashCode(grouplisting);");
 
 										//make sure it isn't part of the processed objects list
 										sw.println("if(!processedObjects.contains(objIdent)) {");
 										sw.indent();
-										
+
 										//add to the processed list
 										sw.println("processedObjects.add(objIdent);");
-										
+
 										//validate the object
 										sw.println("iCSet.addAll(this.unrollConstraintSet(object, "+
 										        "\"" + vPack.getItemName() + "[\" + String.valueOf(it) + \"]\"" + //insert sequence no from collection in []
 										        ", subValidator.performValidation(innerObject, null, groups, processedGroups, processedObjects)));");
-										
+
 										//increment counter
 										sw.println("++it;");
-										
+
 										//done checking
 										sw.outdent();
 										sw.println("}");
-										
+
 										//end for loop
 										sw.outdent();
 										sw.println("}");
@@ -504,26 +505,26 @@ public class ValidatorCreator {
 										sw.println("for(" + keyTypeName + " mapKey : objectMap.keySet()) {");
 										sw.println(typeName + " innerObject = objectMap.get(mapKey) ;");
 										sw.indent();
-										
+
 										//create object identifier
-										sw.println("String objIdent = innerObject.hashCode() + \":\" + grouplisting.hashCode();");
-										
+                                        sw.println("String objIdent = System.identityHashCode(innerObject) + \":\" + System.identityHashCode(grouplisting);");
+
 										//make sure it isn't part of the processed objects list
 										sw.println("if(!processedObjects.contains(objIdent)) {");
 										sw.indent();
-										
+
 										//add to the processed list
 										sw.println("processedObjects.add(objIdent);");
-										
+
 										//validate the object
 										sw.println("iCSet.addAll(this.unrollConstraintSet(object, " +
 										        "\"" + vPack.getItemName() + "[\\\"\" + mapKey+ \"\\\"]\"" + //insert map key into []
 										        ", subValidator.performValidation(innerObject, null, groups, processedGroups, processedObjects)));");
-										
+
 										//done checking
 										sw.outdent();
 										sw.println("}");
-										
+
 										//close for loop
 										sw.outdent();
 										sw.println("}");
@@ -532,7 +533,7 @@ public class ValidatorCreator {
 										sw.println("} catch (Exception ex) {");
 										sw.indent();
 										sw.println("//error handling goes here");
-										generateValidatorExceptionHandling(sw, "ex");										
+										generateValidatorExceptionHandling(sw, "ex");
 										sw.outdent();
 										sw.println("}");
 
@@ -562,22 +563,22 @@ public class ValidatorCreator {
 								sw.println("" + typeName + " innerObject = object." + vPack.getMethod().getName() + "();");
 
 								//create object identifier
-								sw.println("String objIdent = innerObject.hashCode() + \":\" + grouplisting.hashCode();");
-								
+                                sw.println("String objIdent = System.identityHashCode(innerObject) + \":\" + System.identityHashCode(grouplisting);");
+
 								//make sure it isn't part of the processed objects list
 								sw.println("if(!processedObjects.contains(objIdent)) {");
 								sw.indent();
-								
+
 								//add to the processed list
 								sw.println("processedObjects.add(objIdent);");
-								
+
 								//validate
 								sw.println("iCSet.addAll(this.unrollConstraintSet(object, \"" + vPack.getItemName() + "\", subValidator.performValidation(innerObject, null, groups, processedGroups, processedObjects)));");
 
 								//close for loop
 								sw.outdent();
 								sw.println("}");
-								
+
 								//finish
 								sw.outdent();
 								sw.println("} catch (Exception ex) {");
@@ -611,7 +612,7 @@ public class ValidatorCreator {
 
 			//commit to tree logger
 			sw.commit(this.logger);
-			
+
 			//output class name
 			outputClassName = originalClassType.getParameterizedQualifiedSourceName() + "Validator";
 
@@ -714,14 +715,9 @@ public class ValidatorCreator {
 			//value
 			String value = propertyMap.get(key);
 
-			//fix for issue #3 - http://code.google.com/p/gwt-validation/issues/detail?id=3
-			if(value != null && value.trim().length() > 0) {
-				value = value.replaceAll("\\\\", "\\\\");
-			}
-			
 			//put out propertykey
 			//propertyMap.put(key, value);
-			sw.println(PROPERTY_MAP_VAR + ".put(\"" + key + "\",\"" + value + "\");");
+			sw.println(PROPERTY_MAP_VAR + ".put(\"" + Generator.escape(key) + "\",\"" + Generator.escape(value) + "\");");
 		}
 
 
