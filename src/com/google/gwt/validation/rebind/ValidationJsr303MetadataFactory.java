@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.validation.Constraint;
+import javax.validation.groups.Default;
 
 import com.google.gwt.validation.client.interfaces.IConstraint;
 
@@ -437,8 +438,7 @@ public class ValidationJsr303MetadataFactory {
 							// build the validation package
 							String[] groups2 = new String[groups.length];
 							for (int i = 0; i < groups.length; i++) {
-								Class class1 = groups[i];
-								groups2[i] = class1.getName();
+                                groups2[i] = extractGroupName(groups[i]);
 							}
 							ValidationPackage vPackage = new ValidationPackage(
 									constraint, message, method, field,
@@ -465,7 +465,17 @@ public class ValidationJsr303MetadataFactory {
 
 	}
 
-	private static Properties getValidatorsImpl() {
+
+    /** Extract group name, "default" group will be returned when Default.class occurs */
+    private static String extractGroupName(final Class group) {
+        if (Default.class.equals(group)) {
+            return "default";
+        } else {
+            return group.getName();
+        }
+    }
+
+    private static Properties getValidatorsImpl() {
 		Properties properties = null;
 		try {
 			properties = new Properties();
