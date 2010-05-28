@@ -22,14 +22,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import java.lang.annotation.Annotation;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
-
 import com.google.gwt.validation.client.Min;
 import com.google.gwt.validation.client.MinValidator;
+import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class MinServerTest {
-	
+
 	//annotation instance
 	private Min m = new Min() {
 
@@ -48,45 +49,64 @@ public class MinServerTest {
 		public Class<? extends Annotation> annotationType() {
 			return null;
 		}
-		
+
 	};
-	
+
 	@Test
 	public void testUnderMin() {
-	
+
 		//create annotation
 		MinValidator mv = new MinValidator();
 		mv.initialize(this.m);
-		
+
 		//values
 		int i =  12;
 		double d =  12;
 		float f = 12;
 		long l = 12;
-		
+
 		//assertions
 		assertFalse("12i is under minimum of 2007",mv.isValid(i));
 		assertFalse("12d is under minimum of 2007",mv.isValid(d));
 		assertFalse("12f is under minimum of 2007",mv.isValid(f));
 		assertFalse("12l is under minimum of 2007",mv.isValid(l));
 	}
-	
+
 	@Test
 	public void testOverMin() {
 		//create annotation
 		MinValidator mv = new MinValidator();
 		mv.initialize(this.m);
-		
+
 		//values
 		int i =  12000;
 		double d =  12000;
 		float f = 12000;
 		long l = 12000;
-		
+
 		//assertions
 		assertTrue("12000i is over minimum of 2007",mv.isValid(i));
 		assertTrue("12000d is over minimum of 2007",mv.isValid(d));
 		assertTrue("12000f is over minimum of 2007",mv.isValid(f));
 		assertTrue("12000l is over minimum of 2007",mv.isValid(l));
 	}
+
+    @Test
+    public void testBoundMin() {
+        //create annotation
+        MinValidator mv = new MinValidator();
+        mv.initialize(this.m);
+
+        //values
+        int i = 2007;
+        double d = 2007;
+        float f = 2007;
+        long l = 2007;
+
+        //assertions
+        assertTrue("2007i is bound minimum of 2007", mv.isValid(i));
+        assertTrue("2007d is bound minimum of 2007", mv.isValid(d));
+        assertTrue("2007f is bound minimum of 2007", mv.isValid(f));
+        assertTrue("2007l is bound minimum of 2007", mv.isValid(l));
+    }
 }
