@@ -13,13 +13,18 @@ public abstract class PatternValidatorAbstract {
 		 */
 
 		this.pattern = propertyMap.get("pattern");
+		if (this.pattern == null) {
+			this.pattern = propertyMap.get("regexp");
+		}
 	}
 
 	public boolean isValid(Object value) {
-		if (value == null)
+		if (value == null) {
 			return true;
-		if (this.pattern == null || this.pattern.trim().length() == 0)
+		}
+		if (this.pattern == null || this.pattern.trim().length() == 0) {
 			return true;
+		}
 
 		boolean valid = false;
 
