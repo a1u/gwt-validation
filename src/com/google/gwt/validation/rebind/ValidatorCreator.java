@@ -656,7 +656,7 @@ public class ValidatorCreator {
 		final ClassSourceFileComposerFactory composer = new ClassSourceFileComposerFactory(packageName, simpleName);
 
 		//add the abstract validator method
-		composer.setSuperclass(AbstractValidator.class.getCanonicalName() + "<" + beanClassType.getSimpleSourceName() + ">");
+		composer.setSuperclass(AbstractValidator.class.getCanonicalName() + "<" + beanClassType.getQualifiedSourceName() + ">");
 
 		//add imports (other classes will be referenced by FULL class name)
 		composer.addImport(List.class.getCanonicalName());
