@@ -203,11 +203,11 @@ public class ValidatorCreator {
 		//string source
 		String outputClassName = null;
 
-		try {
-			final JClassType originalClassType = this.typeOracle.getType(this.originalTypeName);
+		
+			final JClassType originalClassType = this.typeOracle.findType(this.originalTypeName);
 
 			//get class type
-			final JClassType classType = this.typeOracle.getType(this.typeName);
+			final JClassType classType = this.typeOracle.findType(this.typeName);
 
 			//write to string
 			final SourceWriter sw = this.getSourceWriter(originalClassType, classType);
@@ -615,10 +615,6 @@ public class ValidatorCreator {
 
 			//output class name
 			outputClassName = originalClassType.getParameterizedQualifiedSourceName() + "Validator";
-
-		} catch (final NotFoundException e) {
-			this.logger.log(TreeLogger.ERROR, "Type " + this.typeName + " not found.");
-		}
 
 		//output class name
 		return outputClassName;
