@@ -3,6 +3,7 @@
 		<#list properties as property>
 		//${property.name}
 		this.properties.add("${property.name}");
+		this.propertyTypes.put("${property.name}",${property.classString});
 		<#if property.annotations?size &gt; 0>
 		Set<ConstraintDescriptor<?>> ${property.name}AnnotationList = new LinkedHashSet<ConstraintDescriptor<?>>();
 		<#list property.annotations as annotation>
@@ -12,3 +13,6 @@
 		</#if>
 
 		</#list>
+		
+		//set the target class
+		this.targetClass = ${reflectionTargetName}.class;

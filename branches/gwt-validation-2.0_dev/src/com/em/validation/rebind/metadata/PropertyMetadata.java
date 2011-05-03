@@ -10,6 +10,7 @@ public class PropertyMetadata {
 	
 	private String name;
 	private String accessor;
+	private String classString;
 	
 	public String getName() {
 		return name;
@@ -31,5 +32,12 @@ public class PropertyMetadata {
 	public void setAnnotations(List<String> annotations) {
 		this.annotations = annotations;
 	}
+	public String getClassString() {
+		return classString;
+	}
+	public void setClassString(String classString) {
+		this.classString = classString;
+	}
+	
 		
 }

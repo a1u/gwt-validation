@@ -13,9 +13,9 @@ import org.junit.Test;
 
 import com.em.validation.client.model.generic.TestClass;
 import com.em.validation.client.reflector.IReflector;
-import com.em.validation.compiler.TestCompiler;
 import com.em.validation.rebind.ConstraintDescriptionGenerator;
 import com.em.validation.rebind.ReflectorGenerator;
+import com.em.validation.rebind.compiler.TestCompiler;
 import com.em.validation.rebind.metadata.ClassDescriptor;
 import com.em.validation.rebind.metadata.ReflectorClassDescriptions;
 

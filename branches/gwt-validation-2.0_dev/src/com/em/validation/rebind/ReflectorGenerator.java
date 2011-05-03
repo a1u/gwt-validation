@@ -80,6 +80,7 @@ public enum ReflectorGenerator {
 
 			PropertyMetadata pMeta = new PropertyMetadata();
 			pMeta.setName(propertyName);
+			pMeta.setClassString(property.getPropertyType().getName() + ".class");
 			
 			if(this.hasField(reflectionTarget, propertyName)) {
 				pMeta.setAccessor(propertyName);
@@ -146,6 +147,8 @@ public enum ReflectorGenerator {
 			
 			//get field
 			Field field = publicFields.get(fieldName);
+			
+			pMeta.setClassString(field.getType().getName() + ".class");
 			
 			//process annotations
 			List<Annotation> annotations = this.getContstraintAnnotations(Arrays.asList(field.getAnnotations()));
