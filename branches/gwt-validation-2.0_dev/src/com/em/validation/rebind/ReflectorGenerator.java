@@ -129,7 +129,7 @@ public enum ReflectorGenerator {
 			List<Annotation> annotations = this.getContstraintAnnotations(new ArrayList<Annotation>(potentialAnnotations));
 			
 			for(Annotation annotation : annotations) {
-				ClassDescriptor description = ConstraintDescriptionGenerator.INSTANCE.generateConstraintAnnotation(reflectionTarget, propertyName, annotation);
+				ClassDescriptor description = ConstraintDescriptionGenerator.INSTANCE.generateConstraintClassDescriptor(reflectionTarget, propertyName, annotation);
 				pMeta.getAnnotations().add(description.getFullClassName());
 				classDescriptions.getConstraintDescriptors().add(description);
 			}
@@ -151,7 +151,7 @@ public enum ReflectorGenerator {
 			List<Annotation> annotations = this.getContstraintAnnotations(Arrays.asList(field.getAnnotations()));
 			
 			for(Annotation annotation : annotations) {
-				ClassDescriptor description = ConstraintDescriptionGenerator.INSTANCE.generateConstraintAnnotation(reflectionTarget, fieldName, annotation);
+				ClassDescriptor description = ConstraintDescriptionGenerator.INSTANCE.generateConstraintClassDescriptor(reflectionTarget, fieldName, annotation);
 				pMeta.getAnnotations().add(description.getFullClassName());
 				classDescriptions.getConstraintDescriptors().add(description);
 			}
