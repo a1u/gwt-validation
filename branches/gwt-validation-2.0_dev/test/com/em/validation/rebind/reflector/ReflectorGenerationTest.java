@@ -1,6 +1,6 @@
 package com.em.validation.rebind.reflector;
 
-import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.*;
 
 import java.lang.annotation.Annotation;
 
@@ -9,9 +9,11 @@ import javax.validation.constraints.Size;
 import javax.validation.groups.Default;
 import javax.validation.metadata.BeanDescriptor;
 import javax.validation.metadata.ConstraintDescriptor;
+import javax.validation.metadata.PropertyDescriptor;
 
 import org.junit.Test;
 
+import com.em.validation.client.model.generic.ExtendedInterface;
 import com.em.validation.client.model.generic.TestClass;
 import com.em.validation.client.reflector.IReflector;
 import com.em.validation.client.validation.factory.DescriptorFactory;
@@ -107,5 +109,55 @@ public class ReflectorGenerationTest {
 		BeanDescriptor descriptor = DescriptorFactory.INSTANCE.getBeanDescriptor(reflector);
 		
 		assertEquals(TestClass.class, descriptor.getElementClass());
+	}
+	
+	@Test
+	public void testInterfaceReflectorCreation() throws InstantiationException, IllegalAccessException {
+	
+		ReflectorClassDescriptions reflectorPackage = ReflectorGenerator.INSTANCE.getReflectorDescirptions(ExtendedInterface.class);
+		
+		Class<?> reflectorClass = TestCompiler.loadReflectorClass(reflectorPackage);
+		@SuppressWarnings("unchecked")
+		IReflector<ExtendedInterface> reflector = (IReflector<ExtendedInterface>) reflectorClass.newInstance(); 
+		
+		BeanDescriptor descriptor = DescriptorFactory.INSTANCE.getBeanDescriptor(reflector);
+		
+		assertEquals(ExtendedInterface.class, descriptor.getElementClass());
+		
+		//get string prop from ExtendedInterface
+		PropertyDescriptor stringDescriptor = descriptor.getConstraintsForProperty("string");
+		assertNotNull(stringDescriptor);
+		
+		//should contain two properties
+		assertEquals(2, stringDescriptor.getConstraintDescriptors().size());
+		
+		//now to test reflector aspect
+		ExtendedInterface extension = new ExtendedInterface() {
+			@Override
+			public String getTestInterfaceString() {
+				return "test interface string";
+			}
+			
+			@Override
+			public boolean isTrue() {
+				return true;
+			}
+			
+			@Override
+			public boolean isFalse() {
+				return false;
+			}
+			
+			@Override
+			public String getString() {
+				return "test string";
+			}
+		};
+		
+		assertEquals(true, reflector.getValue("true", extension));
+		assertEquals(false, reflector.getValue("false", extension));
+		assertEquals("test string", reflector.getValue("string", extension));
+		assertEquals("test interface string", reflector.getValue("testInterfaceString", extension));
+		
 	}
 }

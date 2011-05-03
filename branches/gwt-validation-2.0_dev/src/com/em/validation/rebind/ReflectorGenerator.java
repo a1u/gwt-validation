@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -45,22 +46,14 @@ public enum ReflectorGenerator {
 		imports.add(reflectionTarget.getName());
 		
 		Set<PropertyDescriptor> propertyDescriptors = new LinkedHashSet<PropertyDescriptor>();
-		//get the property descriptors for the given target class
-		BeanInfo targetInfo = null;
-		try {
-			targetInfo = Introspector.getBeanInfo(reflectionTarget);
-		} catch (IntrospectionException e) {
-			e.printStackTrace();
-			return null;
-		}
-		//save off the info 
-		propertyDescriptors.addAll(Arrays.asList(targetInfo.getPropertyDescriptors()));		
+		//recursively resolve the property descriptors for the given target class
+		propertyDescriptors.addAll(resolveAllPropertyDescriptors(reflectionTarget).values());		
 		
 		//this will be used to filter against later in the process.  this will allow us to
 		//know if a property has a publicly accessible field or if it has a method that should
 		//be used instead.
 		HashMap<String,Field> publicFields = new HashMap<String, Field>();
-		for(Field field : reflectionTarget.getFields()) {
+		for(Field field : reflectionTarget.getDeclaredFields()) {
 			publicFields.put(field.getName(),field);
 		}
 		
@@ -95,12 +88,16 @@ public enum ReflectorGenerator {
 			//remove accessible field from public fields, so that it won't be processed twice
 			publicFields.remove(propertyName);
 			
-			//collect the method and field annotations
-			Set<Annotation> potentialAnnotations = new LinkedHashSet<Annotation>();
-
+			//method and field annotations for composition mechanism
+			Map<String,Annotation> potentialAnnotations = new LinkedHashMap<String, Annotation>();
+			
 			try {
 				Field field = reflectionTarget.getField(propertyName);
-				potentialAnnotations.addAll(Arrays.asList(field.getAnnotations()));
+				for(Annotation a : field.getAnnotations()) {
+					String id = field.getName() + ":" + a.annotationType().getName();
+					potentialAnnotations.put(id, a);
+				}
+				//potentialAnnotations.addAll(Arrays.asList(field.getAnnotations()));
 			} catch (Exception ex) {
 				//log no field access
 			}
@@ -114,10 +111,18 @@ public enum ReflectorGenerator {
 					for(Class<?> infoInterface : infoClass.getInterfaces()) {
 						if(this.hasMethod(infoInterface, methodName, new Class<?>[]{})) {
 							Method interfaceMethod = infoInterface.getMethod(methodName, new Class<?>[]{});
-							potentialAnnotations.addAll(Arrays.asList(interfaceMethod.getAnnotations()));
+							for(Annotation a : interfaceMethod.getAnnotations()) {
+								String id = methodName + ":" + a.annotationType().getName();
+								potentialAnnotations.put(id, a);
+							}
 						}
 					}
-					potentialAnnotations.addAll(Arrays.asList(method.getAnnotations()));
+					
+					for(Annotation a : method.getAnnotations()) {
+						String id = methodName + ":" + a.annotationType().getName();
+						potentialAnnotations.put(id, a);
+					}
+					
 					infoClass = infoClass.getSuperclass();
 					if(this.hasMethod(infoClass, methodName, new Class<?>[]{})) {
 						method = infoClass.getMethod(methodName, new Class<?>[]{});
@@ -127,7 +132,7 @@ public enum ReflectorGenerator {
 				//log no method access (?)
 			}
 			
-			List<Annotation> annotations = this.getContstraintAnnotations(new ArrayList<Annotation>(potentialAnnotations));
+			List<Annotation> annotations = this.getContstraintAnnotations(new ArrayList<Annotation>(potentialAnnotations.values()));
 			
 			for(Annotation annotation : annotations) {
 				ClassDescriptor description = ConstraintDescriptionGenerator.INSTANCE.generateConstraintClassDescriptor(reflectionTarget, propertyName, annotation);
@@ -200,6 +205,35 @@ public enum ReflectorGenerator {
 		} catch (NoSuchMethodException e) {
 		}
 		return false;
+	}
+	
+	private Map<String, PropertyDescriptor> resolveAllPropertyDescriptors(Class<?> targetClass) {
+		
+		Map<String, PropertyDescriptor> descriptors = new LinkedHashMap<String, PropertyDescriptor>();
+		
+		//return the empty list if the target is null
+		if(targetClass == null) return descriptors;
+				
+		//if the object class doesn't equal the superclass, turn around
+		if(!Object.class.equals(targetClass.getSuperclass())) {
+			descriptors.putAll(this.resolveAllPropertyDescriptors(targetClass.getSuperclass()));
+		}
+		
+		for(Class<?> iface : targetClass.getInterfaces()) {
+			descriptors.putAll(this.resolveAllPropertyDescriptors(iface));
+		}
+
+		BeanInfo targetInfo = null;
+		try {
+			targetInfo = Introspector.getBeanInfo(targetClass);
+			for(PropertyDescriptor property : targetInfo.getPropertyDescriptors()) {
+				descriptors.put(property.getName(), property);
+			}
+		} catch (IntrospectionException e) {
+			//do nothing
+		}
+		
+		return descriptors;
 	}
 
 	private List<Annotation> getContstraintAnnotations(List<Annotation> inputList) {
