@@ -7,7 +7,7 @@ import javax.validation.metadata.ElementDescriptor;
 
 import com.em.validation.client.reflector.IReflector;
 
-public class ElementDescriptorImpl extends ProtoDescriptor implements ElementDescriptor {
+public abstract class ElementDescriptorImpl extends ProtoDescriptor implements ElementDescriptor {
 
 	protected IReflector<?> backingReflector = null;
 

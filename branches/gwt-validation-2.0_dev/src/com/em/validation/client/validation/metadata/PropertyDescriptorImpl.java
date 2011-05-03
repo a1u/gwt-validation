@@ -12,6 +12,10 @@ public class PropertyDescriptorImpl extends ProtoDescriptor implements PropertyD
 	protected String propertyName = "";
 	protected IReflector<?> backingReflector = null;
 	
+	protected PropertyDescriptorImpl() {
+		
+	}
+	
 	@Override
 	public Set<ConstraintDescriptor<?>> getConstraintDescriptors() {
 		return this.backingReflector.getConstraintDescriptors(this.propertyName);

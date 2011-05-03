@@ -7,12 +7,14 @@ import java.lang.annotation.Annotation;
 import javax.validation.Payload;
 import javax.validation.constraints.Size;
 import javax.validation.groups.Default;
+import javax.validation.metadata.BeanDescriptor;
 import javax.validation.metadata.ConstraintDescriptor;
 
 import org.junit.Test;
 
 import com.em.validation.client.model.generic.TestClass;
 import com.em.validation.client.reflector.IReflector;
+import com.em.validation.client.validation.factory.DescriptorFactory;
 import com.em.validation.rebind.ConstraintDescriptionGenerator;
 import com.em.validation.rebind.ReflectorGenerator;
 import com.em.validation.rebind.compiler.TestCompiler;
@@ -90,5 +92,20 @@ public class ReflectorGenerationTest {
 		//set new value
 		testInstance.setTestInt(430);
 		assertEquals(430, reflector.getValue("testInt", testInstance));		
+	}
+	
+	@Test
+	public void testDescriptors() throws InstantiationException, IllegalAccessException {
+		TestClass testInstance = new TestClass();
+		
+		ReflectorClassDescriptions reflectorPackage = ReflectorGenerator.INSTANCE.getReflectorDescirptions(testInstance.getClass());
+		
+		Class<?> reflectorClass = TestCompiler.loadReflectorClass(reflectorPackage);
+		@SuppressWarnings("unchecked")
+		IReflector<TestClass> reflector = (IReflector<TestClass>) reflectorClass.newInstance(); 
+		
+		BeanDescriptor descriptor = DescriptorFactory.INSTANCE.getBeanDescriptor(reflector);
+		
+		assertEquals(TestClass.class, descriptor.getElementClass());
 	}
 }

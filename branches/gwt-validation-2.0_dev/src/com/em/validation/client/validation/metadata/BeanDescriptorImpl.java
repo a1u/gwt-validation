@@ -10,6 +10,10 @@ import com.google.gwt.dev.util.collect.HashSet;
 
 public class BeanDescriptorImpl extends ElementDescriptorImpl implements BeanDescriptor {
 
+	protected BeanDescriptorImpl() {
+	
+	}
+	
 	@Override
 	public Set<PropertyDescriptor> getConstrainedProperties() {
 		Set<PropertyDescriptor> propertyDescriptors = new HashSet<PropertyDescriptor>();
