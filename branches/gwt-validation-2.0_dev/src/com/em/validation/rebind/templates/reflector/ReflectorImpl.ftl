@@ -6,6 +6,7 @@ import java.lang.annotation.Annotation;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ArrayList;
+import javax.validation.metadata.ConstraintDescriptor;
 
 //we need the full directory where all the generated constraints are stored
 import ${generatedConstraintPackage}.*;

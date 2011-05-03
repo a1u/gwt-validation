@@ -1,5 +1,5 @@
 		//create underlying annotation
-		this.annotation = ${generatedName}.baseAnnotation;
+		this.annotation = <#include "ConstraintDescriptor_AnnotationDeclaration.ftl">;
 
 		//save properties
 		<#list annotationMetadata as metadata>

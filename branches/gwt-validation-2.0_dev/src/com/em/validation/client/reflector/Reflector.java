@@ -1,9 +1,10 @@
 package com.em.validation.client.reflector;
 
-import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import javax.validation.metadata.ConstraintDescriptor;
 
 import com.google.gwt.dev.util.collect.HashSet;
 
@@ -24,9 +25,17 @@ public abstract class Reflector<T> implements IReflector<T> {
 		return this.properties;
 	}
 	
-	protected Map<String, Set<Annotation>> annotationMap = new HashMap<String, Set<Annotation>>();
+	/**
+	 * Direct access to the constraint descriptors, from which we can get constraints
+	 * 
+	 */
+	protected Map<String, Set<ConstraintDescriptor<?>>> constraintDescriptors = new HashMap<String, Set<ConstraintDescriptor<?>>>();
 	
-	public Set<Annotation> getAnnotations(String name){
-		return this.annotationMap.get(name);
+	/**
+	 * Get the constraint descriptors present on the given property
+	 * 
+	 */
+	public Set<ConstraintDescriptor<?>> getConstraintDescriptors(String name){
+		return this.constraintDescriptors.get(name);
 	}
 }

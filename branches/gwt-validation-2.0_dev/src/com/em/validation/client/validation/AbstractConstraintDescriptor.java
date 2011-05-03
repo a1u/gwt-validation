@@ -9,10 +9,6 @@ import javax.validation.metadata.ConstraintDescriptor;
 
 public abstract class AbstractConstraintDescriptor<T extends Annotation> implements ConstraintDescriptor<T> {
 
-	static {
-		
-	}
-	
 	/**
 	 * The annotation that will be set by the implementing class
 	 * 

@@ -1,6 +1,3 @@
-	//the static annotation
-	private static ${targetAnnotation} baseAnnotation = <#include "ConstraintDescriptor_AnnotationDeclaration.ftl">
-	
 	public ${generatedName}() {
 		<#include "ConstraintDescriptor_Constructor.ftl">
 	}
@@ -15,8 +12,4 @@
 	
 	public Set<Class<? extends Payload>> getPayload() {
 		<#include "ConstraintDescriptor_getPayload.ftl">
-	}
-	
-	public static ${targetAnnotation} getAnnotationInstance() {
-		<#include "ConstraintDescriptor_getAnnotationInstance.ftl">
 	}

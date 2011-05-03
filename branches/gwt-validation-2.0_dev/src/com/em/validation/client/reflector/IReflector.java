@@ -1,7 +1,8 @@
 package com.em.validation.client.reflector;
 
-import java.lang.annotation.Annotation;
 import java.util.Set;
+
+import javax.validation.metadata.ConstraintDescriptor;
 
 public interface IReflector<T> {
 
@@ -22,10 +23,10 @@ public interface IReflector<T> {
 	public Set<String> getPropertyNames();
 		
 	/**
-	 * Given then name of the field or method, return the string that represents the annotation.
+	 * Given then name of the field or method, return a list of constraint descriptors for that annotation.
 	 * 
 	 * @param name
 	 * @return
 	 */
-	public Set<Annotation> getAnnotations(String name);
+	public Set<ConstraintDescriptor<?>> getConstraintDescriptors(String name);
 }
