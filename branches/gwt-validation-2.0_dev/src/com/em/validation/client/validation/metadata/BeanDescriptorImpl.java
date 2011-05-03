@@ -1,4 +1,4 @@
-package com.em.validation.client.validation;
+package com.em.validation.client.validation.metadata;
 
 import java.util.Set;
 

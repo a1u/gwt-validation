@@ -12,7 +12,7 @@ import java.util.UUID;
 import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;
 
-import com.em.validation.client.validation.AbstractConstraintDescriptor;
+import com.em.validation.client.validation.metadata.AbstractConstraintDescriptor;
 import com.em.validation.rebind.metadata.AnnotationMethodMetadata;
 import com.em.validation.rebind.metadata.ClassDescriptor;
 import com.google.gwt.dev.util.collect.HashSet;

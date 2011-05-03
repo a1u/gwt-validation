@@ -4,8 +4,8 @@ import javax.validation.metadata.BeanDescriptor;
 import javax.validation.metadata.PropertyDescriptor;
 
 import com.em.validation.client.reflector.IReflector;
-import com.em.validation.client.validation.BeanDescriptorImpl;
-import com.em.validation.client.validation.PropertyDescriptorImpl;
+import com.em.validation.client.validation.metadata.BeanDescriptorImpl;
+import com.em.validation.client.validation.metadata.PropertyDescriptorImpl;
 
 public enum DescriptorFactory {
 	

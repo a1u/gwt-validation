@@ -12,7 +12,7 @@ import java.util.Set;
 import javax.validation.ConstraintValidator;
 import javax.validation.Payload;
 import javax.validation.metadata.ConstraintDescriptor;
-import com.em.validation.client.validation.AbstractConstraintDescriptor;
+import com.em.validation.client.validation.metadata.AbstractConstraintDescriptor;
 
 //the target constraint annotation
 import ${annotationImportName};
