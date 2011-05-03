@@ -1,0 +1,1 @@
+		return new HashSet<Class<?>>(Arrays.asList(this.annotation.groups()));
