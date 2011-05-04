@@ -1,12 +1,11 @@
 package com.em.validation.client.reflector;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import javax.validation.metadata.ConstraintDescriptor;
-
-import com.google.gwt.dev.util.collect.HashSet;
 
 public abstract class Reflector<T> implements IReflector<T> {
 

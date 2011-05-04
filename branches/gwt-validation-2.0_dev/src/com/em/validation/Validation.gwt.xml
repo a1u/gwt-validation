@@ -1,0 +1,13 @@
+<module>
+  <!-- inherit core gwt -->
+  <inherits name='com.google.gwt.user.User'/>
+
+  <!-- inherit javax.validation -->
+  <inherits name='javax.validation.Validation'/>
+
+  <!-- Generators -->
+  <generate-with class="com.em.validation.rebind.generator.GwtReflectorGenerator">
+        <when-type-assignable class="com.em.validation.client.reflector.IReflector" />
+  </generate-with>
+
+</module>

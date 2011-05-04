@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -15,7 +16,6 @@ import javax.validation.ConstraintValidator;
 import com.em.validation.client.validation.metadata.AbstractConstraintDescriptor;
 import com.em.validation.rebind.metadata.AnnotationMethodMetadata;
 import com.em.validation.rebind.metadata.ClassDescriptor;
-import com.google.gwt.dev.util.collect.HashSet;
 
 /**
  * Lazy singleton for generating annotations.
