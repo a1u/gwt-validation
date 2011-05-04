@@ -19,24 +19,15 @@ import java.util.Set;
 
 import javax.validation.Constraint;
 
-import com.em.validation.client.reflector.IReflector;
 import com.em.validation.rebind.metadata.ClassDescriptor;
 import com.em.validation.rebind.metadata.PropertyMetadata;
 import com.em.validation.rebind.metadata.ReflectorClassDescriptions;
-
-import freemarker.template.Configuration;
-import freemarker.template.DefaultObjectWrapper;
 
 public enum ReflectorGenerator {
 
 	INSTANCE;
 	
 	public ReflectorClassDescriptions getReflectorDescirptions(Class<?> reflectionTarget) {
-		
-		//setup freemarker
-		Configuration freemarkerConfig = new Configuration();
-		freemarkerConfig.setClassForTemplateLoading(IReflector.class, "");
-		freemarkerConfig.setObjectWrapper(new DefaultObjectWrapper());
 		
 		//get the basic name of the target class and generate the reflector class name
 		String concreteClassName = reflectionTarget.getSimpleName() + "Reflector";
@@ -58,7 +49,7 @@ public enum ReflectorGenerator {
 		}
 		
 		//the list of properties
-		List<PropertyMetadata> metadataList = new ArrayList<PropertyMetadata>();
+		Map<String,PropertyMetadata> metadataMap = new LinkedHashMap<String,PropertyMetadata>();
 		
 		//the source listings
 		ReflectorClassDescriptions classDescriptions = new ReflectorClassDescriptions();
@@ -75,18 +66,16 @@ public enum ReflectorGenerator {
 			pMeta.setName(propertyName);
 			pMeta.setClassString(property.getPropertyType().getName() + ".class");
 			
-			if(this.hasField(reflectionTarget, propertyName)) {
-				pMeta.setAccessor(propertyName);
-			} else if(this.hasMethod(reflectionTarget, property.getReadMethod().getName(), new Class<?>[]{})) {
+			if(this.hasMethod(reflectionTarget, property.getReadMethod().getName(), new Class<?>[]{})) {
 				pMeta.setAccessor(property.getReadMethod().getName() + "()");
+			} else if(this.hasField(reflectionTarget, propertyName)) {
+				pMeta.setAccessor(propertyName);
 			} else {
 				continue;
 			}
 			
 			//add the property to the metadata list
-			metadataList.add(pMeta);
-			//remove accessible field from public fields, so that it won't be processed twice
-			publicFields.remove(propertyName);
+			metadataMap.put(propertyName,pMeta);
 			
 			//method and field annotations for composition mechanism
 			Map<String,Annotation> potentialAnnotations = new LinkedHashMap<String, Annotation>();
@@ -97,7 +86,6 @@ public enum ReflectorGenerator {
 					String id = field.getName() + ":" + a.annotationType().getName();
 					potentialAnnotations.put(id, a);
 				}
-				//potentialAnnotations.addAll(Arrays.asList(field.getAnnotations()));
 			} catch (Exception ex) {
 				//log no field access
 			}
@@ -144,16 +132,21 @@ public enum ReflectorGenerator {
 		//process remaining fields
 		for(String fieldName : publicFields.keySet()) {
 
-			//add reflective bits
-			PropertyMetadata pMeta = new PropertyMetadata();
-			pMeta.setName(fieldName);
-			pMeta.setAccessor(fieldName);
-			metadataList.add(pMeta);
-			
 			//get field
 			Field field = publicFields.get(fieldName);
 			
-			pMeta.setClassString(field.getType().getName() + ".class");
+			//add reflective bits
+			PropertyMetadata pMeta = metadataMap.get(fieldName);
+			if(pMeta == null) {
+				//instantiate
+				pMeta = new PropertyMetadata();
+				//set properties
+				pMeta.setName(fieldName);
+				pMeta.setAccessor(fieldName);
+				pMeta.setClassString(field.getType().getName() + ".class");
+				//add to the metadata list
+				metadataMap.put(fieldName,pMeta);			
+			}
 			
 			//process annotations
 			List<Annotation> annotations = this.getContstraintAnnotations(Arrays.asList(field.getAnnotations()));
@@ -171,7 +164,7 @@ public enum ReflectorGenerator {
 		Map<String,Object> templateDataModel = new HashMap<String, Object>();
 		templateDataModel.put("concreteClassName", concreteClassName);
 		templateDataModel.put("importList", imports);
-		templateDataModel.put("properties", metadataList);
+		templateDataModel.put("properties", metadataMap.values());
 		templateDataModel.put("reflectionTargetName", reflectionTarget.getSimpleName());
 		templateDataModel.put("targetPackage", targetPackage);
 		templateDataModel.put("generatedConstraintPackage",ConstraintDescriptionGenerator.INSTANCE.getTargetPackage());
@@ -186,6 +179,7 @@ public enum ReflectorGenerator {
 	}
 	
 	private boolean hasField(Class<?> targetClass, String targetFieldName) {
+		if(targetClass == null) return false;
 		try {
 			if(targetClass.getField(targetFieldName) != null) {
 				return true;
@@ -197,6 +191,7 @@ public enum ReflectorGenerator {
 	}
 
 	private boolean hasMethod(Class<?> targetClass, String targetFieldName, Class<?>[] parameterTypes) {
+		if(targetClass == null) return false;
 		try {
 			if(targetClass.getMethod(targetFieldName,parameterTypes) != null) {
 				return true;
