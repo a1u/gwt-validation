@@ -16,7 +16,7 @@ import org.junit.Test;
 import com.em.validation.client.model.generic.ExtendedInterface;
 import com.em.validation.client.model.generic.TestClass;
 import com.em.validation.client.reflector.IReflector;
-import com.em.validation.client.validation.factory.DescriptorFactory;
+import com.em.validation.client.validation.metadata.factory.DescriptorFactory;
 import com.em.validation.rebind.ConstraintDescriptionGenerator;
 import com.em.validation.rebind.ReflectorGenerator;
 import com.em.validation.rebind.compiler.TestCompiler;
@@ -113,7 +113,6 @@ public class ReflectorGenerationTest {
 	
 	@Test
 	public void testInterfaceReflectorCreation() throws InstantiationException, IllegalAccessException {
-	
 		ReflectorClassDescriptions reflectorPackage = ReflectorGenerator.INSTANCE.getReflectorDescirptions(ExtendedInterface.class);
 		
 		Class<?> reflectorClass = TestCompiler.loadReflectorClass(reflectorPackage);

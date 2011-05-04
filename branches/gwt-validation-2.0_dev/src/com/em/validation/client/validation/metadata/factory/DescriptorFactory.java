@@ -1,4 +1,4 @@
-package com.em.validation.client.validation.factory;
+package com.em.validation.client.validation.metadata.factory;
 
 import javax.validation.metadata.BeanDescriptor;
 import javax.validation.metadata.PropertyDescriptor;

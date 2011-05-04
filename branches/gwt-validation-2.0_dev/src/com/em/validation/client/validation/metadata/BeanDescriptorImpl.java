@@ -5,7 +5,7 @@ import java.util.Set;
 import javax.validation.metadata.BeanDescriptor;
 import javax.validation.metadata.PropertyDescriptor;
 
-import com.em.validation.client.validation.factory.DescriptorFactory;
+import com.em.validation.client.validation.metadata.factory.DescriptorFactory;
 import com.google.gwt.dev.util.collect.HashSet;
 
 public class BeanDescriptorImpl extends ElementDescriptorImpl implements BeanDescriptor {

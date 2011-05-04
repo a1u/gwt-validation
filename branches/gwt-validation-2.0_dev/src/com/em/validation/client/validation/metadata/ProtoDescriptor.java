@@ -6,7 +6,13 @@ public abstract class ProtoDescriptor implements ElementDescriptor{
 
 	@Override
 	public ConstraintFinder findConstraints() {
-		return null;
+		final class PrivateConstraintFinderImpl extends ConstraintFinderImpl {
+			public PrivateConstraintFinderImpl(ElementDescriptor descriptor) {
+				super(descriptor);
+			}			
+		}
+		
+		return new PrivateConstraintFinderImpl(this);
 	}
 	
 }

@@ -293,7 +293,7 @@ public enum ConstraintDescriptionGenerator {
 			output.append("[]{");
 			int i = 0;
 			for(Object v : values) {
-				if(i > 1) {
+				if(i > 0) {
 					output.append(",");
 				}
 				i++;
