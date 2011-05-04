@@ -2,7 +2,8 @@
 
 = Introduction =
 
-Even though the gwt sdk will include (some) JSR-303 compatibility with version 2.3 or 2.4 it still requires (from what knowledge is available) a non-client check of the file for constraint violations.  This is, at the very least, undesirable.
+Even though the GWT SDK will include (some or all) JSR-303 compatibility with version 2.3 or 2.4 it still requires (from what knowledge is available) a non-client check of the file for constraint violations.  This is, at the very least, undesirable.
+
 
 = Why? =
 
@@ -21,11 +22,27 @@ It is entirely possible to create a fully, or almost fully, complete JSR-303 val
  * Full i8n support.
 
 
+
 = Concept of Operations =
 
+==Data Model==
 
+===Reflector===
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+The cornerstone of the new data model is the IReflector interface and the Reflector abstraction.  The 2.0 validation framework generates reflectors at runtime that provide information about the constraint status of the underlying class *and* allow the runtime resolution of property values.
+
+In the generated gwt code the Reflector class allows dynamic property value checks and access to the ConstraintDescriptors that make up the constraints on a given class.
+
+In the server side code, the IReflector interface provides a single point of implementation into the reflection subsystem.  This class is relatively easy to implement because the reflection and bean information classes are familiar.
+
+All of the {{{javax.validation.metadata}}} classes are backed by a reflector instance.
+
+===Factories===
+
+At the basic level there are factories that provide the Reflector instance to the requesting caller.  This is true of the generated code as well as server side code.
+
+===Annotation Scanning===
+
+At class generation time two classpath scans will be performed.  The first will scan for @Constraint to find all of the constraints available.  The second scan will look for all of the constrained classes available on the classpath.  This information will be used to generate the ReflectorFactory at compile time.  This will be accomplished by using the overlay mechanism so that the server side ReflectorFactory can exist in the same place and be used interchangeably.
+
+On the server side ReflectorFactory will return a Reflector instance as discussed above.
