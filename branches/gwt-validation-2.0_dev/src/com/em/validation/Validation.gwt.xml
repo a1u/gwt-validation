@@ -1,13 +1,17 @@
 <module>
-  <!-- inherit core gwt -->
-  <inherits name='com.google.gwt.user.User'/>
+	<!-- inherit javax.validation -->
+	<inherits name='javax.validation.Validation'/>
+	
+	<!-- Generate reflectors, which (in turn) generates constraint descriptors -->
+	<generate-with class="com.em.validation.rebind.generator.gwt.GwtReflectorGenerator">
+	      <when-type-assignable class="com.em.validation.client.reflector.IReflector" />
+	</generate-with>
+	
+	<!-- Scan the classpath and build the reflector factory -->
+	<generate-with class="com.em.validation.rebind.generator.gwt.GwtReflectorFactoryGenerator">
+	      <when-type-assignable class="com.em.validation.client.reflector.IReflectorFactory" />
+	</generate-with>
 
-  <!-- inherit javax.validation -->
-  <inherits name='javax.validation.Validation'/>
-
-  <!-- Generators -->
-  <generate-with class="com.em.validation.rebind.generator.GwtReflectorGenerator">
-        <when-type-assignable class="com.em.validation.client.reflector.IReflector" />
-  </generate-with>
-
+	<!-- Super Source Emulation -->
+ 	<super-source path="emul" />
 </module>

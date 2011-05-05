@@ -1,1 +1,0 @@
-		return new HashSet<Class<? extends Payload>>(Arrays.asList(this.annotation.payload()));

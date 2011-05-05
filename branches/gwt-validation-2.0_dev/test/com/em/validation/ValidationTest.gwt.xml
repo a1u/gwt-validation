@@ -1,0 +1,6 @@
+<module>
+
+	<!-- inherit base project -->
+	<inherits name='com.em.validation.Validation'/>
+	
+</module>

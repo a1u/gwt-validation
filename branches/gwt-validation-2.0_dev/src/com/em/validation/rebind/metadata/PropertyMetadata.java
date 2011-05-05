@@ -1,5 +1,6 @@
 package com.em.validation.rebind.metadata;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ public class PropertyMetadata {
 
 
 	private List<String> annotations = new ArrayList<String>();
+	private List<Annotation> annotationInstances = new ArrayList<Annotation>();
 	
 	private String name;
 	private String accessor;
@@ -35,9 +37,16 @@ public class PropertyMetadata {
 	public String getClassString() {
 		return classString;
 	}
+	
 	public void setClassString(String classString) {
 		this.classString = classString;
 	}
+	public List<Annotation> getAnnotationInstances() {
+		return annotationInstances;
+	}
+	public void setAnnotationInstances(List<Annotation> annotationInstances) {
+		this.annotationInstances = annotationInstances;
+	}
 	
-		
+	
 }
