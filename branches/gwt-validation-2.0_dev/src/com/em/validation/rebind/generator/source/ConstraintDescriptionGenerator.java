@@ -11,7 +11,6 @@ import java.util.UUID;
 import javax.validation.ConstraintValidator;
 
 import com.em.validation.client.metadata.AbstractConstraintDescriptor;
-import com.em.validation.rebind.keys.ConstraintDescriptorKey;
 import com.em.validation.rebind.metadata.AnnotationMetadata;
 import com.em.validation.rebind.metadata.ClassDescriptor;
 import com.em.validation.rebind.resolve.AnnotationResolver;
