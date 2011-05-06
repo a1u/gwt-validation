@@ -31,7 +31,7 @@ public class MetadataTest {
 		
 		ClassDescriptor reflectorPackage = ReflectorGenerator.INSTANCE.getReflectorDescirptions(groupTest.getClass());
 		
-		Class<?> reflectorClass = TestCompiler.loadClass(reflectorPackage);
+		Class<?> reflectorClass = TestCompiler.INSTANCE.loadClass(reflectorPackage);
 		@SuppressWarnings("unchecked")
 		IReflector<GroupTestClass> reflector = (IReflector<GroupTestClass>) reflectorClass.newInstance(); 
 

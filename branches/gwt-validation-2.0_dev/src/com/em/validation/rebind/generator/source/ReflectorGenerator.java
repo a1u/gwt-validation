@@ -20,7 +20,7 @@ public enum ReflectorGenerator {
 	
 	public ClassDescriptor getReflectorDescirptions(Class<?> targetClass) {
 		//target of generation
-		String targetPackage = this.BASE_PACKAGE + this.TARGET_PACKAGE;
+		String targetPackage = this.TARGET_PACKAGE;
 
 		//get the basic name of the target class and generate the reflector class name
 		String concreteClassName = targetClass.getSimpleName() + "Reflector";
@@ -39,7 +39,8 @@ public enum ReflectorGenerator {
 		for(PropertyMetadata propertyMetadata : metadataMap.values()) {
 			//generate for each targetClass, property, annotation
 			for(Annotation annotation : propertyMetadata.getAnnotationInstances()) {
-				ClassDescriptor descriptor = ConstraintDescriptionGenerator.INSTANCE.generateConstraintClassDescriptor(targetClass, propertyMetadata.getName(), annotation);
+				//ClassDescriptor descriptor = ConstraintDescriptionGenerator.INSTANCE.generateConstraintClassDescriptor(targetClass, propertyMetadata.getName(), annotation);
+				ClassDescriptor descriptor = ConstraintDescriptionGenerator.INSTANCE.generateConstraintDescriptor(annotation);
 				propertyMetadata.getAnnotations().add(descriptor.getClassName());
 				reflectorDescriptor.getDependencies().add(descriptor);
 			}

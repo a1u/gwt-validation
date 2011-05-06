@@ -27,9 +27,6 @@ public class ReflectorGenerationTest {
 	
 	@Test
 	public void testConstraintGeneration() throws InstantiationException, IllegalAccessException {
-		
-		Class<?> targetClass = TestClass.class;
-		String propertyName = "testString";
 		Size annotation = new Size(){
 
 			@Override
@@ -64,8 +61,8 @@ public class ReflectorGenerationTest {
 			
 		};
 		
-		ClassDescriptor descriptor = ConstraintDescriptionGenerator.INSTANCE.generateConstraintClassDescriptor(targetClass, propertyName, annotation);
-		Class<?> descriptorClass = TestCompiler.loadClass(descriptor);
+		ClassDescriptor descriptor = ConstraintDescriptionGenerator.INSTANCE.generateConstraintDescriptor(annotation);
+		Class<?> descriptorClass = TestCompiler.INSTANCE.loadClass(descriptor);
 		
 		@SuppressWarnings("unchecked")
 		ConstraintDescriptor<Size> constraintDescriptor = (ConstraintDescriptor<Size>)descriptorClass.newInstance();
@@ -84,7 +81,7 @@ public class ReflectorGenerationTest {
 		
 		ClassDescriptor reflectorPackage = ReflectorGenerator.INSTANCE.getReflectorDescirptions(testInstance.getClass());
 		
-		Class<?> reflectorClass = TestCompiler.loadClass(reflectorPackage);
+		Class<?> reflectorClass = TestCompiler.INSTANCE.loadClass(reflectorPackage);
 		@SuppressWarnings("unchecked")
 		IReflector<TestClass> reflector = (IReflector<TestClass>) reflectorClass.newInstance(); 
 		
@@ -102,7 +99,7 @@ public class ReflectorGenerationTest {
 		
 		ClassDescriptor reflectorPackage = ReflectorGenerator.INSTANCE.getReflectorDescirptions(testInstance.getClass());
 		
-		Class<?> reflectorClass = TestCompiler.loadClass(reflectorPackage);
+		Class<?> reflectorClass = TestCompiler.INSTANCE.loadClass(reflectorPackage);
 		@SuppressWarnings("unchecked")
 		IReflector<TestClass> reflector = (IReflector<TestClass>) reflectorClass.newInstance(); 
 		
@@ -115,7 +112,7 @@ public class ReflectorGenerationTest {
 	public void testInterfaceReflectorCreation() throws InstantiationException, IllegalAccessException {
 		ClassDescriptor reflectorPackage = ReflectorGenerator.INSTANCE.getReflectorDescirptions(ExtendedInterface.class);
 		
-		Class<?> reflectorClass = TestCompiler.loadClass(reflectorPackage);
+		Class<?> reflectorClass = TestCompiler.INSTANCE.loadClass(reflectorPackage);
 		@SuppressWarnings("unchecked")
 		IReflector<ExtendedInterface> reflector = (IReflector<ExtendedInterface>) reflectorClass.newInstance(); 
 		

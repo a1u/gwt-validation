@@ -2,8 +2,6 @@ package com.em.validation.rebind.scan;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;

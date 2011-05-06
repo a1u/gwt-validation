@@ -3,6 +3,7 @@ package com.em.validation.rebind.generator.source;
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -28,21 +29,20 @@ public enum ConstraintDescriptionGenerator {
 		
 	private final String BASE_PACKAGE = "com.em.validation.client";
 	private final String TARGET_PACKAGE = this.BASE_PACKAGE + ".generated.constraints";
+	private final String PREFIX = "ConstraintDescriptor";
 	
-	private final Map<ConstraintDescriptorKey, Map<String,Object>> constraintDescriptorCache = new HashMap<ConstraintDescriptorKey, Map<String,Object>>();
+	private final Map<String, ClassDescriptor> descriptorCache = new LinkedHashMap<String, ClassDescriptor>();
 	
 	private ConstraintDescriptionGenerator() {
 		
 	}
 	
-	private Map<String,Object> generateTemplateMap(Class<?> targetClass, String propertyName, Annotation annotation) {
-		//create key
-		ConstraintDescriptorKey key = new ConstraintDescriptorKey(targetClass,propertyName,annotation);
-		Map<String,Object> generatedAnnotationModel = this.constraintDescriptorCache.get(key);	
-		
-		if(generatedAnnotationModel == null) {
+	public ClassDescriptor generateConstraintDescriptor(Annotation annotation) {
+		//System.out.println("Annotation: " + annotation.toString());
+		ClassDescriptor descriptor = this.descriptorCache.get(annotation.toString());
+		if(descriptor == null) {
 			//initialize
-			generatedAnnotationModel = new HashMap<String, Object>();
+			Map<String,Object> generatedAnnotationModel = new HashMap<String, Object>();
 			
 			//get annotation metadata
 			AnnotationMetadata metadata = AnnotationResolver.INSTANCE.getAnnotationMetadata(annotation);
@@ -58,7 +58,7 @@ public enum ConstraintDescriptionGenerator {
 			uuidString = uuidString.replaceAll("\\-","");
 			
 			//create generation target annotation name
-			String generatedAnnotationName = targetClass.getSimpleName() + "_" + propertyName + "_" + annotationSimpleName + "_" + uuidString;
+			String generatedAnnotationName = this.PREFIX + "_" + uuidString;
 			String annotationType = annotationName + ".class";
 			String fullGeneratedAnnotationName = this.TARGET_PACKAGE + "." +generatedAnnotationName;
 							
@@ -77,96 +77,20 @@ public enum ConstraintDescriptionGenerator {
 			generatedAnnotationModel.put("targetAnnotation",annotationSimpleName);
 			generatedAnnotationModel.put("validatedBy",constraintValidatorClassNames);
 			
+			//populate descriptor
+			//create the description that the caller will use to do things with the generated class file
+			descriptor = new ClassDescriptor();
+			//generate annotation with template and set into description
+			descriptor.setClassContents(TemplateController.INSTANCE.processTemplate("templates/constraint/ConstraintDescriptor.ftl", generatedAnnotationModel));
+			descriptor.setFullClassName((String)generatedAnnotationModel.get("fullGeneratedAnnotationName"));
+			descriptor.setClassName((String)generatedAnnotationModel.get("generatedName"));
+			
 			//put the model in the cache
-			this.constraintDescriptorCache.put(key, generatedAnnotationModel);
-		}
+			this.descriptorCache.put(annotation.toString(), descriptor);			
+		}		
+		return descriptor;
+	}
 		
-		//return the model
-		return generatedAnnotationModel;
-	}
-	
-	public String generateConstraintDescription(Class<?> targetClass, String propertyName, Annotation annotation) {
-		//get the data model
-		Map<String,Object> dataModel = this.generateTemplateMap(targetClass, propertyName, annotation);
-		//return the class body
-		return TemplateController.INSTANCE.processTemplate("templates/constraint/ConstraintDescriptor.ftl", dataModel);
-	}
-	
-	public ClassDescriptor generateConstraintClassDescriptor(Class<?> targetClass, String propertyName, Annotation annotation) {
-		//get the data model
-		Map<String,Object> dataModel = this.generateTemplateMap(targetClass, propertyName, annotation);
-				
-		//create the description that the caller will use to do things with the generated class file
-		ClassDescriptor description = new ClassDescriptor();
-		//generate annotation with template and set into description
-		description.setClassContents(this.generateConstraintDescription(targetClass, propertyName, annotation));
-		description.setFullClassName((String)dataModel.get("fullGeneratedAnnotationName"));
-		description.setClassName((String)dataModel.get("generatedName"));
-		
-		//return the full class name of the generated annotation
-		return description;		
-	}
-	
-	public String getClassName(Class<?> targetClass, String propertyName, Annotation annotation) {
-		//get the data model
-		Map<String,Object> dataModel = this.generateTemplateMap(targetClass, propertyName, annotation);
-		return (String)dataModel.get("fullGeneratedAnnotationName");		
-	}
-	
-	public String getSimpleClassName(Class<?> targetClass, String propertyName, Annotation annotation) {
-		Map<String,Object> dataModel = this.generateTemplateMap(targetClass, propertyName, annotation);
-		return (String)dataModel.get("generatedName");
-	}
-	
-	public String getAnnotationDeclaration(Class<?> targetClass, String propertyName, Annotation annotation) {
-		//get the data model
-		Map<String,Object> dataModel = this.generateTemplateMap(targetClass, propertyName, annotation);
-		//return the class body
-		return TemplateController.INSTANCE.processTemplate("templates/constraint/ConstraintDescriptor_AnnotationDeclaration.ftl", dataModel);
-	}
-	
-	public String getClassBody(Class<?> targetClass, String propertyName, Annotation annotation) {
-		//get the data model
-		Map<String,Object> dataModel = this.generateTemplateMap(targetClass, propertyName, annotation);
-		//return the class body
-		return TemplateController.INSTANCE.processTemplate("templates/constraint/ConstraintDescriptor_ClassBody.ftl", dataModel);
-	}
-	
-	public String getConstructor(Class<?> targetClass, String propertyName, Annotation annotation) {
-		//get the data model
-		Map<String,Object> dataModel = this.generateTemplateMap(targetClass, propertyName, annotation);
-		//return the class body
-		return TemplateController.INSTANCE.processTemplate("templates/constraint/ConstraintDescriptor_Constructor.ftl", dataModel);
-	}
-	
-	public String getAnnotationInstance(Class<?> targetClass, String propertyName, Annotation annotation) {
-		//get the data model
-		Map<String,Object> dataModel = this.generateTemplateMap(targetClass, propertyName, annotation);
-		//return the class body
-		return TemplateController.INSTANCE.processTemplate("templates/constraint/ConstraintDescriptor_getAnnotationInstance.ftl", dataModel);
-	}
-	
-	public String getConstraintValidatorClasses(Class<?> targetClass, String propertyName, Annotation annotation) {
-		//get the data model
-		Map<String,Object> dataModel = this.generateTemplateMap(targetClass, propertyName, annotation);
-		//return the class body
-		return TemplateController.INSTANCE.processTemplate("templates/constraint/ConstraintDescriptor_getConstraintValidatorClasses.ftl", dataModel);
-	}
-	
-	public String getGroups(Class<?> targetClass, String propertyName, Annotation annotation) {
-		//get the data model
-		Map<String,Object> dataModel = this.generateTemplateMap(targetClass, propertyName, annotation);
-		//return the class body
-		return TemplateController.INSTANCE.processTemplate("templates/constraint/ConstraintDescriptor_getGroups.ftl", dataModel);
-	}
-	
-	public String getPayload(Class<?> targetClass, String propertyName, Annotation annotation) {
-		//get the data model
-		Map<String,Object> dataModel = this.generateTemplateMap(targetClass, propertyName, annotation);
-		//return the class body
-		return TemplateController.INSTANCE.processTemplate("templates/constraint/ConstraintDescriptor_getPayload.ftl", dataModel);
-	}
-	
 	public Class<?> getParentClass() {
 		return AbstractConstraintDescriptor.class;
 	}

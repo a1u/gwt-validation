@@ -21,7 +21,7 @@ public class Defect_005 {
 		
 		ClassDescriptor reflectorPackage = ReflectorGenerator.INSTANCE.getReflectorDescirptions(capitalization.getClass());
 		
-		Class<?> reflectorClass = TestCompiler.loadClass(reflectorPackage);
+		Class<?> reflectorClass = TestCompiler.INSTANCE.loadClass(reflectorPackage);
 		@SuppressWarnings("unchecked")
 		IReflector<StrangeCapitalization> reflector = (IReflector<StrangeCapitalization>) reflectorClass.newInstance(); 
 		

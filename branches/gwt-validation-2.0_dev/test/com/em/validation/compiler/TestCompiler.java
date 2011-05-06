@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.tools.JavaCompiler;
@@ -18,48 +18,20 @@ import javax.tools.ToolProvider;
 
 import com.em.validation.rebind.metadata.ClassDescriptor;
 
-public class TestCompiler {
+public enum TestCompiler {
+	
+	INSTANCE;
+	
+	private ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+	
+	private TestCompiler() {
+		
+	}
 
-	@SuppressWarnings("deprecation")
-	public static Class<?> loadClass(ClassDescriptor descriptor) {
-		try {
-			if(Class.forName(descriptor.getFullClassName()) != null) return Class.forName(descriptor.getFullClassName());
-		} catch (ClassNotFoundException e1) {
-			//class can't be found, carry on.
-		}
-		
-		Class<?> returnClass = null;
-		
-		JavaCompiler jc = ToolProvider.getSystemJavaCompiler();
-		StandardJavaFileManager sjfm = jc.getStandardFileManager(null, null, null);
-		
-		List<File> fileList = new ArrayList<File>();
-		
-		UUID randomRun = UUID.randomUUID();
-		
-		File dir = new File("./gen/id_" + randomRun.toString());
-		if(!dir.exists()) {
-			dir.mkdirs();
-		}
-		
+	private void writeClassFiles(ClassDescriptor descriptor, File dir, Set<File> fileList) {
+		//recursively write files
 		for(ClassDescriptor dep : descriptor.getDependencies()) {
-			//write constraint description to file
-			File tempFile;
-			try {
-				String fileName = dep.getFullClassName();
-				fileName = fileName.replaceAll("\\.", "/");
-				tempFile = new File(dir.getAbsolutePath() + "/" + fileName + ".java");
-				tempFile.getParentFile().mkdirs();
-				FileWriter writer = new FileWriter(tempFile);
-				writer.write(dep.getClassContents());
-				writer.flush();
-				writer.close();
-				
-				//add file to list
-				fileList.add(tempFile);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			this.writeClassFiles(dep, dir, fileList);
 		}
 		
 		//write constraint description to file
@@ -79,6 +51,32 @@ public class TestCompiler {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@SuppressWarnings("deprecation")
+	public Class<?> loadClass(ClassDescriptor descriptor) {
+		try {
+			if(Class.forName(descriptor.getFullClassName()) != null) return Class.forName(descriptor.getFullClassName());
+		} catch (ClassNotFoundException e1) {
+			//class can't be found, carry on.
+		}
+		
+		Class<?> returnClass = null;
+		
+		JavaCompiler jc = ToolProvider.getSystemJavaCompiler();
+		StandardJavaFileManager sjfm = jc.getStandardFileManager(null, null, null);
+		
+		Set<File> fileList = new LinkedHashSet<File>();
+		
+		UUID randomRun = UUID.randomUUID();
+		
+		File dir = new File("./gen/id_" + randomRun.toString());
+		if(!dir.exists()) {
+			dir.mkdirs();
+		}
+		
+		//write files to "dir" and save in the file list for the compiler iterator
+		this.writeClassFiles(descriptor, dir, fileList);
 		
 		//add task to jc
 		Iterable<? extends JavaFileObject> fileObjects = sjfm.getJavaFileObjects(fileList.toArray(new File[]{}));
@@ -103,7 +101,7 @@ public class TestCompiler {
 			e.printStackTrace();
 		}
 		if(urls.length > 0) {
-			URLClassLoader ucl = new URLClassLoader(urls);
+			URLClassLoader ucl = new URLClassLoader(urls, this.classLoader);
 			try {
 				returnClass = ucl.loadClass(descriptor.getFullClassName());
 			} catch (ClassNotFoundException e) {
