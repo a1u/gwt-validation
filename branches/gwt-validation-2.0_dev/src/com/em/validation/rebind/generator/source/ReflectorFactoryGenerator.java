@@ -31,6 +31,7 @@ public enum ReflectorFactoryGenerator {
 		ClassDescriptor factoryDescriptor = new ClassDescriptor();
 		factoryDescriptor.setClassName(this.CLASS_NAME);
 		factoryDescriptor.setFullClassName(this.TARGET_PACKAGE + "." + factoryDescriptor.getClassName());
+		factoryDescriptor.setPackageName(this.TARGET_PACKAGE);
 		
 		//create reflector metadata
 		Set<Class<?>> constrainedClasses = ConstrainedClassScanner.INSTANCE.getConstrainedClasses();

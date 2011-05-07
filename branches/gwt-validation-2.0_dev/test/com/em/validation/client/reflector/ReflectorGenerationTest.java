@@ -1,5 +1,6 @@
 package com.em.validation.client.reflector;
 
+import com.em.validation.client.model.generic.TestClass;
 import com.google.gwt.junit.client.GWTTestCase;
 
 public class ReflectorGenerationTest extends GWTTestCase{
@@ -10,11 +11,20 @@ public class ReflectorGenerationTest extends GWTTestCase{
 	}
 	
 	public void testConstraintGeneration() {
-		
-		//@SuppressWarnings("unchecked")
-		//IReflector<TestClass> testClassReflector = (IReflector<TestClass>)GWT.create(TestClass.class);
+		//get the factory instance
+		IReflectorFactory factory = ReflectorFactory.INSTANCE;
 
-		assertNull(null);
+		//assert that we got a usable factory
+		assertNotNull(factory);
+		
+		//test class
+		TestClass testClassInstance = new TestClass();
+		IReflector<TestClass> testClassReflector = factory.getReflector(TestClass.class);
+		
+		assertEquals(0, testClassReflector.getValue("testInt", testClassInstance));
+		//set new value
+		testClassInstance.setTestInt(430);
+		assertEquals(430, testClassReflector.getValue("testInt", testClassInstance));	
 		
 	}
 

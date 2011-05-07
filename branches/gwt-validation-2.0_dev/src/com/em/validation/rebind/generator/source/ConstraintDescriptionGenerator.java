@@ -83,6 +83,7 @@ public enum ConstraintDescriptionGenerator {
 			descriptor.setClassContents(TemplateController.INSTANCE.processTemplate("templates/constraint/ConstraintDescriptor.ftl", generatedAnnotationModel));
 			descriptor.setFullClassName((String)generatedAnnotationModel.get("fullGeneratedAnnotationName"));
 			descriptor.setClassName((String)generatedAnnotationModel.get("generatedName"));
+			descriptor.setPackageName(this.TARGET_PACKAGE);
 			
 			//put the model in the cache
 			this.descriptorCache.put(annotation.toString(), descriptor);			

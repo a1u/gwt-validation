@@ -59,6 +59,7 @@ public enum ReflectorGenerator {
 		reflectorDescriptor.setClassContents(TemplateController.INSTANCE.processTemplate("templates/reflector/ReflectorImpl.ftl", templateDataModel));
 		reflectorDescriptor.setClassName(concreteClassName);
 		reflectorDescriptor.setFullClassName(targetPackage + "." + concreteClassName);
+		reflectorDescriptor.setPackageName(this.TARGET_PACKAGE);
 		
 		return reflectorDescriptor;
 	}
