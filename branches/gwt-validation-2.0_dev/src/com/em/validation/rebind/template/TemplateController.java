@@ -20,9 +20,7 @@ public enum TemplateController {
 	INSTANCE;
 	
 	private Configuration freeConfig = null;
-	
-
-	
+		
 	private TemplateController() {
 		Configuration freemarkerConfig = new Configuration();
 		freemarkerConfig.setClassForTemplateLoading(TemplateController.class, "");
@@ -53,8 +51,12 @@ public enum TemplateController {
 			e.printStackTrace();
 			return "";
 		}
-		
-		return outputStream.toString();
+		//get result for manipulation
+		String result = outputStream.toString();
+		//fix escape sequences in all string literals
+		result = result.replaceAll("\\\\", "\\\\\\\\");
+		//return result
+		return result;
 	}
 	
 }
