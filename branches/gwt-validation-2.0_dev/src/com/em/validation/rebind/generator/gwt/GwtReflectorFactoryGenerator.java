@@ -30,16 +30,11 @@ public class GwtReflectorFactoryGenerator extends Generator {
 	}
 	
 	private void generateClass(ClassDescriptor descriptor, TreeLogger logger, GeneratorContext context) {
-		//generate the class files for those that this class depends on
-		for(ClassDescriptor depenency : descriptor.getDependencies()) {
-			this.generateClass(depenency, logger, context);
-		}
-
 		//do not generate a class twice.  this hash set is used to manage that.
 		if(GwtReflectorFactoryGenerator.generationSet.contains(descriptor.getFullClassName())) {
 			return;
 		}
-		
+
 		//create the print writer for the class
 		PrintWriter printWriter = context.tryCreate(logger, descriptor.getPackageName(),descriptor.getClassName());
         //this is null when a class already exists.  in that case it will return null.  this happens when
@@ -52,7 +47,12 @@ public class GwtReflectorFactoryGenerator extends Generator {
 		//commit the source
 		context.commit(logger, printWriter);
 		
-		//once the source is committed successfully add to the hash set as generated
+		//if not in the hash set, then set it to prevent cyclical / infinite recursion problems
 		GwtReflectorFactoryGenerator.generationSet.add(descriptor.getFullClassName());
+		
+		//generate the class files for those that this class depends on
+		for(ClassDescriptor depenency : descriptor.getDependencies()) {
+			this.generateClass(depenency, logger, context);
+		}
 	}
 }

@@ -16,5 +16,34 @@ import ${import};
 </#list>
 
 public class ${concreteClassName} extends Reflector<${reflectionTargetName}> {
-	<#include "Reflector_ClassBody.ftl">
+	public ${concreteClassName}() {
+		//set the available property names in the constructor
+		
+		<#list properties as property>
+		//${property.name}
+		this.properties.add("${property.name}");
+		this.propertyTypes.put("${property.name}",${property.classString});
+		<#if property.annotations?size &gt; 0>
+		Set<ConstraintDescriptor<?>> ${property.name}ConstraintDescriptorList = new LinkedHashSet<ConstraintDescriptor<?>>();
+		<#list property.annotations as annotation>
+		${property.name}ConstraintDescriptorList.add(${annotation}.INSTANCE);			
+		</#list>
+		this.constraintDescriptors.put("${property.name}",${property.name}ConstraintDescriptorList);
+		</#if>
+
+		</#list>
+		
+		//set the target class
+		this.targetClass = ${reflectionTargetName}.class;
+	}
+
+	public Object getValue(String name, ${reflectionTargetName} target){
+		Object value = null;
+	
+		<#list properties as property><#if property_index &gt; 0> else </#if>if("${property.name}".equals(name)) {
+			value = target.${property.accessor};				
+		}</#list>
+	
+		return value;
+	}
 }

@@ -16,7 +16,7 @@ public enum AnnotationResolver {
 
 	INSTANCE;
 	
-	private Map<Annotation, ConstraintMetadata> metadataCache = new HashMap<Annotation, ConstraintMetadata>();
+	private Map<String, ConstraintMetadata> metadataCache = new HashMap<String, ConstraintMetadata>();
 	
 	private AnnotationResolver() {
 		
@@ -25,12 +25,12 @@ public enum AnnotationResolver {
 	public ConstraintMetadata getAnnotationMetadata(Annotation annotation) {
 		
 		//create annotation metadata
-		ConstraintMetadata metadata = this.metadataCache.get(annotation); 
+		ConstraintMetadata metadata = this.metadataCache.get(annotation.toString()); 
 				
 		//if the cache misses, generate
 		if(metadata == null) {
 			metadata = new ConstraintMetadata();
-			
+		
 			//create empty annotation metadata
 			//annotation names
 			metadata.setName(annotation.annotationType().getName());
@@ -61,19 +61,23 @@ public enum AnnotationResolver {
 			Constraint constraint = annotation.annotationType().getAnnotation(Constraint.class);
 			metadata.getValidatedBy().addAll(Arrays.asList(constraint.validatedBy()));
 			
-			//composing constraints
-			for(Annotation subAnnotation : annotation.annotationType().getAnnotations()) {
-				if(subAnnotation.annotationType().getAnnotation(Constraint.class) != null){
-					metadata.getComposedOf().add(this.getAnnotationMetadata(subAnnotation));
-				}
-			}
-			
 			//report as single or not
 			metadata.setReportAsSingleViolation(annotation.annotationType().getAnnotation(ReportAsSingleViolation.class) != null);  
 			
 			//scope
 			
 			//target element types
+			
+			//put in cache
+			this.metadataCache.put(annotation.toString(), metadata);
+			
+			//get composing constraints
+			for(Annotation subAnnotation : annotation.annotationType().getAnnotations()) {
+				if(subAnnotation.annotationType().getAnnotation(Constraint.class) != null){
+					metadata.getComposedOf().add(this.getAnnotationMetadata(subAnnotation));
+				}
+			}
+
 		}
 		
 		return metadata;

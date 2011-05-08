@@ -4,12 +4,8 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
-import java.lang.annotation.Annotation;
 import java.util.Set;
 
-import javax.validation.Payload;
-import javax.validation.constraints.Size;
-import javax.validation.groups.Default;
 import javax.validation.metadata.BeanDescriptor;
 import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.PropertyDescriptor;
@@ -20,64 +16,16 @@ import com.em.validation.client.metadata.factory.DescriptorFactory;
 import com.em.validation.client.model.composed.ComposedConstraint;
 import com.em.validation.client.model.composed.ComposedSingleViolationConstraint;
 import com.em.validation.client.model.composed.ComposedTestClass;
+import com.em.validation.client.model.composed.CyclicalComposedConstraintPart1;
+import com.em.validation.client.model.composed.CyclicalComposedConstraintPart2;
 import com.em.validation.client.model.generic.ExtendedInterface;
 import com.em.validation.client.model.generic.TestClass;
 import com.em.validation.client.reflector.IReflector;
 import com.em.validation.compiler.TestCompiler;
-import com.em.validation.rebind.generator.source.ConstraintDescriptionGenerator;
 import com.em.validation.rebind.generator.source.ReflectorGenerator;
 import com.em.validation.rebind.metadata.ClassDescriptor;
 
 public class ReflectorGenerationTest {
-	
-	@Test
-	public void testConstraintGeneration() throws InstantiationException, IllegalAccessException {
-		Size annotation = new Size(){
-
-			@Override
-			public Class<? extends Annotation> annotationType() {
-				return Size.class;
-			}
-
-			@Override
-			public Class<?>[] groups() {
-				return new Class<?>[]{Default.class};
-			}
-
-			@Override
-			public String message() {
-				return null;
-			}
-
-			@Override
-			public Class<? extends Payload>[] payload() {
-				return null;
-			}
-
-			@Override
-			public int max() {
-				return 412;
-			}
-
-			@Override
-			public int min() {
-				return -12;
-			}
-			
-		};
-		
-		ClassDescriptor descriptor = ConstraintDescriptionGenerator.INSTANCE.generateConstraintDescriptor(annotation);
-		Class<?> descriptorClass = TestCompiler.INSTANCE.loadClass(descriptor);
-		
-		@SuppressWarnings("unchecked")
-		ConstraintDescriptor<Size> constraintDescriptor = (ConstraintDescriptor<Size>)descriptorClass.newInstance();
-		
-		//assertions
-		assertEquals(Size.class, constraintDescriptor.getAnnotation().annotationType());
-		assertEquals(annotation.max(), constraintDescriptor.getAnnotation().max());
-		assertEquals(annotation.min(), constraintDescriptor.getAnnotation().min());
-		assertEquals(annotation.groups()[0], constraintDescriptor.getGroups().toArray(new Class<?>[]{})[0]);
-	}
 	
 	@Test
 	public void testReflectorGeneration() throws InstantiationException, IllegalAccessException {
@@ -177,12 +125,19 @@ public class ReflectorGenerationTest {
 		
 		Set<ConstraintDescriptor<?>> constraints = beanDesc.getConstraintDescriptors();
 		
-		assertEquals(2, constraints.size());
+		assertEquals(4, constraints.size());
 		
 		for(ConstraintDescriptor<?> descriptor : constraints) {
 			if(ComposedConstraint.class.equals(descriptor.getAnnotation().annotationType())){
-				
+				assertEquals(2, descriptor.getComposingConstraints().size());
 			} else if(ComposedSingleViolationConstraint.class.equals(descriptor.getAnnotation().annotationType())){
+				assertTrue(descriptor.isReportAsSingleViolation());
+				assertEquals(3, descriptor.getComposingConstraints().size());
+			} else if(CyclicalComposedConstraintPart1.class.equals(descriptor.getAnnotation().annotationType())) {
+				assertEquals(2, descriptor.getComposingConstraints().size());
+				assertTrue(!descriptor.isReportAsSingleViolation());
+			} else if(CyclicalComposedConstraintPart2.class.equals(descriptor.getAnnotation().annotationType())) {
+				assertEquals(1, descriptor.getComposingConstraints().size());
 				assertTrue(descriptor.isReportAsSingleViolation());
 			}
 		}

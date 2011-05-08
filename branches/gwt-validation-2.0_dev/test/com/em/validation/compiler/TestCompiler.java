@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -26,22 +27,23 @@ public enum TestCompiler {
 	
 	private ClassLoader classLoader = ClassLoader.getSystemClassLoader();
 	
+	private Set<String> fileNameLock = new HashSet<String>();
+	
 	private TestCompiler() {
 		
 	}
 
 	private void writeClassFiles(ClassDescriptor descriptor, File dir, Set<File> fileList) {
-		//recursively write files
-		for(ClassDescriptor dep : descriptor.getDependencies()) {
-			this.writeClassFiles(dep, dir, fileList);
+		String fileName = descriptor.getFullClassName();
+		fileName = fileName.replaceAll("\\.", "/");
+		
+		if(this.fileNameLock.contains(fileName)) {
+			return;
 		}
 		
 		//write constraint description to file
 		File tempFile = null;
 		try {
-			
-			String fileName = descriptor.getFullClassName();
-			fileName = fileName.replaceAll("\\.", "/");
 			tempFile = new File(dir.getAbsolutePath() + "/" + fileName + ".java");
 			if(!tempFile.exists()) {
 				tempFile.getParentFile().mkdirs();
@@ -49,11 +51,17 @@ public enum TestCompiler {
 				writer.write(descriptor.getClassContents());
 				writer.flush();
 				writer.close();
-			
-				fileList.add(tempFile);
 			}
+			fileList.add(tempFile);
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+		
+		this.fileNameLock.add(fileName);
+		
+		//recursively write files
+		for(ClassDescriptor dep : descriptor.getDependencies()) {
+			this.writeClassFiles(dep, dir, fileList);
 		}
 	}
 	
@@ -64,6 +72,9 @@ public enum TestCompiler {
 		} catch (ClassNotFoundException e1) {
 			//class can't be found, carry on.
 		}
+		
+		//clear
+		this.fileNameLock.clear();
 		
 		Class<?> returnClass = null;
 		
@@ -79,13 +90,15 @@ public enum TestCompiler {
 		//write files to "dir" and save in the file list for the compiler iterator
 		this.writeClassFiles(descriptor, dir, fileList);
 		
-		//add task to jc
-		Iterable<? extends JavaFileObject> fileObjects = sjfm.getJavaFileObjects(fileList.toArray(new File[]{}));
-		
-		//String[] options = new String[]{"-Xlint:unchecked"};
-		//CompilationTask task = jc.getTask(null, sjfm, null, Arrays.asList(options), null, fileObjects);
-		CompilationTask task = jc.getTask(null, sjfm, null, null, null, fileObjects);
-		task.call();
+		if(fileList.size() > 0) {
+			//add task to jc
+			Iterable<? extends JavaFileObject> fileObjects = sjfm.getJavaFileObjects(fileList.toArray(new File[]{}));
+			
+			//String[] options = new String[]{"-Xlint:unchecked"};
+			//CompilationTask task = jc.getTask(null, sjfm, null, Arrays.asList(options), null, fileObjects);
+			CompilationTask task = jc.getTask(null, sjfm, null, null, null, fileObjects);
+			task.call();
+		}
 
 		//close or at least try to close
 		try {

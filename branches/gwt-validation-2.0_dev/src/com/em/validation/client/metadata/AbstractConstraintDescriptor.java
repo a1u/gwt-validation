@@ -47,6 +47,16 @@ public abstract class AbstractConstraintDescriptor<T extends Annotation> impleme
 		return this.propertyMap;
 	}
 	
+	public AbstractConstraintDescriptor() {
+		init();
+	}
+	
+	/**
+	 * Override for construction
+	 * 
+	 */
+	public abstract void init();
+	
 	@Override
 	public Set<ConstraintDescriptor<?>> getComposingConstraints() {
 		return this.composedOf;

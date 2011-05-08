@@ -4,6 +4,8 @@ public class ComposedTestClass {
 
 	@ComposedConstraint
 	@ComposedSingleViolationConstraint
+	@CyclicalComposedConstraintPart1
+	@CyclicalComposedConstraintPart2
 	private String composedString = "";
 
 	public String getComposedString() {

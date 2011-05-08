@@ -49,11 +49,6 @@ public enum ConstraintDescriptionGenerator {
 			//class descriptor
 			descriptor = new ClassDescriptor();
 
-			//get the generated code for the constraints of the composing metadata, if it exists
-			for(ConstraintMetadata subMetadata : metadata.getComposedOf()) {
-				descriptor.getDependencies().add(this.getDescriptorFromMetadata(subMetadata));
-			}
-			
 			//initialize
 			Map<String,Object> generatedAnnotationModel = new HashMap<String, Object>();
 			
@@ -68,19 +63,32 @@ public enum ConstraintDescriptionGenerator {
 			uuidString = uuidString.replaceAll("\\-","");
 			
 			//create generation target annotation name
-			String generatedAnnotationName = this.PREFIX + "_" + uuidString;
+			String generatedConstraintName = this.PREFIX + "_" + uuidString;
 			String annotationType = annotationName + ".class";
-			String fullGeneratedAnnotationName = this.TARGET_PACKAGE + "." +generatedAnnotationName;
+			String fullGeneratedConstraintName = this.TARGET_PACKAGE + "." +generatedConstraintName;
 							
 			Set<String> constraintValidatorClassNames = new HashSet<String>();
 			for(Class<? extends ConstraintValidator<?, ?>> validator : metadata.getValidatedBy()) {
 				constraintValidatorClassNames.add(validator.getClass().getName() + ".class");
 			}			
-					
+			
+			//push into cache
+			this.descriptorCache.put(metadata.getInstance().toString(), descriptor);
+
+			//generate constraint descriptor
+			descriptor.setFullClassName(fullGeneratedConstraintName);
+			descriptor.setClassName(generatedConstraintName);
+			descriptor.setPackageName(this.TARGET_PACKAGE);
+			
+			//get the generated code for the constrageneratedAnnotationNameints of the composing metadata, if it exists
+			for(ConstraintMetadata subMetadata : metadata.getComposedOf()) {
+				descriptor.getDependencies().add(this.getDescriptorFromMetadata(subMetadata));
+			}
+			
 			//create fake annotation data model
 			generatedAnnotationModel.put("targetPackage", this.TARGET_PACKAGE);
-			generatedAnnotationModel.put("generatedName", generatedAnnotationName);
-			generatedAnnotationModel.put("fullGeneratedAnnotationName",fullGeneratedAnnotationName);
+			generatedAnnotationModel.put("generatedName", generatedConstraintName);
+			generatedAnnotationModel.put("fullGeneratedAnnotationName",fullGeneratedConstraintName);
 			generatedAnnotationModel.put("annotationType", annotationType);
 			generatedAnnotationModel.put("annotationMetadata",metadata.getMethodMap().values());
 			generatedAnnotationModel.put("composedOf", descriptor.getDependencies());
@@ -89,11 +97,8 @@ public enum ConstraintDescriptionGenerator {
 			generatedAnnotationModel.put("targetAnnotation",annotationSimpleName);
 			generatedAnnotationModel.put("validatedBy",constraintValidatorClassNames);
 			
-			//generate constraint descriptor with template and set into description
+			//finally generate class contents
 			descriptor.setClassContents(TemplateController.INSTANCE.processTemplate("templates/constraint/ConstraintDescriptor.ftl", generatedAnnotationModel));
-			descriptor.setFullClassName((String)generatedAnnotationModel.get("fullGeneratedAnnotationName"));
-			descriptor.setClassName((String)generatedAnnotationModel.get("generatedName"));
-			descriptor.setPackageName(this.TARGET_PACKAGE);
 		}
 		
 		return descriptor;

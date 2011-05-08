@@ -29,6 +29,10 @@ public class RuntimeConstraintDescriptor<T extends Annotation> extends AbstractC
 		}
 	}
 	
+	public void init() {
+		
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Class<? extends ConstraintValidator<T, ?>>> getConstraintValidatorClasses() {
