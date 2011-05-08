@@ -9,7 +9,9 @@ import com.em.validation.client.reflector.IReflector;
 
 public abstract class ElementDescriptorImpl extends ProtoDescriptor implements ElementDescriptor {
 
-	protected IReflector<?> backingReflector = null;
+	public ElementDescriptorImpl(IReflector<?> reflector) {
+		super(reflector);
+	}
 
 	@Override
 	public Set<ConstraintDescriptor<?>> getConstraintDescriptors() {

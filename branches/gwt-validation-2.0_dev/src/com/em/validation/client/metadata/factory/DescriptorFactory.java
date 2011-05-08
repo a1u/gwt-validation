@@ -17,6 +17,16 @@ public enum DescriptorFactory {
 	}
 	
 	/**
+	 * Get the bean descriptor from the target object
+	 * 
+	 * @param targetObject
+	 * @return
+	 */
+	public BeanDescriptor getBeanDescriptor(Object targetObject) {
+		return this.getBeanDescriptor(targetObject.getClass());
+	}
+	
+	/**
 	 * Get a bean descriptor directly from the target class
 	 * 
 	 * @param targetClass
@@ -33,14 +43,7 @@ public enum DescriptorFactory {
 	 * @return
 	 */
 	public BeanDescriptor getBeanDescriptor(final IReflector<?> reflector) {
-		final class PrivateBeanDescriptorImpl extends BeanDescriptorImpl {
-			public PrivateBeanDescriptorImpl() {
-				this.backingReflector = reflector;
-			}			
-		}
-		
-		BeanDescriptor beanDescriptor = new PrivateBeanDescriptorImpl();
-
+		BeanDescriptor beanDescriptor = new BeanDescriptorImpl(reflector);
 		return beanDescriptor;
 	}
 	 
@@ -51,15 +54,7 @@ public enum DescriptorFactory {
 	 * @return
 	 */
 	public PropertyDescriptor getPropertyDescriptor(final IReflector<?> reflector, final String name) {
-		final class PrivatePropertyDescriptorImpl extends PropertyDescriptorImpl {
-			public PrivatePropertyDescriptorImpl() {
-				this.backingReflector = reflector;
-				this.propertyName = name;
-			}
-		}
-		
-		PropertyDescriptor propDescriptor = new PrivatePropertyDescriptorImpl();
-		
+		PropertyDescriptor propDescriptor = new PropertyDescriptorImpl(reflector, name);
 		return propDescriptor;
 	}
 	

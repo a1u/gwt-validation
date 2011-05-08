@@ -7,37 +7,39 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.validation.Constraint;
+import javax.validation.ReportAsSingleViolation;
 
-import com.em.validation.rebind.metadata.AnnotationMetadata;
-import com.em.validation.rebind.metadata.AnnotationMethodMetadata;
+import com.em.validation.rebind.metadata.ConstraintMetadata;
+import com.em.validation.rebind.metadata.ConstraintPropertyMetadata;
 
 public enum AnnotationResolver {
 
 	INSTANCE;
 	
-	private Map<Annotation, AnnotationMetadata> metadataCache = new HashMap<Annotation, AnnotationMetadata>();
+	private Map<Annotation, ConstraintMetadata> metadataCache = new HashMap<Annotation, ConstraintMetadata>();
 	
 	private AnnotationResolver() {
 		
 	}
 	
-	public AnnotationMetadata getAnnotationMetadata(Annotation annotation) {
+	public ConstraintMetadata getAnnotationMetadata(Annotation annotation) {
 		
 		//create annotation metadata
-		AnnotationMetadata metadata = this.metadataCache.get(annotation); 
+		ConstraintMetadata metadata = this.metadataCache.get(annotation); 
 				
 		//if the cache misses, generate
 		if(metadata == null) {
-			metadata = new AnnotationMetadata();
+			metadata = new ConstraintMetadata();
 			
 			//create empty annotation metadata
 			//annotation names
 			metadata.setName(annotation.annotationType().getName());
 			metadata.setSimpleName(annotation.annotationType().getSimpleName());
-					
+			metadata.setInstance(annotation);
+			
 			//create annotation method metadata
 			for(Method method : annotation.annotationType().getDeclaredMethods()) {
-				AnnotationMethodMetadata aMeta = new AnnotationMethodMetadata();
+				ConstraintPropertyMetadata aMeta = new ConstraintPropertyMetadata();
 				String returnValue = this.createReturnValueAsString(method, annotation);
 				
 				//get return type
@@ -59,6 +61,16 @@ public enum AnnotationResolver {
 			Constraint constraint = annotation.annotationType().getAnnotation(Constraint.class);
 			metadata.getValidatedBy().addAll(Arrays.asList(constraint.validatedBy()));
 			
+			//composing constraints
+			for(Annotation subAnnotation : annotation.annotationType().getAnnotations()) {
+				if(subAnnotation.annotationType().getAnnotation(Constraint.class) != null){
+					metadata.getComposedOf().add(this.getAnnotationMetadata(subAnnotation));
+				}
+			}
+			
+			//report as single or not
+			metadata.setReportAsSingleViolation(annotation.annotationType().getAnnotation(ReportAsSingleViolation.class) != null);  
+			
 			//scope
 			
 			//target element types
@@ -66,7 +78,7 @@ public enum AnnotationResolver {
 		
 		return metadata;
 	}
-	
+		
 	/**
 	 * Takes an annotation and a method and turns it into the string representation of what
 	 * would need to be typed in to a class body to return that value;

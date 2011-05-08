@@ -7,13 +7,14 @@ import javax.validation.metadata.BeanDescriptor;
 import javax.validation.metadata.PropertyDescriptor;
 
 import com.em.validation.client.metadata.factory.DescriptorFactory;
+import com.em.validation.client.reflector.IReflector;
 
 public class BeanDescriptorImpl extends ElementDescriptorImpl implements BeanDescriptor {
 
-	protected BeanDescriptorImpl() {
-	
+	public BeanDescriptorImpl(IReflector<?> reflector) {
+		super(reflector);
 	}
-	
+
 	@Override
 	public Set<PropertyDescriptor> getConstrainedProperties() {
 		Set<PropertyDescriptor> propertyDescriptors = new HashSet<PropertyDescriptor>();

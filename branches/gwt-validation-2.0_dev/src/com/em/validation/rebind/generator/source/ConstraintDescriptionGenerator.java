@@ -11,7 +11,7 @@ import java.util.UUID;
 import javax.validation.ConstraintValidator;
 
 import com.em.validation.client.metadata.AbstractConstraintDescriptor;
-import com.em.validation.rebind.metadata.AnnotationMetadata;
+import com.em.validation.rebind.metadata.ConstraintMetadata;
 import com.em.validation.rebind.metadata.ClassDescriptor;
 import com.em.validation.rebind.resolve.AnnotationResolver;
 import com.em.validation.rebind.template.TemplateController;
@@ -37,14 +37,25 @@ public enum ConstraintDescriptionGenerator {
 	}
 	
 	public ClassDescriptor generateConstraintDescriptor(Annotation annotation) {
-		//System.out.println("Annotation: " + annotation.toString());
-		ClassDescriptor descriptor = this.descriptorCache.get(annotation.toString());
+		//get annotation metadata
+		ConstraintMetadata metadata = AnnotationResolver.INSTANCE.getAnnotationMetadata(annotation);
+		
+		return this.getDescriptorFromMetadata(metadata);
+	}
+	
+	private ClassDescriptor getDescriptorFromMetadata(ConstraintMetadata metadata) {
+		ClassDescriptor descriptor = this.descriptorCache.get(metadata.getInstance().toString());
 		if(descriptor == null) {
+			//class descriptor
+			descriptor = new ClassDescriptor();
+
+			//get the generated code for the constraints of the composing metadata, if it exists
+			for(ConstraintMetadata subMetadata : metadata.getComposedOf()) {
+				descriptor.getDependencies().add(this.getDescriptorFromMetadata(subMetadata));
+			}
+			
 			//initialize
 			Map<String,Object> generatedAnnotationModel = new HashMap<String, Object>();
-			
-			//get annotation metadata
-			AnnotationMetadata metadata = AnnotationResolver.INSTANCE.getAnnotationMetadata(annotation);
 			
 			//annotation names
 			String annotationName = metadata.getName();
@@ -72,25 +83,22 @@ public enum ConstraintDescriptionGenerator {
 			generatedAnnotationModel.put("fullGeneratedAnnotationName",fullGeneratedAnnotationName);
 			generatedAnnotationModel.put("annotationType", annotationType);
 			generatedAnnotationModel.put("annotationMetadata",metadata.getMethodMap().values());
+			generatedAnnotationModel.put("composedOf", descriptor.getDependencies());
+			generatedAnnotationModel.put("reportAsSingleViolation", String.valueOf(metadata.isReportAsSingleViolation()));
 			generatedAnnotationModel.put("annotationImportName", annotationImportName);
 			generatedAnnotationModel.put("targetAnnotation",annotationSimpleName);
 			generatedAnnotationModel.put("validatedBy",constraintValidatorClassNames);
 			
-			//populate descriptor
-			//create the description that the caller will use to do things with the generated class file
-			descriptor = new ClassDescriptor();
-			//generate annotation with template and set into description
+			//generate constraint descriptor with template and set into description
 			descriptor.setClassContents(TemplateController.INSTANCE.processTemplate("templates/constraint/ConstraintDescriptor.ftl", generatedAnnotationModel));
 			descriptor.setFullClassName((String)generatedAnnotationModel.get("fullGeneratedAnnotationName"));
 			descriptor.setClassName((String)generatedAnnotationModel.get("generatedName"));
 			descriptor.setPackageName(this.TARGET_PACKAGE);
-			
-			//put the model in the cache
-			this.descriptorCache.put(annotation.toString(), descriptor);			
-		}		
+		}
+		
 		return descriptor;
 	}
-		
+	
 	public Class<?> getParentClass() {
 		return AbstractConstraintDescriptor.class;
 	}

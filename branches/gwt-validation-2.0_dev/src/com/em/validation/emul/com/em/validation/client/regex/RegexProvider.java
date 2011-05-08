@@ -1,5 +1,8 @@
 package com.em.validation.client.regex;
 
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
+
 public enum RegexProvider {
 
 	INSTANCE;
@@ -9,7 +12,9 @@ public enum RegexProvider {
 	}
 	
 	public boolean matches(String regex, String check) {
-		return true;
+		RegExp exp = RegExp.compile(regex);
+		MatchResult result = exp.exec(check);
+		return result.getIndex() >= 0;
 	}
 	
 }

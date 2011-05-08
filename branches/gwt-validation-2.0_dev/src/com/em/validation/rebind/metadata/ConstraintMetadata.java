@@ -2,6 +2,7 @@ package com.em.validation.rebind.metadata;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -10,13 +11,13 @@ import java.util.Set;
 import javax.validation.ConstraintValidator;
 import javax.validation.metadata.Scope;
 
-public class AnnotationMetadata {
+public class ConstraintMetadata {
 
 	/**
 	 * Maps the method names to the methods themselves.  Can be used to get the method value.
 	 * 
 	 */
-	private Map<String, AnnotationMethodMetadata> methodMap = new LinkedHashMap<String, AnnotationMethodMetadata>();
+	private Map<String, ConstraintPropertyMetadata> methodMap = new LinkedHashMap<String, ConstraintPropertyMetadata>();
 	
 	/**
 	 * The name of the annotation (full class name)
@@ -57,11 +58,30 @@ public class AnnotationMetadata {
 	 */
 	private Annotation instance = null;
 	
-	public Map<String, AnnotationMethodMetadata> getMethodMap() {
+	/**
+	 * A list of the constraints that the constraint is composed of
+	 * 
+	 */
+	private Set<ConstraintMetadata> composedOf = new HashSet<ConstraintMetadata>();
+	
+	/**
+	 * Should this report any violations as multiple violations or all as one?
+	 *  true = one violation and none other
+	 *  false = report any violation individually and independently of the others
+	 */
+	private boolean reportAsSingleViolation = false;
+	
+	/**
+	 * This is the set of element types that this constraint was observed declared on
+	 * 
+	 */
+	private Set<ElementType> declaredOn = new HashSet<ElementType>();
+	
+	public Map<String, ConstraintPropertyMetadata> getMethodMap() {
 		return methodMap;
 	}
 
-	public void setMethodMap(Map<String, AnnotationMethodMetadata> methodMap) {
+	public void setMethodMap(Map<String, ConstraintPropertyMetadata> methodMap) {
 		this.methodMap = methodMap;
 	}
 
@@ -112,7 +132,31 @@ public class AnnotationMetadata {
 
 	public void setElementTypes(Set<ElementType> elementTypes) {
 		this.elementTypes = elementTypes;
+	}
+
+	public Set<ConstraintMetadata> getComposedOf() {
+		return composedOf;
+	}
+
+	public void setComposedOf(Set<ConstraintMetadata> composedOf) {
+		this.composedOf = composedOf;
+	}
+
+	public boolean isReportAsSingleViolation() {
+		return reportAsSingleViolation;
+	}
+
+	public void setReportAsSingleViolation(boolean reportAsSingleViolation) {
+		this.reportAsSingleViolation = reportAsSingleViolation;
+	}
+
+	public Set<ElementType> getDeclaredOn() {
+		return declaredOn;
+	}
+
+	public void setDeclaredOn(Set<ElementType> declaredOn) {
+		this.declaredOn = declaredOn;
 	}	
-	
+		
 }
 

@@ -10,12 +10,12 @@ import com.em.validation.client.reflector.IReflector;
 public class PropertyDescriptorImpl extends ProtoDescriptor implements PropertyDescriptor {
 
 	protected String propertyName = "";
-	protected IReflector<?> backingReflector = null;
 	
-	protected PropertyDescriptorImpl() {
-		
+	public PropertyDescriptorImpl(IReflector<?> reflector, String name) {
+		super(reflector);
+		this.propertyName = name;
 	}
-	
+
 	@Override
 	public Set<ConstraintDescriptor<?>> getConstraintDescriptors() {
 		return this.backingReflector.getConstraintDescriptors(this.propertyName);

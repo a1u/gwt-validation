@@ -1,7 +1,7 @@
 package com.em.validation.rebind.metadata;
 
 
-public class AnnotationMethodMetadata {
+public class ConstraintPropertyMetadata {
 
 	private String returnType = null;
 	

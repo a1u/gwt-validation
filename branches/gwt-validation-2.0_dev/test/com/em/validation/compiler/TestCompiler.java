@@ -22,6 +22,8 @@ public enum TestCompiler {
 	
 	INSTANCE;
 	
+	private File dir = new File("./gen/id_" + UUID.randomUUID().toString());
+	
 	private ClassLoader classLoader = ClassLoader.getSystemClassLoader();
 	
 	private TestCompiler() {
@@ -35,19 +37,21 @@ public enum TestCompiler {
 		}
 		
 		//write constraint description to file
-		File tempFile;
+		File tempFile = null;
 		try {
+			
 			String fileName = descriptor.getFullClassName();
 			fileName = fileName.replaceAll("\\.", "/");
 			tempFile = new File(dir.getAbsolutePath() + "/" + fileName + ".java");
-			tempFile.getParentFile().mkdirs();
-			FileWriter writer = new FileWriter(tempFile);
-			writer.write(descriptor.getClassContents());
-			writer.flush();
-			writer.close();
+			if(!tempFile.exists()) {
+				tempFile.getParentFile().mkdirs();
+				FileWriter writer = new FileWriter(tempFile);
+				writer.write(descriptor.getClassContents());
+				writer.flush();
+				writer.close();
 			
-			//add file to list
-			fileList.add(tempFile);
+				fileList.add(tempFile);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -68,9 +72,6 @@ public enum TestCompiler {
 		
 		Set<File> fileList = new LinkedHashSet<File>();
 		
-		UUID randomRun = UUID.randomUUID();
-		
-		File dir = new File("./gen/id_" + randomRun.toString());
 		if(!dir.exists()) {
 			dir.mkdirs();
 		}

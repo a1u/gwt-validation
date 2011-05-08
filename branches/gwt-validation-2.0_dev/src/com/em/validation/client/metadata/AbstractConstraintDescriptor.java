@@ -20,6 +20,18 @@ public abstract class AbstractConstraintDescriptor<T extends Annotation> impleme
 	protected T annotation = null;
 	
 	/**
+	 * Set of composing constraints
+	 * 
+	 */
+	protected Set<ConstraintDescriptor<?>> composedOf = new HashSet<ConstraintDescriptor<?>>();
+	
+	/**
+	 * If this should be reported as a single violation
+	 * 
+	 */
+	protected boolean reportAsSingleViolation = false;
+	
+	/**
 	 * The property map that will be populated by the implementing class
 	 * 
 	 */
@@ -37,12 +49,12 @@ public abstract class AbstractConstraintDescriptor<T extends Annotation> impleme
 	
 	@Override
 	public Set<ConstraintDescriptor<?>> getComposingConstraints() {
-		return null;
+		return this.composedOf;
 	}
 	
 	@Override
 	public boolean isReportAsSingleViolation() {
-		return true;
+		return this.reportAsSingleViolation;
 	}
 	
 	@Override

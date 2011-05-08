@@ -13,9 +13,9 @@ public class RuntimeConstraintDescriptor<T extends Annotation> extends AbstractC
 
 	private Annotation annotation = null;
 	
-	private AnnotationMetadata annotationMetadata = null;
+	private ConstraintMetadata annotationMetadata = null;
 	
-	public RuntimeConstraintDescriptor(AnnotationMetadata annotationMetadata) {
+	public RuntimeConstraintDescriptor(ConstraintMetadata annotationMetadata) {
 		this.annotation = annotationMetadata.getInstance();
 		this.annotationMetadata = annotationMetadata;
 		

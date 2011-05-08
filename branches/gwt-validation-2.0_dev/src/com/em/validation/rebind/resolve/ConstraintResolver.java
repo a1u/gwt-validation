@@ -8,7 +8,7 @@ import java.util.Set;
 
 import javax.validation.metadata.ConstraintDescriptor;
 
-import com.em.validation.rebind.metadata.AnnotationMetadata;
+import com.em.validation.rebind.metadata.ConstraintMetadata;
 import com.em.validation.rebind.metadata.PropertyMetadata;
 import com.em.validation.rebind.metadata.RuntimeConstraintDescriptor;
 
@@ -40,7 +40,7 @@ public enum ConstraintResolver {
 		Set<ConstraintDescriptor<Annotation>> descriptors = new LinkedHashSet<ConstraintDescriptor<Annotation>>();
 		PropertyMetadata property = PropertyResolver.INSTANCE.getPropertyMetadata(targetClass, propertyName);
 		for(Annotation annotation : property.getAnnotationInstances()) {
-			AnnotationMetadata metadata = AnnotationResolver.INSTANCE.getAnnotationMetadata(annotation);
+			ConstraintMetadata metadata = AnnotationResolver.INSTANCE.getAnnotationMetadata(annotation);
 			ConstraintDescriptor<Annotation> descriptor = new RuntimeConstraintDescriptor<Annotation>(metadata);
 			descriptors.add(descriptor);
 		}		

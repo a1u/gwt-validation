@@ -2,8 +2,10 @@ package com.em.validation.compiled.reflector;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 
 import java.lang.annotation.Annotation;
+import java.util.Set;
 
 import javax.validation.Payload;
 import javax.validation.constraints.Size;
@@ -15,6 +17,9 @@ import javax.validation.metadata.PropertyDescriptor;
 import org.junit.Test;
 
 import com.em.validation.client.metadata.factory.DescriptorFactory;
+import com.em.validation.client.model.composed.ComposedConstraint;
+import com.em.validation.client.model.composed.ComposedSingleViolationConstraint;
+import com.em.validation.client.model.composed.ComposedTestClass;
 import com.em.validation.client.model.generic.ExtendedInterface;
 import com.em.validation.client.model.generic.TestClass;
 import com.em.validation.client.reflector.IReflector;
@@ -154,6 +159,33 @@ public class ReflectorGenerationTest {
 		assertEquals(false, reflector.getValue("false", extension));
 		assertEquals("test string", reflector.getValue("string", extension));
 		assertEquals("test interface string", reflector.getValue("testInterfaceString", extension));
+		
+	}
+	
+	@Test
+	public void testComposedConstraints() throws InstantiationException, IllegalAccessException {
+		ComposedTestClass groupTest = new ComposedTestClass();
+		
+		ClassDescriptor reflectorPackage = ReflectorGenerator.INSTANCE.getReflectorDescirptions(groupTest.getClass());
+		
+		Class<?> reflectorClass = TestCompiler.INSTANCE.loadClass(reflectorPackage);
+		@SuppressWarnings("unchecked")
+		IReflector<ComposedTestClass> reflector = (IReflector<ComposedTestClass>) reflectorClass.newInstance(); 
+		
+		//test composed constraint
+		BeanDescriptor beanDesc = DescriptorFactory.INSTANCE.getBeanDescriptor(reflector);
+		
+		Set<ConstraintDescriptor<?>> constraints = beanDesc.getConstraintDescriptors();
+		
+		assertEquals(2, constraints.size());
+		
+		for(ConstraintDescriptor<?> descriptor : constraints) {
+			if(ComposedConstraint.class.equals(descriptor.getAnnotation().annotationType())){
+				
+			} else if(ComposedSingleViolationConstraint.class.equals(descriptor.getAnnotation().annotationType())){
+				assertTrue(descriptor.isReportAsSingleViolation());
+			}
+		}
 		
 	}
 }
