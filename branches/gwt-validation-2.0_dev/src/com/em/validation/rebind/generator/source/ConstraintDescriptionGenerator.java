@@ -69,7 +69,7 @@ public enum ConstraintDescriptionGenerator {
 							
 			Set<String> constraintValidatorClassNames = new HashSet<String>();
 			for(Class<? extends ConstraintValidator<?, ?>> validator : metadata.getValidatedBy()) {
-				constraintValidatorClassNames.add(validator.getClass().getName() + ".class");
+				constraintValidatorClassNames.add(validator.getClass().getName());
 			}			
 			
 			//push into cache

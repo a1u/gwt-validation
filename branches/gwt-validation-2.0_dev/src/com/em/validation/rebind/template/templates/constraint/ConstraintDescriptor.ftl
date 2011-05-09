@@ -55,14 +55,14 @@ public enum ${generatedName} implements ConstraintDescriptor<${targetAnnotation}
 				
 				//report as single violation
 				<#if reportAsSingleViolation != "null">
-					this.reportAsSingleViolation = ${reportAsSingleViolation};
+				this.reportAsSingleViolation = ${reportAsSingleViolation};
 				</#if>
 			}
 			
 			public List<Class<? extends ConstraintValidator<${targetAnnotation}, ?>>> getConstraintValidatorClasses() {
 				List<Class<? extends ConstraintValidator<${targetAnnotation}, ?>>> validatedBy = new ArrayList<Class<? extends ConstraintValidator<${targetAnnotation}, ?>>>();
 				<#list validatedBy as validator>
-				validatedBy.add(validator);
+				validatedBy.add(${validator}.class);
 				</#list>	
 				return validatedBy;
 			}
