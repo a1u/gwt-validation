@@ -1,11 +1,10 @@
-package com.em.validation.client.reflector;
+package com.em.validation.client.core;
 
 import java.util.Set;
 
 import javax.validation.metadata.BeanDescriptor;
 import javax.validation.metadata.ConstraintDescriptor;
 
-import com.em.validation.client.GwtValidationBaseTestCase;
 import com.em.validation.client.metadata.factory.DescriptorFactory;
 import com.em.validation.client.model.composed.ComposedConstraint;
 import com.em.validation.client.model.composed.ComposedSingleViolationConstraint;
@@ -13,13 +12,13 @@ import com.em.validation.client.model.composed.ComposedTestClass;
 import com.em.validation.client.model.composed.CyclicalComposedConstraintPart1;
 import com.em.validation.client.model.composed.CyclicalComposedConstraintPart2;
 import com.em.validation.client.model.generic.TestClass;
+import com.em.validation.client.model.tests.GwtValidationBaseTestCase;
+import com.em.validation.client.reflector.IReflector;
+import com.em.validation.client.reflector.IReflectorFactory;
 
-public class ReflectorGenerationTest extends GwtValidationBaseTestCase {
+public class CoreConstraintsTest extends GwtValidationBaseTestCase {
 	
-	public void testConstraintGeneration() {
-		//get the factory instance
-		IReflectorFactory factory = ReflectorFactory.INSTANCE;
-
+	public static void testConstraintGeneration(IReflectorFactory factory) {
 		//assert that we got a usable factory
 		assertNotNull(factory);
 		
@@ -34,7 +33,7 @@ public class ReflectorGenerationTest extends GwtValidationBaseTestCase {
 		
 	}
 	
-	public void testComposedConstraints() {
+	public static void testComposedConstraints(IReflectorFactory factory) {
 		//test composed constraint
 		BeanDescriptor beanDesc = DescriptorFactory.INSTANCE.getBeanDescriptor(ComposedTestClass.class);
 		

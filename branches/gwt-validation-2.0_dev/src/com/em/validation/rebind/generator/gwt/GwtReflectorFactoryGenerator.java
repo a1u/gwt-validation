@@ -28,7 +28,14 @@ public class GwtReflectorFactoryGenerator extends Generator {
 		
 		return factoryDescriptor.getFullClassName();
 	}
-	
+
+	/**
+	 * Actually generate all of the files described by the ClassDescriptor and the dependency tree.
+	 * 
+	 * @param descriptor
+	 * @param logger
+	 * @param context
+	 */
 	private void generateClass(ClassDescriptor descriptor, TreeLogger logger, GeneratorContext context) {
 		//do not generate a class twice.  this hash set is used to manage that.
 		if(GwtReflectorFactoryGenerator.generationSet.contains(descriptor.getFullClassName())) {
@@ -37,8 +44,8 @@ public class GwtReflectorFactoryGenerator extends Generator {
 
 		//create the print writer for the class
 		PrintWriter printWriter = context.tryCreate(logger, descriptor.getPackageName(),descriptor.getClassName());
-        //this is null when a class already exists.  in that case it will return null.  this happens when
-        //an identical annotation is used twice
+        //this is null when a class already exists. this usually happens when the print writer would be attempting
+		//to output the same class twice.  with the generationSet and various other blocks this should not happen.
 		if(printWriter == null) return;
         
 		//use the print writer

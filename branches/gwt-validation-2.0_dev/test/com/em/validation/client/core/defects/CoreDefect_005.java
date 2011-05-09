@@ -1,6 +1,4 @@
-package com.em.validation.compiled.reflector.defects;
-
-import static org.junit.Assert.assertEquals;
+package com.em.validation.client.core.defects;
 
 import javax.validation.metadata.BeanDescriptor;
 
@@ -8,22 +6,17 @@ import org.junit.Test;
 
 import com.em.validation.client.metadata.factory.DescriptorFactory;
 import com.em.validation.client.model.defects.defect_005.StrangeCapitalization;
+import com.em.validation.client.model.tests.GwtValidationBaseTestCase;
 import com.em.validation.client.reflector.IReflector;
-import com.em.validation.compiler.TestCompiler;
-import com.em.validation.rebind.generator.source.ReflectorGenerator;
-import com.em.validation.rebind.metadata.ClassDescriptor;
+import com.em.validation.client.reflector.IReflectorFactory;
 
-public class Defect_005 {
+public class CoreDefect_005 extends GwtValidationBaseTestCase {
 
 	@Test
-	public void testStrangeCapitalization() throws InstantiationException, IllegalAccessException {
-		StrangeCapitalization capitalization = new StrangeCapitalization();
+	public static void testStrangeCapitalization(IReflectorFactory factory) {
+		StrangeCapitalization capitalization = new StrangeCapitalization();	
 		
-		ClassDescriptor reflectorPackage = ReflectorGenerator.INSTANCE.getReflectorDescirptions(capitalization.getClass());
-		
-		Class<?> reflectorClass = TestCompiler.INSTANCE.loadClass(reflectorPackage);
-		@SuppressWarnings("unchecked")
-		IReflector<StrangeCapitalization> reflector = (IReflector<StrangeCapitalization>) reflectorClass.newInstance(); 
+		IReflector<StrangeCapitalization> reflector = factory.getReflector(capitalization.getClass()); 
 		
 		BeanDescriptor descriptor = DescriptorFactory.INSTANCE.getBeanDescriptor(reflector);
 		

@@ -6,14 +6,27 @@ import javax.validation.metadata.PropertyDescriptor;
 import com.em.validation.client.metadata.BeanDescriptorImpl;
 import com.em.validation.client.metadata.PropertyDescriptorImpl;
 import com.em.validation.client.reflector.IReflector;
+import com.em.validation.client.reflector.IReflectorFactory;
 import com.em.validation.client.reflector.ReflectorFactory;
 
 public enum DescriptorFactory {
 	
 	INSTANCE;
 	
+	private IReflectorFactory factory = null;
+	
 	private DescriptorFactory() {
-		
+		this.factory = ReflectorFactory.INSTANCE;
+	}
+	
+	/**
+	 * Override the default reflector factory.  Useful for testing, multiple modules, or
+	 * other special cases.
+	 * 
+	 * @param factory
+	 */
+	public void setReflectorFactory(IReflectorFactory factory) {
+		this.factory = factory;
 	}
 	
 	/**
@@ -33,7 +46,7 @@ public enum DescriptorFactory {
 	 * @return
 	 */
 	public BeanDescriptor getBeanDescriptor(final Class<?> targetClass) {
-		return this.getBeanDescriptor(ReflectorFactory.INSTANCE.getReflector(targetClass));
+		return this.getBeanDescriptor(this.factory.getReflector(targetClass));
 	}
 	
 	/**

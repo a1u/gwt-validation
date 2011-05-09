@@ -1,14 +1,10 @@
-package com.em.validation.compiled.reflector;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+package com.em.validation.client.core;
 
 import javax.validation.groups.Default;
 import javax.validation.metadata.BeanDescriptor;
 import javax.validation.metadata.ElementDescriptor.ConstraintFinder;
 import javax.validation.metadata.PropertyDescriptor;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.em.validation.client.metadata.factory.DescriptorFactory;
@@ -16,33 +12,15 @@ import com.em.validation.client.model.groups.BasicGroup;
 import com.em.validation.client.model.groups.ExtendedGroup;
 import com.em.validation.client.model.groups.GroupTestClass;
 import com.em.validation.client.model.groups.MaxGroup;
-import com.em.validation.client.reflector.IReflector;
-import com.em.validation.compiler.TestCompiler;
-import com.em.validation.rebind.generator.source.ReflectorGenerator;
-import com.em.validation.rebind.metadata.ClassDescriptor;
+import com.em.validation.client.model.tests.GwtValidationBaseTestCase;
+import com.em.validation.client.reflector.IReflectorFactory;
 
-public class MetadataTest {
+public class CoreMetadataTest extends GwtValidationBaseTestCase {
 
-	private static BeanDescriptor descriptor = null;
-	
-	@BeforeClass
-	public static void getBeanDescriptor() throws InstantiationException, IllegalAccessException {
-		GroupTestClass groupTest = new GroupTestClass();
-		
-		ClassDescriptor reflectorPackage = ReflectorGenerator.INSTANCE.getReflectorDescirptions(groupTest.getClass());
-		
-		Class<?> reflectorClass = TestCompiler.INSTANCE.loadClass(reflectorPackage);
-		@SuppressWarnings("unchecked")
-		IReflector<GroupTestClass> reflector = (IReflector<GroupTestClass>) reflectorClass.newInstance(); 
+	public static void testGroupFinderOnClass(IReflectorFactory factory) {
 
-		//get descriptor and finder
-		MetadataTest.descriptor = DescriptorFactory.INSTANCE.getBeanDescriptor(reflector);
-	}
-	
-	@Test
-	public void testGroupFinderOnClass() {
 		//get bean descriptor and initial finder
-		BeanDescriptor descriptor = MetadataTest.descriptor;
+		BeanDescriptor descriptor = DescriptorFactory.INSTANCE.getBeanDescriptor(GroupTestClass.class);
 		ConstraintFinder finder = descriptor.findConstraints();
 		
 		//test with no groups
@@ -79,9 +57,9 @@ public class MetadataTest {
 	}
 	
 	@Test
-	public void testGroupFinderOnProperty() {
+	public static void testGroupFinderOnProperty(IReflectorFactory factory) {
 		//get property descriptor and initial finder
-		PropertyDescriptor propertyDescriptor = MetadataTest.descriptor.getConstraintsForProperty("testString");
+		PropertyDescriptor propertyDescriptor = DescriptorFactory.INSTANCE.getBeanDescriptor(GroupTestClass.class).getConstraintsForProperty("testString");
 		ConstraintFinder finder = propertyDescriptor.findConstraints();
 		
 		//all constraints
@@ -91,4 +69,5 @@ public class MetadataTest {
 		assertEquals(2, finder.unorderedAndMatchingGroups(ExtendedGroup.class).getConstraintDescriptors().size());
 		
 	}
+	
 }
