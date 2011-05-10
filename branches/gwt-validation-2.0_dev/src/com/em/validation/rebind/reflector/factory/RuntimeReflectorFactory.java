@@ -9,7 +9,7 @@ import javax.validation.metadata.ConstraintDescriptor;
 import com.em.validation.client.reflector.IReflector;
 import com.em.validation.client.reflector.IReflectorFactory;
 import com.em.validation.rebind.reflector.RuntimeReflectorImpl;
-import com.em.validation.rebind.resolve.ConstraintResolver;
+import com.em.validation.rebind.resolve.ConstraintDescriptionResolver;
 
 public enum RuntimeReflectorFactory implements IReflectorFactory {
 	
@@ -28,7 +28,7 @@ public enum RuntimeReflectorFactory implements IReflectorFactory {
 		if(reflector == null) {
 			reflector = new RuntimeReflectorImpl<T>(targetClass);
 			
-			for(Set<ConstraintDescriptor<?>> subset : ConstraintResolver.INSTANCE.getConstraintDescriptors(targetClass).values()){
+			for(Set<ConstraintDescriptor<?>> subset : ConstraintDescriptionResolver.INSTANCE.getConstraintDescriptors(targetClass).values()){
 				reflector.getConstraintDescriptors().addAll(subset);
 			}
 			this.reflectorCache.put(targetClass, reflector);

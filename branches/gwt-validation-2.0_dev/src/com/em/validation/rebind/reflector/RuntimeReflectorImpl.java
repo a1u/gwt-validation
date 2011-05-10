@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.em.validation.client.reflector.Reflector;
 import com.em.validation.rebind.metadata.PropertyMetadata;
-import com.em.validation.rebind.resolve.ConstraintResolver;
+import com.em.validation.rebind.resolve.ConstraintDescriptionResolver;
 import com.em.validation.rebind.resolve.PropertyResolver;
 
 public class RuntimeReflectorImpl<T> extends Reflector<T> {
@@ -22,7 +22,7 @@ public class RuntimeReflectorImpl<T> extends Reflector<T> {
 		this();
 		this.targetClass = targetClass;
 		this.metadataMap = PropertyResolver.INSTANCE.getPropertyMetadata(targetClass);
-		this.constraintDescriptors = ConstraintResolver.INSTANCE.getConstraintDescriptors(targetClass);
+		this.constraintDescriptors = ConstraintDescriptionResolver.INSTANCE.getConstraintDescriptors(targetClass);
 	}
 	
 	@Override

@@ -4,25 +4,59 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.validation.Constraint;
+import javax.validation.OverridesAttribute;
 import javax.validation.ReportAsSingleViolation;
+import javax.validation.metadata.ConstraintDescriptor;
 
 import com.em.validation.rebind.metadata.ConstraintMetadata;
 import com.em.validation.rebind.metadata.ConstraintPropertyMetadata;
+import com.em.validation.rebind.metadata.OverridesMetadata;
+import com.em.validation.rebind.metadata.PropertyMetadata;
+import com.em.validation.rebind.reflector.factory.RuntimeConstraintDescriptorFactory;
 
-public enum AnnotationResolver {
+
+/**
+ * Get all of the constraints (via constraint descriptors) of a given class.
+ * 
+ * @author chris
+ *
+ */
+public enum ConstraintDescriptionResolver {
 
 	INSTANCE;
 	
 	private Map<String, ConstraintMetadata> metadataCache = new HashMap<String, ConstraintMetadata>();
 	
-	private AnnotationResolver() {
+	private ConstraintDescriptionResolver() {
 		
 	}
 	
-	public ConstraintMetadata getAnnotationMetadata(Annotation annotation) {
+	public Map<String,Set<ConstraintDescriptor<?>>> getConstraintDescriptors(Class<?> targetClass) {
+		Map<String,Set<ConstraintDescriptor<?>>> results = new HashMap<String, Set<ConstraintDescriptor<?>>>();
+		Map<String,PropertyMetadata> propertyMetadata = PropertyResolver.INSTANCE.getPropertyMetadata(targetClass);
+		for(String propertyName : propertyMetadata.keySet()) {
+			results.put(propertyName, this.getConstraintsForProperty(targetClass, propertyName));
+		}		
+		return results;
+	}
+	
+	public Set<ConstraintDescriptor<?>> getConstraintsForProperty(Class<?> targetClass, String propertyName) {
+		Set<ConstraintDescriptor<?>> descriptors = new LinkedHashSet<ConstraintDescriptor<?>>();
+		PropertyMetadata property = PropertyResolver.INSTANCE.getPropertyMetadata(targetClass, propertyName);
+		for(Annotation annotation : property.getAnnotationInstances()) {
+			ConstraintMetadata metadata = this.getConstraintMetadata(annotation);
+			ConstraintDescriptor<?> descriptor = RuntimeConstraintDescriptorFactory.INSTANCE.getConstraintDescriptor(metadata);
+			descriptors.add(descriptor);
+		}		
+		return descriptors;
+	}
+	
+	public ConstraintMetadata getConstraintMetadata(Annotation annotation) {
 		
 		//create annotation metadata
 		ConstraintMetadata metadata = this.metadataCache.get(annotation.toString()); 
@@ -74,10 +108,42 @@ public enum AnnotationResolver {
 			//get composing constraints
 			for(Annotation subAnnotation : annotation.annotationType().getAnnotations()) {
 				if(subAnnotation.annotationType().getAnnotation(Constraint.class) != null){
-					metadata.getComposedOf().add(this.getAnnotationMetadata(subAnnotation));
+					metadata.getComposedOf().add(this.getConstraintMetadata(subAnnotation));
 				}
 			}
-
+			
+			//get overrides
+			if(metadata.getComposedOf() != null && metadata.getComposedOf().size() > 0) {
+				//create overrides metadata for method/property
+				OverridesMetadata overrides = new OverridesMetadata();
+				//create annotation method metadata
+				for(Method method : annotation.annotationType().getDeclaredMethods()) {
+					OverridesAttribute override = method.getAnnotation(OverridesAttribute.class);
+					if(override != null) {
+						Object value = null;
+						try {
+							value = method.invoke(annotation, new Object[]{});
+						} catch (Exception e) {
+							//could not invoke method, value is null
+						}						
+						overrides.addOverride(override.constraint(), method.getName(), value, this.createReturnValueAsString(value), override.constraintIndex());
+					}
+					OverridesAttribute.List overrideList = method.getAnnotation(OverridesAttribute.List.class);
+					if(overrideList != null && overrideList.value() != null && overrideList.value().length > 0) {
+						for(OverridesAttribute listedOverride : overrideList.value()) {
+							if(listedOverride != null) {
+								Object value = null;
+								try {
+									value = method.invoke(annotation, new Object[]{});
+								} catch (Exception e) {
+									//could not invoke method, value is null
+								}						
+								overrides.addOverride(listedOverride.constraint(), method.getName(), value, this.createReturnValueAsString(value), listedOverride.constraintIndex());
+							}							
+						}
+					}
+				}
+			}
 		}
 		
 		return metadata;

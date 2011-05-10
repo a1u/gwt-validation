@@ -11,9 +11,9 @@ import java.util.UUID;
 import javax.validation.ConstraintValidator;
 
 import com.em.validation.client.metadata.AbstractConstraintDescriptor;
-import com.em.validation.rebind.metadata.ConstraintMetadata;
 import com.em.validation.rebind.metadata.ClassDescriptor;
-import com.em.validation.rebind.resolve.AnnotationResolver;
+import com.em.validation.rebind.metadata.ConstraintMetadata;
+import com.em.validation.rebind.resolve.ConstraintDescriptionResolver;
 import com.em.validation.rebind.template.TemplateController;
 
 /**
@@ -38,7 +38,7 @@ public enum ConstraintDescriptionGenerator {
 	
 	public ClassDescriptor generateConstraintDescriptor(Annotation annotation) {
 		//get annotation metadata
-		ConstraintMetadata metadata = AnnotationResolver.INSTANCE.getAnnotationMetadata(annotation);
+		ConstraintMetadata metadata = ConstraintDescriptionResolver.INSTANCE.getConstraintMetadata(annotation);
 		
 		return this.getDescriptorFromMetadata(metadata);
 	}

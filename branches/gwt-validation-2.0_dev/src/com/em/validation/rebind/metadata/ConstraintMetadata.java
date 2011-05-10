@@ -72,6 +72,12 @@ public class ConstraintMetadata {
 	private boolean reportAsSingleViolation = false;
 	
 	/**
+	 * Stores the overrides for properties
+	 * 
+	 */
+	private Map<String,OverridesMetadata> overridesMap = new LinkedHashMap<String, OverridesMetadata>();
+	
+	/**
 	 * This is the set of element types that this constraint was observed declared on
 	 * 
 	 */
@@ -156,6 +162,14 @@ public class ConstraintMetadata {
 
 	public void setDeclaredOn(Set<ElementType> declaredOn) {
 		this.declaredOn = declaredOn;
+	}
+
+	public Map<String,OverridesMetadata> getOverridesMap() {
+		return overridesMap;
+	}
+
+	public void setOverridesMap(Map<String,OverridesMetadata> overridesMap) {
+		this.overridesMap = overridesMap;
 	}	
 		
 }
