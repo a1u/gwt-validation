@@ -86,8 +86,10 @@ public enum PropertyResolver {
 			
 			if(this.hasMethod(targetClass, property.getReadMethod().getName(), new Class<?>[]{})) {
 				pMeta.setAccessor(property.getReadMethod().getName() + "()");
+				pMeta.setField(false);
 			} else if(this.hasField(targetClass, propertyName)) {
 				pMeta.setAccessor(propertyName);
+				pMeta.setField(true);
 			} else {
 				continue;
 			}

@@ -45,7 +45,7 @@ public enum DescriptorFactory {
 	 * @param targetClass
 	 * @return
 	 */
-	public BeanDescriptor getBeanDescriptor(final Class<?> targetClass) {
+	public <T> BeanDescriptor getBeanDescriptor(final Class<T> targetClass) {
 		return this.getBeanDescriptor(this.factory.getReflector(targetClass));
 	}
 	

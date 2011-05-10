@@ -14,6 +14,8 @@ public class PropertyMetadata {
 	private String accessor;
 	private String classString;
 	
+	private boolean field = true;
+	
 	public String getName() {
 		return name;
 	}
@@ -46,6 +48,12 @@ public class PropertyMetadata {
 	}
 	public void setAnnotationInstances(List<Annotation> annotationInstances) {
 		this.annotationInstances = annotationInstances;
+	}
+	public boolean isField() {
+		return field;
+	}
+	public void setField(boolean field) {
+		this.field = field;
 	}
 	
 	

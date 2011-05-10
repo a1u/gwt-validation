@@ -20,7 +20,7 @@ public abstract class Reflector<T> implements IReflector<T> {
 	protected Map<String,Class<?>> propertyTypes = new HashMap<String, Class<?>>();
 	
 	/**
-	 * Class
+	 * The target class of the reflector
 	 * 
 	 */
 	protected Class<?> targetClass = null;

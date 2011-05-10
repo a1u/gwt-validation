@@ -10,7 +10,7 @@ import javax.validation.metadata.ConstraintDescriptor;
 
 import com.em.validation.rebind.metadata.ConstraintMetadata;
 import com.em.validation.rebind.metadata.PropertyMetadata;
-import com.em.validation.rebind.metadata.RuntimeConstraintDescriptor;
+import com.em.validation.rebind.reflector.factory.RuntimeConstraintDescriptorFactory;
 
 
 /**
@@ -27,8 +27,8 @@ public enum ConstraintResolver {
 		
 	}
 	
-	public Map<String,Set<ConstraintDescriptor<Annotation>>> getConstraintDescriptors(Class<?> targetClass) {
-		Map<String,Set<ConstraintDescriptor<Annotation>>> results = new HashMap<String, Set<ConstraintDescriptor<Annotation>>>();
+	public Map<String,Set<ConstraintDescriptor<?>>> getConstraintDescriptors(Class<?> targetClass) {
+		Map<String,Set<ConstraintDescriptor<?>>> results = new HashMap<String, Set<ConstraintDescriptor<?>>>();
 		Map<String,PropertyMetadata> propertyMetadata = PropertyResolver.INSTANCE.getPropertyMetadata(targetClass);
 		for(String propertyName : propertyMetadata.keySet()) {
 			results.put(propertyName, this.getConstraintsForProperty(targetClass, propertyName));
@@ -36,12 +36,12 @@ public enum ConstraintResolver {
 		return results;
 	}
 	
-	public Set<ConstraintDescriptor<Annotation>> getConstraintsForProperty(Class<?> targetClass, String propertyName) {
-		Set<ConstraintDescriptor<Annotation>> descriptors = new LinkedHashSet<ConstraintDescriptor<Annotation>>();
+	public Set<ConstraintDescriptor<?>> getConstraintsForProperty(Class<?> targetClass, String propertyName) {
+		Set<ConstraintDescriptor<?>> descriptors = new LinkedHashSet<ConstraintDescriptor<?>>();
 		PropertyMetadata property = PropertyResolver.INSTANCE.getPropertyMetadata(targetClass, propertyName);
 		for(Annotation annotation : property.getAnnotationInstances()) {
 			ConstraintMetadata metadata = AnnotationResolver.INSTANCE.getAnnotationMetadata(annotation);
-			ConstraintDescriptor<Annotation> descriptor = new RuntimeConstraintDescriptor<Annotation>(metadata);
+			ConstraintDescriptor<?> descriptor = RuntimeConstraintDescriptorFactory.INSTANCE.getConstraintDescriptor(metadata);
 			descriptors.add(descriptor);
 		}		
 		return descriptors;

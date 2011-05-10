@@ -11,13 +11,13 @@ import com.em.validation.client.metadata.AbstractConstraintDescriptor;
 
 public class RuntimeConstraintDescriptor<T extends Annotation> extends AbstractConstraintDescriptor<T> {
 
-	private Annotation annotation = null;
-	
 	private ConstraintMetadata annotationMetadata = null;
 	
+	@SuppressWarnings("unchecked")
 	public RuntimeConstraintDescriptor(ConstraintMetadata annotationMetadata) {
-		this.annotation = annotationMetadata.getInstance();
+		this.annotation = (T)annotationMetadata.getInstance();
 		this.annotationMetadata = annotationMetadata;
+		this.reportAsSingleViolation = annotationMetadata.isReportAsSingleViolation();
 		
 		for(Method method : this.annotation.getClass().getMethods()) {
 			try {
