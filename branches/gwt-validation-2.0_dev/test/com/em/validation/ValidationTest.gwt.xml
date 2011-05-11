@@ -3,4 +3,7 @@
 	<!-- inherit base project -->
 	<inherits name='com.em.validation.Validation'/>
 	
+	<!-- unit testing framework -->
+	<inherits name='com.google.gwt.junit.JUnit'/>	
+	
 </module>
