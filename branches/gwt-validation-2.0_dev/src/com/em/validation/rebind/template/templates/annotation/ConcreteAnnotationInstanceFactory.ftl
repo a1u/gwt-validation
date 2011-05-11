@@ -57,9 +57,19 @@ public enum ${generatedName} implements IConcreteAnnotationInstanceFactory<${tar
 				@Override
 				public ${metadata.returnType} ${metadata.methodName}() {
 					<#if metadata.returnType == "int">
-					return ((Integer)valueMap.get("${metadata.methodName}")).intValue();
+					return (int)(Integer)valueMap.get("${metadata.methodName}");
 					<#elseif metadata.returnType == "long">
-					return ((Long)valueMap.get("${metadata.methodName}")).longValue();
+					return (long)(Long)valueMap.get("${metadata.methodName}");
+					<#elseif metadata.returnType == "double">
+					return (double)(Double)valueMap.get("${metadata.methodName}");
+					<#elseif metadata.returnType == "float">
+					return (float)(Float)valueMap.get("${metadata.methodName}");
+					<#elseif metadata.returnType == "boolean">
+					return (boolean)(Boolean)vaueMap.get("${metadata.methodName}");
+					<#elseif metadata.returnType == "char">
+					return (char)(Char)valueMap.get("${metadata.methodName}");
+					<#elseif metadata.returnType == "short">
+					return (short)(Short)valueMap.get("${metadata.methodName}");
 					<#else>
 					return (${metadata.returnType})valueMap.get("${metadata.methodName}");
 					</#if>
