@@ -84,7 +84,7 @@ public enum AnnotationInstanceFactoryGenerator {
 			
 			//create generation target annotation name
 			String generatedFactoryName = this.PREFIX + "_" + uuidString;
-			String fullGeneratedFactoryName = this.TARGET_PACKAGE + "." +generatedFactoryName;
+			String fullGeneratedFactoryName = this.TARGET_PACKAGE + ".instances." +generatedFactoryName;
 			
 			//target annotation stuff
 			String annotationImportName = annotationClass.getName();
@@ -95,13 +95,13 @@ public enum AnnotationInstanceFactoryGenerator {
 			templateMap.put("constraints",constraints);
 			templateMap.put("methods", methods);
 			templateMap.put("generatedName",generatedFactoryName);
-			templateMap.put("targetPackage", this.TARGET_PACKAGE);
+			templateMap.put("targetPackage", this.TARGET_PACKAGE + ".instances");
 			templateMap.put("annotationImportName",annotationImportName);
 			templateMap.put("targetAnnotation",targetAnnotation);
 			
 			//use the template and create and save a new descriptor
 			ClassDescriptor descriptor = new ClassDescriptor();
-			descriptor.setPackageName(this.TARGET_PACKAGE);
+			descriptor.setPackageName(this.TARGET_PACKAGE + ".instances");
 			descriptor.setFullClassName(fullGeneratedFactoryName);
 			descriptor.setClassName(generatedFactoryName);
 			descriptor.setClassContents(TemplateController.INSTANCE.processTemplate("templates/annotation/ConcreteAnnotationInstanceFactory.ftl", templateMap));
