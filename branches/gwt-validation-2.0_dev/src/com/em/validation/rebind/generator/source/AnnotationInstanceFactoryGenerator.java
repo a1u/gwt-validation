@@ -133,9 +133,5 @@ public enum AnnotationInstanceFactoryGenerator {
 		//return set
 		return outerFactoryDescriptor;
 	}
-	
-	
-	public static void main(String[] args) {
-		AnnotationInstanceFactoryGenerator.INSTANCE.getAnnotationFactoryDescriptor();
-	}
+
 }

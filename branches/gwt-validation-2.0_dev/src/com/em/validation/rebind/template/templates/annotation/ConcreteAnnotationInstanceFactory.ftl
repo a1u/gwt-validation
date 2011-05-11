@@ -35,9 +35,13 @@ public enum ${generatedName} implements IConcreteAnnotationInstanceFactory<${tar
 		//save properties for each signature
 		<#list constraints as constraint>
 		//metadata map for ${constraint.instance.toString()}
-		this.signatureToValueMap.put("${constraint.instance.toString()}",new HashMap<String,Object>());
+		this.signatureToValueMap.put("${hash(constraint.instance.toString())}",new HashMap<String,Object>());
 		<#list constraint.methodMap?values as property>
-		this.signatureToValueMap.get("${constraint.instance.toString()}").put("${property.methodName}",${property.returnValue});
+		<#if property.returnType == "String">
+		this.signatureToValueMap.get("${hash(constraint.instance.toString())}").put("${property.methodName}","${property.returnValue?j_string}");
+		<#else>
+		this.signatureToValueMap.get("${hash(constraint.instance.toString())}").put("${property.methodName}",${property.returnValue});
+		</#if>
 		</#list>
 		
 		</#list>

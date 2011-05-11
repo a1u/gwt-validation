@@ -28,10 +28,10 @@ public enum ${generatedName} implements ConstraintDescriptor<${targetAnnotation}
 		this.instance = new AbstractConstraintDescriptor<${targetAnnotation}>() {
 			public void init() {
 				//create underlying annotation
-				this.annotation = AnnotationInstanceFactory.INSTANCE.getAnnotationFactory(${targetAnnotation}.class).getAnnotation("${signature}");
+				this.annotation = AnnotationInstanceFactory.INSTANCE.getAnnotationFactory(${targetAnnotation}.class).getAnnotation("${hash(signature)}");
 		
 				//get property map
-				this.propertyMap = AnnotationInstanceFactory.INSTANCE.getAnnotationFactory(${targetAnnotation}.class).getPropertyMap("${signature}");
+				this.propertyMap = AnnotationInstanceFactory.INSTANCE.getAnnotationFactory(${targetAnnotation}.class).getPropertyMap("${hash(signature)}");
 			
 				//save composed constraints
 				<#list composedOf as composed>

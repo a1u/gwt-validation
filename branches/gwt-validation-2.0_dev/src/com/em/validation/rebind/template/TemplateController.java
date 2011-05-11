@@ -38,6 +38,9 @@ public enum TemplateController {
 		//create empty byte array output stream
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		
+		//add hash method to map
+		templateModel.put("hash", new StringHashMethod());
+		
 		//process template
 		try {
 			Writer outputWriter = new OutputStreamWriter(outputStream);
@@ -51,12 +54,8 @@ public enum TemplateController {
 			e.printStackTrace();
 			return "";
 		}
-		//get result for manipulation
-		String result = outputStream.toString();
-		//fix escape sequences in all string literals
-		result = result.replaceAll("\\\\", "\\\\\\\\");
-		//return result
-		return result;
+		
+		return outputStream.toString();
 	}
 	
 }
