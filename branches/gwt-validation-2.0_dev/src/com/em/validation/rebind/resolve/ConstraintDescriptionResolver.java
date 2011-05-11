@@ -45,6 +45,18 @@ public enum ConstraintDescriptionResolver {
 		return results;
 	}
 	
+	public Set<ConstraintMetadata> getAllMetadata(Class<?> targetClass) {
+		Set<ConstraintMetadata> metadataResult = new LinkedHashSet<ConstraintMetadata>();
+		Map<String,PropertyMetadata> propertyMetadata = PropertyResolver.INSTANCE.getPropertyMetadata(targetClass);
+		for(String propertyName : propertyMetadata.keySet()) {
+			PropertyMetadata property = propertyMetadata.get(propertyName);
+			for(Annotation annotation : property.getAnnotationInstances()) {
+				metadataResult.add(this.getConstraintMetadata(annotation));
+			}
+		}		
+		return metadataResult;
+	}
+	
 	public Set<ConstraintDescriptor<?>> getConstraintsForProperty(Class<?> targetClass, String propertyName) {
 		Set<ConstraintDescriptor<?>> descriptors = new LinkedHashSet<ConstraintDescriptor<?>>();
 		PropertyMetadata property = PropertyResolver.INSTANCE.getPropertyMetadata(targetClass, propertyName);

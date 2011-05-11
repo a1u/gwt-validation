@@ -33,6 +33,9 @@ public enum ReflectorFactoryGenerator {
 		factoryDescriptor.setFullClassName(this.TARGET_PACKAGE + "." + factoryDescriptor.getClassName());
 		factoryDescriptor.setPackageName(this.TARGET_PACKAGE);
 		
+		//add annotation instance factory
+		factoryDescriptor.getDependencies().add(AnnotationInstanceFactoryGenerator.INSTANCE.getAnnotationFactoryDescriptor());
+		
 		//create reflector metadata
 		Set<Class<?>> constrainedClasses = ConstrainedClassScanner.INSTANCE.getConstrainedClasses();
 		Set<ReflectorMetadata> metadata = new LinkedHashSet<ReflectorMetadata>();

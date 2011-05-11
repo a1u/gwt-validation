@@ -96,6 +96,7 @@ public enum ConstraintDescriptionGenerator {
 			generatedAnnotationModel.put("annotationImportName", annotationImportName);
 			generatedAnnotationModel.put("targetAnnotation",annotationSimpleName);
 			generatedAnnotationModel.put("validatedBy",constraintValidatorClassNames);
+			generatedAnnotationModel.put("signature",metadata.getInstance().toString());
 			
 			//finally generate class contents
 			descriptor.setClassContents(TemplateController.INSTANCE.processTemplate("templates/constraint/ConstraintDescriptor.ftl", generatedAnnotationModel));

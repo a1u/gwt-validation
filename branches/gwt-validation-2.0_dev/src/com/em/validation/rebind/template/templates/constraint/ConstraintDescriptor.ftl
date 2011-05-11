@@ -13,6 +13,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.Payload;
 import javax.validation.metadata.ConstraintDescriptor;
 import com.em.validation.client.metadata.AbstractConstraintDescriptor;
+import com.em.validation.client.generated.factory.AnnotationInstanceFactory;
 
 //the target constraint annotation
 import ${annotationImportName};
@@ -27,27 +28,11 @@ public enum ${generatedName} implements ConstraintDescriptor<${targetAnnotation}
 		this.instance = new AbstractConstraintDescriptor<${targetAnnotation}>() {
 			public void init() {
 				//create underlying annotation
-				this.annotation = new ${targetAnnotation}() {
-					//generated body methods
-					<#list annotationMetadata as metadata>
-					<#if metadata.returnType == "Class[]">@SuppressWarnings({ "rawtypes", "unchecked" })</#if>
-					@Override
-					public ${metadata.returnType} ${metadata.methodName}() {
-						return ${metadata.returnValue};
-					}			
-					</#list>
-					
-					@Override
-					public Class<? extends Annotation> annotationType() {
-						return ${targetAnnotation}.class;
-					}		
-				};
+				this.annotation = AnnotationInstanceFactory.INSTANCE.getAnnotationFactory(${targetAnnotation}.class).getAnnotation("${signature}");
 		
-				//save properties
-				<#list annotationMetadata as metadata>
-				this.propertyMap.put("${metadata.methodName}",this.annotation.${metadata.methodName}());
-				</#list>
-				
+				//get property map
+				this.propertyMap = AnnotationInstanceFactory.INSTANCE.getAnnotationFactory(${targetAnnotation}.class).getPropertyMap("${signature}");
+			
 				//save composed constraints
 				<#list composedOf as composed>
 				this.composedOf.add(${composed.className}.INSTANCE);
