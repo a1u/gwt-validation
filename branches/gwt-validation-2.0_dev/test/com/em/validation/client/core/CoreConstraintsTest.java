@@ -31,6 +31,12 @@ public class CoreConstraintsTest extends GwtValidationBaseTestCase {
 		testClassInstance.setTestInt(430);
 		assertEquals(430, testClassReflector.getValue("testInt", testClassInstance));	
 		
+		//test interface
+		assertEquals("testInterfaceString", testClassReflector.getValue("testInterfaceString", testClassInstance));
+		assertEquals("parentAbstractString", testClassReflector.getValue("parentAbstractString", testClassInstance));
+		
+		//test parent values
+		assertEquals("publicParentString", testClassReflector.getValue("publicParentString", testClassInstance));
 	}
 	
 	public static void testComposedConstraints(IReflectorFactory factory) {

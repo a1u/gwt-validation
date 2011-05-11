@@ -30,7 +30,6 @@ public class ${concreteClassName} extends Reflector<${reflectionTargetName}> {
 		</#list>
 		this.constraintDescriptors.put("${property.name}",${property.name}ConstraintDescriptorList);
 		</#if>
-
 		</#list>
 		
 		//set the target class
@@ -43,7 +42,11 @@ public class ${concreteClassName} extends Reflector<${reflectionTargetName}> {
 		<#list properties as property><#if property_index &gt; 0> else </#if>if("${property.name}".equals(name)) {
 			value = target.${property.accessor};				
 		}</#list>
-	
+		
+		if(value == null) {
+			value = this.getSuperValues(name, target);
+		}
+		
 		return value;
 	}
 }

@@ -45,6 +45,13 @@ public enum ReflectorFactoryGenerator {
 			ReflectorMetadata rMeta = new ReflectorMetadata();
 			rMeta.setReflectorClass(reflectorDescriptor.getFullClassName());
 			rMeta.setTargetClass(targetClass.getName());
+			if(targetClass.getSuperclass() != null && !Object.class.equals(targetClass.getSuperclass())) {
+				rMeta.setSuperClass(targetClass.getSuperclass().getName());
+			}
+			for(Class<?> iface : targetClass.getInterfaces()) {
+				rMeta.getReflectorInterfaces().add(iface.getName());
+			}	
+			
 			metadata.add(rMeta);
 		}
 		

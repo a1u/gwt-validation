@@ -115,27 +115,20 @@ public enum PropertyResolver {
 				Method method = property.getReadMethod();
 				String methodName = property.getReadMethod().getName();
 				Class<?> infoClass = method.getDeclaringClass();
-				do {
-					for(Class<?> infoInterface : infoClass.getInterfaces()) {
-						if(this.hasMethod(infoInterface, methodName, new Class<?>[]{})) {
-							Method interfaceMethod = infoInterface.getMethod(methodName, new Class<?>[]{});
-							for(Annotation a : interfaceMethod.getAnnotations()) {
-								String id = methodName + ":" + a.annotationType().getName();
-								potentialAnnotations.put(id, a);
-							}
+				for(Class<?> infoInterface : infoClass.getInterfaces()) {
+					if(this.hasMethod(infoInterface, methodName, new Class<?>[]{})) {
+						Method interfaceMethod = infoInterface.getMethod(methodName, new Class<?>[]{});
+						for(Annotation a : interfaceMethod.getAnnotations()) {
+							String id = methodName + ":" + a.annotationType().getName();
+							potentialAnnotations.put(id, a);
 						}
 					}
+				}
 					
-					for(Annotation a : method.getAnnotations()) {
-						String id = methodName + ":" + a.annotationType().getName();
-						potentialAnnotations.put(id, a);
-					}
-					
-					infoClass = infoClass.getSuperclass();
-					if(this.hasMethod(infoClass, methodName, new Class<?>[]{})) {
-						method = infoClass.getMethod(methodName, new Class<?>[]{});
-					}
-				} while(infoClass != null);
+				for(Annotation a : method.getAnnotations()) {
+					String id = methodName + ":" + a.annotationType().getName();
+					potentialAnnotations.put(id, a);
+				}
 			} catch (Exception ex) {
 				//log no method access (?)
 			}
@@ -201,15 +194,6 @@ public enum PropertyResolver {
 		//return the empty list if the target is null
 		if(targetClass == null) return descriptors;
 				
-		//if the object class doesn't equal the superclass, turn around
-		if(!Object.class.equals(targetClass.getSuperclass())) {
-			descriptors.putAll(this.resolveAllPropertyDescriptors(targetClass.getSuperclass()));
-		}
-		
-		for(Class<?> iface : targetClass.getInterfaces()) {
-			descriptors.putAll(this.resolveAllPropertyDescriptors(iface));
-		}
-
 		BeanInfo targetInfo = null;
 		try {
 			targetInfo = Introspector.getBeanInfo(targetClass);

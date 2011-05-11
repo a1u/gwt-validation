@@ -9,7 +9,7 @@ public abstract class ParentClass implements ParentInterface {
 
 	@NotNull
 	@Size(min=4)
-	public String publicParentString = "";
+	public String publicParentString = "publicParentString";
 	
 	@Max(22)
 	private int parentInt = 0;

@@ -13,23 +13,29 @@ import com.em.validation.client.model.groups.ExtendedGroup;
 import com.em.validation.client.model.groups.GroupTestClass;
 import com.em.validation.client.model.groups.MaxGroup;
 import com.em.validation.client.model.tests.GwtValidationBaseTestCase;
+import com.em.validation.client.reflector.IReflector;
 import com.em.validation.client.reflector.IReflectorFactory;
+import com.em.validation.client.reflector.ReflectorFactory;
 
 public class CoreMetadataTest extends GwtValidationBaseTestCase {
 
 	public static void testGroupFinderOnClass(IReflectorFactory factory) {
 
 		//get bean descriptor and initial finder
+		IReflector<GroupTestClass> groupTestReflector = ReflectorFactory.INSTANCE.getReflector(GroupTestClass.class);
 		BeanDescriptor descriptor = DescriptorFactory.INSTANCE.getBeanDescriptor(GroupTestClass.class);
 		ConstraintFinder finder = descriptor.findConstraints();
 		
+		//test group parent
+		assertEquals("parentSizeConstrainedString",groupTestReflector.getValue("parentSizeConstrainedString", new GroupTestClass()));
+		
 		//test with no groups
-		assertEquals(6, finder.getConstraintDescriptors().size());
+		assertEquals(8, finder.getConstraintDescriptors().size());
 		assertTrue(finder.hasConstraints());
 		
 		//add Default.class
 		finder.unorderedAndMatchingGroups(Default.class);
-		assertEquals(3, finder.getConstraintDescriptors().size());
+		assertEquals(4, finder.getConstraintDescriptors().size());
 		
 		//add MaxGroup.class
 		finder.unorderedAndMatchingGroups(MaxGroup.class);
@@ -44,7 +50,7 @@ public class CoreMetadataTest extends GwtValidationBaseTestCase {
 		assertEquals(1, finder.getConstraintDescriptors().size());
 		
 		//new finder, only max group
-		assertEquals(4, descriptor.findConstraints().unorderedAndMatchingGroups(MaxGroup.class).getConstraintDescriptors().size());
+		assertEquals(5, descriptor.findConstraints().unorderedAndMatchingGroups(MaxGroup.class).getConstraintDescriptors().size());
 		
 		//new finder, only extended
 		assertEquals(3, descriptor.findConstraints().unorderedAndMatchingGroups(ExtendedGroup.class).getConstraintDescriptors().size());
@@ -53,7 +59,7 @@ public class CoreMetadataTest extends GwtValidationBaseTestCase {
 		finder = descriptor.findConstraints()
 					.unorderedAndMatchingGroups(Default.class)
 					.unorderedAndMatchingGroups(BasicGroup.class);
-		assertEquals(1, finder.getConstraintDescriptors().size());
+		assertEquals(2, finder.getConstraintDescriptors().size());
 	}
 	
 	@Test

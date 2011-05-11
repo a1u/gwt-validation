@@ -14,12 +14,12 @@ public class TestClass extends ParentClass implements TestInterface {
 		@Pattern(regexp="--")
 	})
 	@Size(min=2, max=12)
-	public String publicTestString = "";
+	public String publicTestString = "publicTestString";
 	
 	@Min(5)
 	public int publicTestInt = 0;
 	
-	private String testString = "testtesttest";
+	private String testString = "testString";
 	
 	private int testInt = 0;
 
@@ -45,14 +45,13 @@ public class TestClass extends ParentClass implements TestInterface {
 	@Size(min=1)
 	@Override
 	public String getTestInterfaceString() {
-		return null;
+		return "testInterfaceString";
 	}
 
 	@Size(min=1)
 	@Override
 	public String getParentAbstractString() {
-		// TODO Auto-generated method stub
-		return null;
+		return "parentAbstractString";
 	}
 	
 }

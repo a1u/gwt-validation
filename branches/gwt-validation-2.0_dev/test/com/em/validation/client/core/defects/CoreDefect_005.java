@@ -18,6 +18,9 @@ public class CoreDefect_005 extends GwtValidationBaseTestCase {
 		
 		IReflector<StrangeCapitalization> reflector = factory.getReflector(capitalization.getClass()); 
 		
+		//no null reflectors
+		assertNotNull(reflector);
+		
 		BeanDescriptor descriptor = DescriptorFactory.INSTANCE.getBeanDescriptor(reflector);
 		
 		//check reflector

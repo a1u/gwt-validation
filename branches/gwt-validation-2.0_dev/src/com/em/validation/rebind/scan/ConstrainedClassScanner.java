@@ -2,6 +2,7 @@ package com.em.validation.rebind.scan;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -50,6 +51,12 @@ public enum ConstrainedClassScanner {
 								try {
 									Class<?> constrainedClass = Class.forName(constrainedClassName);
 									result.add(constrainedClass);
+									if(!Object.class.equals(constrainedClass.getSuperclass()) && constrainedClass.getSuperclass() != null) {
+										result.add(constrainedClass.getSuperclass());
+									}
+									if(constrainedClass.getInterfaces().length > 0) {
+										result.addAll(Arrays.asList(constrainedClass.getInterfaces()));
+									}
 								} catch (ClassNotFoundException e) {
 									e.printStackTrace();
 								}

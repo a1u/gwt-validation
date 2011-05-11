@@ -7,7 +7,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.validation.groups.Default;
 
-public class GroupTestClass {
+public class GroupTestClass extends ParentGroupClass {
 
 	@Min(12)
 	private double testDouble = 0;
