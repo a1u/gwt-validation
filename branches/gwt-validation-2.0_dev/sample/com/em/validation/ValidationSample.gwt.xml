@@ -1,0 +1,10 @@
+<module>
+	<!-- inherit user module -->
+	<inherits name='com.google.gwt.user.User'/>
+
+	<!-- inherit javax.validation -->
+	<inherits name='com.em.validation.Validation'/>
+	
+	<!-- set entry point -->
+	<entry-point class="com.em.validation.client.ValidationSample" />
+</module>
