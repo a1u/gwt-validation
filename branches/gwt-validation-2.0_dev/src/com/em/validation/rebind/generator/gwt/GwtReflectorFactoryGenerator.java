@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.em.validation.rebind.generator.GeneratorState;
 import com.em.validation.rebind.generator.source.ReflectorFactoryGenerator;
 import com.em.validation.rebind.metadata.ClassDescriptor;
 import com.google.gwt.core.ext.Generator;
@@ -37,6 +38,9 @@ public class GwtReflectorFactoryGenerator extends Generator {
 	 * @param context
 	 */
 	private void generateClass(ClassDescriptor descriptor, TreeLogger logger, GeneratorContext context) {
+		//set using gwt features in generator state
+		GeneratorState.INSTANCE.setUsingGwtFeatures(true);
+		
 		//do not generate a class twice.  this hash set is used to manage that.
 		if(GwtReflectorFactoryGenerator.generationSet.contains(descriptor.getFullClassName())) {
 			return;

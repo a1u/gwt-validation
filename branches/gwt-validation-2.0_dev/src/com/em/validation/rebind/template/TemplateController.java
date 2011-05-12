@@ -5,6 +5,8 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Map;
 
+import com.em.validation.rebind.generator.GeneratorState;
+
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
@@ -30,16 +32,15 @@ public enum TemplateController {
 		this.freeConfig = freemarkerConfig;
 	}
 	
-	public Configuration getConfiguration() {
-		return this.freeConfig;
-	}
-	
 	public String processTemplate(String templateName, Map<String, Object> templateModel) {
 		//create empty byte array output stream
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		
 		//add hash method to map
 		templateModel.put("hash", new StringHashMethod());
+		
+		//add the template value that sets up using gwt features for code splitting and others
+		templateModel.put("usingGwtFeatures",GeneratorState.INSTANCE.isUsingGwtFeatures());
 		
 		//process template
 		try {

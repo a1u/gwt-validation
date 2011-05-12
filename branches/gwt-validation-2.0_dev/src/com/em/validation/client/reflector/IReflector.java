@@ -14,16 +14,7 @@ public interface IReflector<T> {
 	 * @return
 	 */
 	public Object getValue(String name, T target);
-	
-	/**
-	 * Unparameterized get value from target;
-	 * 
-	 * @param name
-	 * @param target
-	 * @return
-	 */
-	public Object getValueFromObject(String name, Object target);
-		
+
 	/**
 	 * Get the bean accessible name (short name) of all of the publicly accessible methods contained in the given concrete class.
 	 * 

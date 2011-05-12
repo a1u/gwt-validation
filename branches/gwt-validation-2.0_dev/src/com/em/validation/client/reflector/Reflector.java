@@ -98,7 +98,6 @@ public abstract class Reflector<T> implements IReflector<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
 	public Object getValueFromObject(String name, Object target) {
 		return this.getValue(name, (T)target);
 	}	
@@ -106,14 +105,14 @@ public abstract class Reflector<T> implements IReflector<T> {
 	protected Object getSuperValues(String name, T target) {
 		//check super classes
 		Object value = null;
-		if(this.superReflector != null) {
-			value = this.superReflector.getValueFromObject(name, target);
+		if(this.superReflector != null && this.superReflector instanceof Reflector) {
+			value = ((Reflector<?>)this.superReflector).getValueFromObject(name, target);
 		}		
 		//if the value is still null, check interfaces
 		if(value == null) {
 			for(IReflector<?> iface : this.reflectorInterfaces) {
-				if(iface != null) {
-					value = iface.getValueFromObject(name, target);
+				if(iface != null && iface instanceof Reflector) {
+					value = ((Reflector<?>)iface).getValueFromObject(name, target);
 				}
 				if(value != null) break;
 			}
