@@ -17,6 +17,8 @@
 */
 
 /*
+Modifications made by and under:
+
 (c) 2011 Eminent Minds, LLC
 	- Chris Ruffalo
 
