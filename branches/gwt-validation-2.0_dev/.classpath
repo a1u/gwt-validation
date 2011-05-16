@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="com/em/validation/emul/javax/validation/|com/em/validation/emul/java/util/regex/|com/em/validation/emul/com/em/validation/client/reflector/|com/em/validation/emul/com/em/validation/client/regex/" kind="src" path="src"/>
-	<classpathentry excluding="com/em/validation/emul/java/lang/" kind="src" path="test"/>
+	<classpathentry excluding="com/em/validation/emul/com/|com/em/validation/emul/java/|com/em/validation/emul/javax/" kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/test/java"/>
 	<classpathentry kind="src" path="sample"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/freemarker.jar"/>
