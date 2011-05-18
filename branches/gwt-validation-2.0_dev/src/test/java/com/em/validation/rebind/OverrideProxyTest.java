@@ -1,21 +1,23 @@
 package com.em.validation.rebind;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.validation.Payload;
 import javax.validation.constraints.Size;
 import javax.validation.groups.Default;
+import javax.validation.metadata.ConstraintDescriptor;
 
 import org.junit.Test;
 
 import com.em.validation.client.model.groups.ExtendedGroup;
 import com.em.validation.client.model.groups.MaxGroup;
 import com.em.validation.rebind.reflector.AnnotationProxyFactory;
+import com.em.validation.rebind.resolve.ConstraintDescriptionResolver;
 
 public class OverrideProxyTest {
 
@@ -62,14 +64,73 @@ public class OverrideProxyTest {
 		
 		//get override instance
 		Size overriden = AnnotationProxyFactory.INSTANCE.getProxy(size, overMap);
-		
-		
+				
 		//get equals
 		assertEquals(size.min(), overriden.min());
 		assertTrue(size.max() != overriden.max());
 		
 		//groups
 		assertTrue(size.groups()[0] != overriden.groups()[0]);
+		
+		//signatures
+		assertTrue(!size.toString().equals(overriden.toString()));
 	}
 	
+	@Test
+	public void testOverrideOnAnnotationFromClass() {
+		
+		class OverrideTestClass {
+		
+			@Size(min=12,max=240)
+			private String testString = "testString";
+
+			@SuppressWarnings("unused")
+			public String getTestString() {
+				return testString;
+			}
+
+			@SuppressWarnings("unused")
+			public void setTestString(String testString) {
+				this.testString = testString;
+			}
+			
+		}
+		
+		OverrideTestClass test = new OverrideTestClass();
+		
+		//constraint descriptors
+		Set<ConstraintDescriptor<? extends Annotation>> descriptors = ConstraintDescriptionResolver.INSTANCE.getConstraintsForProperty(test.getClass(), "testString");
+		
+		//constraint descriptor list should be predictable in size
+		assertNotNull(descriptors);
+		assertEquals(1, descriptors.size());
+
+		@SuppressWarnings("unchecked")
+		ConstraintDescriptor<Size> testDescriptor = (ConstraintDescriptor<Size>)descriptors.iterator().next();
+		
+		//get annotation
+		Size size = testDescriptor.getAnnotation();
+		
+		//create overrides
+		Map<String,Object> overMap = new HashMap<String, Object>();
+		overMap.put("max", 22);
+		overMap.put("groups", new Class<?>[]{MaxGroup.class,ExtendedGroup.class});
+		
+		//get proxy instance
+		Size over = AnnotationProxyFactory.INSTANCE.getProxy(size, overMap);	
+			
+		//check groups (default values and non-default)
+		assertArrayEquals(new Class<?>[]{}, size.groups());
+		assertArrayEquals(new Class<?>[]{MaxGroup.class,ExtendedGroup.class}, over.groups());
+		
+		//check override values
+		assertEquals(240,size.max());
+		assertEquals(22,over.max());
+				
+		//check that non-override values are exactly the same
+		assertEquals(size.min(),over.min());
+		
+		//check that the message is exactly the same
+		assertEquals(size.message(), over.message());
+	}
 }
