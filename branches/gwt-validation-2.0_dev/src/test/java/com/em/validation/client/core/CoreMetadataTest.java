@@ -23,6 +23,7 @@ import javax.validation.groups.Default;
 import javax.validation.metadata.BeanDescriptor;
 import javax.validation.metadata.ElementDescriptor.ConstraintFinder;
 import javax.validation.metadata.PropertyDescriptor;
+import javax.validation.metadata.Scope;
 
 import org.junit.Test;
 
@@ -79,6 +80,12 @@ public class CoreMetadataTest extends GwtValidationBaseTestCase {
 					.unorderedAndMatchingGroups(Default.class)
 					.unorderedAndMatchingGroups(BasicGroup.class);
 		assertEquals(2, finder.getConstraintDescriptors().size());
+		
+		//new finder, looking at local (element) scope
+		finder = descriptor.findConstraints()
+				.lookingAt(Scope.LOCAL_ELEMENT);
+		assertEquals(6, finder.getConstraintDescriptors().size());
+		assertEquals(8, finder.lookingAt(Scope.HIERARCHY).getConstraintDescriptors().size());
 	}
 	
 	@Test

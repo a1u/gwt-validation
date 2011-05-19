@@ -35,12 +35,12 @@ public abstract class ProtoDescriptor implements ElementDescriptor{
 	@Override
 	public ConstraintFinder findConstraints() {
 		final class PrivateConstraintFinderImpl extends ConstraintFinderImpl {
-			public PrivateConstraintFinderImpl(ElementDescriptor descriptor) {
-				super(descriptor);
+			public PrivateConstraintFinderImpl(IReflector<?> reflector, ElementDescriptor descriptor) {
+				super(reflector,descriptor);
 			}			
 		}
 		
-		return new PrivateConstraintFinderImpl(this);
+		return new PrivateConstraintFinderImpl(this.backingReflector,this);
 	}
 	
 }

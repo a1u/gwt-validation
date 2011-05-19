@@ -30,6 +30,9 @@ import javax.validation.metadata.ElementDescriptor;
 import javax.validation.metadata.ElementDescriptor.ConstraintFinder;
 import javax.validation.metadata.Scope;
 
+import com.em.validation.client.reflector.IReflector;
+import com.em.validation.client.reflector.Reflector;
+
 /**
  * The constraint finder implementation that uses the special properties of the implemented descriptors to do things
  * like navigate the type hierarchy for local and other scopes.
@@ -43,6 +46,12 @@ public class ConstraintFinderImpl implements ConstraintFinder {
 	 * The descriptor (which uses an IReflector instance) that provides the metadata for the search 
 	 */
 	private ElementDescriptor backingDescriptor;
+	
+	/**
+	 * Used for scope searches
+	 * 
+	 */
+	private IReflector<?> backingReflector = null;
 	
 	/**
 	 * When the state of the search values has changed, mark the cache as dirty so that the search will be re-run. 
@@ -71,7 +80,8 @@ public class ConstraintFinderImpl implements ConstraintFinder {
 	 */
 	private Set<ConstraintDescriptor<?>> cachedResults = new HashSet<ConstraintDescriptor<?>>();
 	
-	protected ConstraintFinderImpl(ElementDescriptor descriptor) {
+	protected ConstraintFinderImpl(IReflector<?> reflector, ElementDescriptor descriptor) {
+		this.backingReflector = reflector;
 		this.backingDescriptor = descriptor;
 		this.cachedResults = this.backingDescriptor.getConstraintDescriptors();
 	}
@@ -94,8 +104,9 @@ public class ConstraintFinderImpl implements ConstraintFinder {
 			if(Scope.HIERARCHY.equals(this.scope)) {
 				startSet = this.backingDescriptor.getConstraintDescriptors();
 			} else {
-				if(this.backingDescriptor instanceof BeanDescriptorImpl) {
-					startSet = new HashSet<ConstraintDescriptor<?>>();
+				if(this.backingReflector instanceof Reflector) {
+					Reflector<?> reflector = (Reflector<?>)this.backingReflector;
+					startSet = reflector.getConstraintDescriptors(this.scope);
 				}
 			}
 			
