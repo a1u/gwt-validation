@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="com/em/validation/emul/com/|com/em/validation/emul/java/|com/em/validation/emul/javax/" kind="src" path="src/main/java"/>
+	<classpathentry excluding="**/.svn/**|com/em/validation/emul/com/|com/em/validation/emul/java/|com/em/validation/emul/javax/" kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/test/java"/>
 	<classpathentry kind="src" path="sample"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
