@@ -19,10 +19,15 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+import javax.validation.metadata.BeanDescriptor;
+
 import org.junit.Test;
 
 import com.em.validation.client.core.CoreConstraintsTest;
+import com.em.validation.client.metadata.factory.DescriptorFactory;
+import com.em.validation.client.model.overlay.OverlayClass;
 import com.em.validation.client.model.tests.GwtValidationBaseTestCase;
+import com.em.validation.client.reflector.IReflector;
 
 public class ConstraintsTest extends GwtValidationBaseTestCase {
 	
@@ -39,5 +44,29 @@ public class ConstraintsTest extends GwtValidationBaseTestCase {
 	@Test
 	public void testOverridesConstraints() {
 		CoreConstraintsTest.testOverridesConstraints(this.getReflectorFactory());
+	}
+	
+	/**
+	 * Only tested in gwt/generated/deferred binding mode.  overlay types cannot be handled by reflective java.
+	 * 
+	 */
+	@Test
+	public void testOverlayType() {
+		
+		//create instance
+		OverlayClass overlay = new OverlayClass();
+		
+		//get descriptor
+		BeanDescriptor descriptor = DescriptorFactory.INSTANCE.getBeanDescriptor(OverlayClass.class);
+		
+		//get reflector
+		IReflector<OverlayClass> overlayReflector = this.getReflectorFactory().getReflector(OverlayClass.class);
+		
+		//test reflection
+		assertEquals(overlay.getTestString(), overlayReflector.getValue("testString",overlay));
+		
+		//set constraints
+		assertEquals(2,descriptor.getConstraintDescriptors().size());
+		assertEquals(1,descriptor.getConstrainedProperties().size());
 	}
 }
