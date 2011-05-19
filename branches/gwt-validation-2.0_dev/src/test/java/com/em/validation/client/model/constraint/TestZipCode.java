@@ -1,4 +1,4 @@
-package com.em.validation.client.model.override;
+package com.em.validation.client.model.constraint;
 
 /* 
 (c) 2011 Eminent Minds, LLC
@@ -52,7 +52,6 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 @Pattern(regexp=".*")
 @Size.List({
 	@Size(min=2,max=400,message="TEST1"),
@@ -64,7 +63,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 @Documented
 @Target({ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.FIELD, ElementType.CONSTRUCTOR, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ZipCodeExample {
+public @interface TestZipCode {
 	
 	String message() default "{com.em.validation.client.model.override.ZipCodeExample.message}";
 	Class<?>[] groups() default {};

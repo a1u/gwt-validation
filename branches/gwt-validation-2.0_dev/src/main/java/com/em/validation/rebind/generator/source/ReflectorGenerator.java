@@ -22,9 +22,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import com.em.validation.client.reflector.IReflector;
+import com.em.validation.client.reflector.ReflectorFactory;
 import com.em.validation.rebind.metadata.ClassDescriptor;
 import com.em.validation.rebind.metadata.PropertyMetadata;
 import com.em.validation.rebind.resolve.PropertyResolver;
@@ -38,6 +42,9 @@ public enum ReflectorGenerator {
 	private final String TARGET_PACKAGE = this.BASE_PACKAGE + ".generated.reflector";
 	
 	public ClassDescriptor getReflectorDescirptions(Class<?> targetClass) {
+		//get the runtime reflector (usful for some metadata)
+		IReflector<?> runtimeReflector = ReflectorFactory.INSTANCE.getReflector(targetClass);
+		
 		//target of generation
 		String targetPackage = this.TARGET_PACKAGE;
 
@@ -53,15 +60,21 @@ public enum ReflectorGenerator {
 
 		//the list of properties
 		Map<String,PropertyMetadata> metadataMap = PropertyResolver.INSTANCE.getPropertyMetadata(targetClass);
+		
+		//list of cascaded properties
+		Set<String> cascadedProperties = new LinkedHashSet<String>();
 
 		//generate class descriptors for each metadata on each annotation
 		for(PropertyMetadata propertyMetadata : metadataMap.values()) {
 			//generate for each targetClass, property, annotation
 			for(Annotation annotation : propertyMetadata.getAnnotationInstances()) {
-				//ClassDescriptor descriptor = ConstraintDescriptionGenerator.INSTANCE.generateConstraintClassDescriptor(targetClass, propertyMetadata.getName(), annotation);
 				ClassDescriptor descriptor = ConstraintDescriptionGenerator.INSTANCE.generateConstraintDescriptor(annotation);
-				propertyMetadata.getAnnotations().add(descriptor.getClassName());
+				propertyMetadata.getConstraintDescriptorClasses().add(descriptor.getClassName());
 				reflectorDescriptor.getDependencies().add(descriptor);
+			}
+			
+			if(runtimeReflector.isCascaded(propertyMetadata.getName())) {
+				cascadedProperties.add(propertyMetadata.getName());
 			}
 		}
 		
@@ -73,6 +86,7 @@ public enum ReflectorGenerator {
 		templateDataModel.put("reflectionTargetName", targetClass.getSimpleName());
 		templateDataModel.put("targetPackage", targetPackage);
 		templateDataModel.put("generatedConstraintPackage",ConstraintDescriptionGenerator.INSTANCE.getTargetPackage());
+		templateDataModel.put("cascades",cascadedProperties);
 
 		//create class descriptor from generated code
 		reflectorDescriptor.setClassContents(TemplateController.INSTANCE.processTemplate("templates/reflector/ReflectorImpl.ftl", templateDataModel));

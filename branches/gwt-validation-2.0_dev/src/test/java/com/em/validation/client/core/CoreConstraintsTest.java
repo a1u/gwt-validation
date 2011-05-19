@@ -25,16 +25,19 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.validation.metadata.BeanDescriptor;
 import javax.validation.metadata.ConstraintDescriptor;
+import javax.validation.metadata.PropertyDescriptor;
 
 import com.em.validation.client.metadata.factory.DescriptorFactory;
+import com.em.validation.client.model.cascade.Inside;
+import com.em.validation.client.model.cascade.Outside;
 import com.em.validation.client.model.composed.ComposedConstraint;
 import com.em.validation.client.model.composed.ComposedSingleViolationConstraint;
 import com.em.validation.client.model.composed.ComposedTestClass;
 import com.em.validation.client.model.composed.CyclicalComposedConstraintPart1;
 import com.em.validation.client.model.composed.CyclicalComposedConstraintPart2;
+import com.em.validation.client.model.constraint.TestZipCode;
 import com.em.validation.client.model.generic.TestClass;
 import com.em.validation.client.model.override.ZipCodeContainer;
-import com.em.validation.client.model.override.ZipCodeExample;
 import com.em.validation.client.model.tests.GwtValidationBaseTestCase;
 import com.em.validation.client.reflector.IReflector;
 import com.em.validation.client.reflector.IReflectorFactory;
@@ -96,7 +99,7 @@ public class CoreConstraintsTest extends GwtValidationBaseTestCase {
 		
 		//get the parent constraint
 		ConstraintDescriptor<?> parent = descriptors.iterator().next();
-		assertEquals(ZipCodeExample.class, parent.getAnnotation().annotationType());
+		assertEquals(TestZipCode.class, parent.getAnnotation().annotationType());
 		
 		//get the composed constraints
 		Set<ConstraintDescriptor<?>> composedOf = parent.getComposingConstraints();
@@ -126,6 +129,31 @@ public class CoreConstraintsTest extends GwtValidationBaseTestCase {
 				assertEquals("[0-8]*", p.regexp());
 			}			
 		}
+	}
+	
+	public static void testCascadedConstraints(IReflectorFactory factory) {
+		
+		Outside outside = new Outside();
+		
+		BeanDescriptor descriptor = DescriptorFactory.INSTANCE.getBeanDescriptor(outside);
+		
+		assertTrue(descriptor.isBeanConstrained());
+		assertEquals(2,descriptor.getConstrainedProperties().size());
+		assertEquals(2,descriptor.getConstraintDescriptors().size());
+		
+		//check cascade
+		PropertyDescriptor propDescriptor = descriptor.getConstraintsForProperty("inside");
+		assertNotNull(propDescriptor);
+		assertEquals(1, propDescriptor.getConstraintDescriptors().size());
+		assertEquals(Inside.class,propDescriptor.getElementClass());
+		assertTrue("Property descriptor should be cascaded, actual value: " + propDescriptor.isCascaded(), propDescriptor.isCascaded());
+		
+		//check non-cascade
+		PropertyDescriptor noCascadeDescriptor = descriptor.getConstraintsForProperty("noCascade");
+		assertNotNull(noCascadeDescriptor);
+		assertEquals(1, noCascadeDescriptor.getConstraintDescriptors().size());
+		assertFalse("Property descriptor should NOT be cascaded, actual value: " + noCascadeDescriptor.isCascaded(), noCascadeDescriptor.isCascaded());
+				
 	}
 
 }

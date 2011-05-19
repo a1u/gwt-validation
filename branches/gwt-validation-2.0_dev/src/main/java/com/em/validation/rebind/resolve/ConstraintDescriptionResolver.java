@@ -61,6 +61,18 @@ public enum ConstraintDescriptionResolver {
 	public Map<String,Set<ConstraintDescriptor<?>>> getConstraintDescriptors(Class<?> targetClass) {
 		Map<String,Set<ConstraintDescriptor<?>>> results = new HashMap<String, Set<ConstraintDescriptor<?>>>();
 		Map<String,PropertyMetadata> propertyMetadata = PropertyResolver.INSTANCE.getPropertyMetadata(targetClass);
+
+		//get class level annotations and get the constraint metadata and add them
+		List<Annotation> classLevelAnnotations = PropertyResolver.INSTANCE.getContstraintAnnotations(Arrays.asList(targetClass.getAnnotations()));
+		Set<ConstraintDescriptor<?>> classLevelDescriptors = new LinkedHashSet<ConstraintDescriptor<?>>();
+		for(Annotation classAnnotation : classLevelAnnotations) {
+			ConstraintMetadata metadata = this.getConstraintMetadata(classAnnotation);
+			ConstraintDescriptor<?> descriptor = RuntimeConstraintDescriptorFactory.INSTANCE.getConstraintDescriptor(metadata);
+			classLevelDescriptors.add(descriptor);
+		}
+		//add class level metadata to return map
+		results.put(targetClass.getName(), classLevelDescriptors);		
+		
 		for(String propertyName : propertyMetadata.keySet()) {
 			results.put(propertyName, this.getConstraintsForProperty(targetClass, propertyName));
 		}		
@@ -69,6 +81,7 @@ public enum ConstraintDescriptionResolver {
 	
 	public Set<ConstraintMetadata> getAllMetadata(Class<?> targetClass) {
 		Set<ConstraintMetadata> metadataResult = new LinkedHashSet<ConstraintMetadata>();
+		
 		Map<String,PropertyMetadata> propertyMetadata = PropertyResolver.INSTANCE.getPropertyMetadata(targetClass);
 		for(String propertyName : propertyMetadata.keySet()) {
 			PropertyMetadata property = propertyMetadata.get(propertyName);
@@ -131,8 +144,6 @@ public enum ConstraintDescriptionResolver {
 			
 			//report as single or not
 			metadata.setReportAsSingleViolation(annotation.annotationType().getAnnotation(ReportAsSingleViolation.class) != null);  
-			
-			//scope
 			
 			//target element types
 			

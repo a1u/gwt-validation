@@ -62,10 +62,6 @@ public abstract class Reflector<T> implements IReflector<T> {
 		return this.properties;
 	}
 	
-	public Class<?> getPropertyType(String name) {
-		return this.propertyTypes.get(name);
-	}
-	
 	/**
 	 * Direct access to the constraint descriptors, from which we can get constraints
 	 * 
@@ -88,10 +84,33 @@ public abstract class Reflector<T> implements IReflector<T> {
 		return outputSet;
 	}
 	
+	@Override
 	public Set<ConstraintDescriptor<?>> getConstraintDescriptors() {
 		return this.getConstraintDescriptors(Scope.HIERARCHY);
 	}
 	
+	private Set<ConstraintDescriptor<?>> getClassConstraintDescriptors(Scope scope) {
+		Set<ConstraintDescriptor<?>> classDescriptors = this.constraintDescriptors.get(this.targetClass.getName());
+		if(classDescriptors == null) {
+			classDescriptors = new HashSet<ConstraintDescriptor<?>>();
+			this.constraintDescriptors.put(this.targetClass.getName(), classDescriptors);
+		}
+		if(Scope.HIERARCHY.equals(scope)) {
+			if(this.superReflector != null) {
+				classDescriptors.addAll(this.superReflector.getClassConstraintDescriptors());
+			}
+			for(IReflector<?> iface : this.reflectorInterfaces) {
+				classDescriptors.addAll(iface.getClassConstraintDescriptors());
+			}
+		}
+		return classDescriptors;
+	}
+	
+	@Override
+	public Set<ConstraintDescriptor<?>> getClassConstraintDescriptors() {
+		return this.getClassConstraintDescriptors(Scope.HIERARCHY);
+	}
+
 	public Set<ConstraintDescriptor<?>> getConstraintDescriptors(String name, Scope scope) {
 		Set<ConstraintDescriptor<?>> descriptors = this.constraintDescriptors.get(name);
 		if(descriptors == null) {
@@ -109,10 +128,7 @@ public abstract class Reflector<T> implements IReflector<T> {
 		return this.constraintDescriptors.get(name);
 	}
 
-	/**
-	 * Get the constraint descriptors present on the given property
-	 * 
-	 */
+	@Override
 	public Set<ConstraintDescriptor<?>> getConstraintDescriptors(String name){
 		return this.getConstraintDescriptors(name, Scope.HIERARCHY);
 	}

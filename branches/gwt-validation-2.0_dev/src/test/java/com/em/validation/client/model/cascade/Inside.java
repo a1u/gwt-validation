@@ -1,8 +1,6 @@
-package com.em.validation.client.model.override;
+package com.em.validation.client.model.cascade;
 
-import com.em.validation.client.model.constraint.TestZipCode;
-
-/* 
+/*
 (c) 2011 Eminent Minds, LLC
 	- Chris Ruffalo
 
@@ -21,17 +19,21 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-public class ZipCodeContainer {
 
-	@TestZipCode(size=12,pattern="[0-8]*")
-	private String zipCode = "";
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-	public String getZipCode() {
-		return zipCode;
+public class Inside {
+
+	@NotNull
+	@Size(min=12,max=200)
+	private String testString = "testString";
+
+	public String getTestString() {
+		return testString;
 	}
 
-	public void setZipCode(String zipCode) {
-		this.zipCode = zipCode;
+	public void setTestString(String testString) {
+		this.testString = testString;
 	}
-	
 }

@@ -174,7 +174,7 @@ public enum PropertyResolver {
 				//add to the metadata list
 				metadataMap.put(fieldName,pMeta);			
 			}
-			
+
 			//process annotations
 			List<Annotation> annotations = this.getContstraintAnnotations(Arrays.asList(field.getAnnotations()));
 			pMeta.getAnnotationInstances().addAll(annotations);
@@ -226,7 +226,7 @@ public enum PropertyResolver {
 		return descriptors;
 	}
 
-	private List<Annotation> getContstraintAnnotations(List<Annotation> inputList) {
+	public List<Annotation> getContstraintAnnotations(List<Annotation> inputList) {
 		
 		//the list of approved/correct annotations
 		List<Annotation> propertyAnnotations = new ArrayList<Annotation>();

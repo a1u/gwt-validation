@@ -69,4 +69,9 @@ public class ConstraintsTest extends GwtValidationBaseTestCase {
 		assertEquals(2,descriptor.getConstraintDescriptors().size());
 		assertEquals(1,descriptor.getConstrainedProperties().size());
 	}
+	
+	@Test
+	public void testCascadedConstraints() {
+		CoreConstraintsTest.testCascadedConstraints(this.getReflectorFactory());
+	}
 }

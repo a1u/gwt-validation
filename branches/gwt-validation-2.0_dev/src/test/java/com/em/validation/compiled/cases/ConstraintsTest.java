@@ -41,4 +41,8 @@ public class ConstraintsTest extends CompiledValidationBaseTestClass {
 		CoreConstraintsTest.testOverridesConstraints(this.getReflectorFactory());
 	}
 
+	@Test
+	public void testCascadedConstraints() throws InstantiationException, IllegalAccessException {
+		CoreConstraintsTest.testCascadedConstraints(this.getReflectorFactory());
+	}	
 }

@@ -25,6 +25,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import com.em.validation.client.model.constraint.FakeConstraint;
+
 public class TestClass extends ParentClass implements TestInterface {
 
 	@NotNull
@@ -32,6 +34,7 @@ public class TestClass extends ParentClass implements TestInterface {
 		@Pattern(regexp=".+"),
 		@Pattern(regexp="--")
 	})
+	@FakeConstraint
 	@Size(min=2, max=12)
 	public String publicTestString = "publicTestString";
 	
@@ -53,6 +56,7 @@ public class TestClass extends ParentClass implements TestInterface {
 
 	@Max(10)
 	@Min(5)
+	@FakeConstraint
 	public int getTestInt() {
 		return testInt;
 	}

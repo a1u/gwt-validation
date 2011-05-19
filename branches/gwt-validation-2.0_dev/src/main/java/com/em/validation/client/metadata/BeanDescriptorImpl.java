@@ -60,7 +60,7 @@ public class BeanDescriptorImpl extends ElementDescriptorImpl implements BeanDes
 
 	@Override
 	public boolean isBeanConstrained() {
-		return false;
+		return this.hasConstraints();
 	}
 
 }

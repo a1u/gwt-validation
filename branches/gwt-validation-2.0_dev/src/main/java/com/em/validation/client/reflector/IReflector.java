@@ -43,7 +43,7 @@ public interface IReflector<T> {
 	public Set<String> getPropertyNames();
 		
 	/**
-	 * Returns all of the constraint descriptors declared on a given field
+	 * Returns all of the constraint descriptors declared on every field and on the class itself
 	 * 
 	 * @return
 	 */
@@ -56,6 +56,13 @@ public interface IReflector<T> {
 	 * @return
 	 */
 	public Set<ConstraintDescriptor<?>> getConstraintDescriptors(String name);
+	
+	/**
+	 * Returns the descriptors from the class level
+	 * 
+	 * @return
+	 */
+	public Set<ConstraintDescriptor<?>> getClassConstraintDescriptors();
 	
 	/**
 	 * Get the class that this reflector is made to operate on
@@ -71,4 +78,12 @@ public interface IReflector<T> {
 	 * @return
 	 */
 	public Class<?> getPropertyType(String name);
+	
+	/**
+	 * Returns true if the underlying property is cascaded.  False otherwise
+	 * 
+	 * @param propertyName
+	 * @return
+	 */
+	public boolean isCascaded(String propertyName);
 }

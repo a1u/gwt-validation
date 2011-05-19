@@ -27,6 +27,12 @@ import java.util.List;
 import java.util.ArrayList;
 import javax.validation.metadata.ConstraintDescriptor;
 
+//super reflector and reflector interfaces
+import com.em.validation.client.reflector.IReflector;
+
+//decorate constraint descriptors so they show up as separate instances
+import com.em.validation.client.metadata.ConstraintDescriptorDecorator;
+
 //we need the full directory where all the generated constraints are stored
 import ${generatedConstraintPackage}.*;
 
@@ -35,6 +41,9 @@ import ${import};
 </#list>
 
 public class ${concreteClassName} extends Reflector<${reflectionTargetName}> {
+	
+	private Set<String> cascadedProperties = new LinkedHashSet<String>();
+
 	public ${concreteClassName}() {
 		//set the available property names in the constructor
 		
@@ -42,13 +51,18 @@ public class ${concreteClassName} extends Reflector<${reflectionTargetName}> {
 		//${property.name}
 		this.properties.add("${property.name}");
 		this.propertyTypes.put("${property.name}",${property.classString});
-		<#if property.annotations?size &gt; 0>
+		<#if property.constraintDescriptorClasses?size &gt; 0>
 		Set<ConstraintDescriptor<?>> ${property.name}ConstraintDescriptorList = new LinkedHashSet<ConstraintDescriptor<?>>();
-		<#list property.annotations as annotation>
-		${property.name}ConstraintDescriptorList.add(${annotation}.INSTANCE);			
+		<#list property.constraintDescriptorClasses as constraintDescriptor>
+		${property.name}ConstraintDescriptorList.add(new ConstraintDescriptorDecorator(${constraintDescriptor}.INSTANCE));			
 		</#list>
 		this.constraintDescriptors.put("${property.name}",${property.name}ConstraintDescriptorList);
 		</#if>
+		</#list>
+		
+		//put the cascaded properties in the cascade
+		<#list cascades as cascade>
+		this.cascadedProperties.add("${cascade}");
 		</#list>
 		
 		//set the target class
@@ -67,5 +81,50 @@ public class ${concreteClassName} extends Reflector<${reflectionTargetName}> {
 		}
 		
 		return value;
+	}
+	
+	@Override
+	public boolean isCascaded(String propertyName) {
+		boolean result = false;
+		
+		//check the cascaded properties set first
+		result = this.cascadedProperties.contains(propertyName);
+		
+		//if still false after checking property and field, continue to check other values
+		if(result == false) {
+			if(this.superReflector != null) {
+				result = this.superReflector.isCascaded(propertyName);
+			}
+			if(result == false) {
+				for(IReflector<?> iface : this.reflectorInterfaces) {
+					result = iface.isCascaded(propertyName);
+					if(result) break;
+				}
+			}			
+		}
+		
+		return result;
+	}
+	
+		
+	/**
+	 * Get the return type of a given property name
+	 */
+	public Class<?> getPropertyType(String name) {
+		Class<?> result = this.propertyTypes.get(name);
+		
+		if(result == null) {
+			if(this.superReflector != null) {
+				result = this.superReflector.getPropertyType(name);
+			}
+			if(result == null) {
+				for(IReflector<?> iface : this.reflectorInterfaces) {
+					result = iface.getPropertyType(name);
+					if(result != null) break;
+				}
+			}	
+		}
+		
+		return result;
 	}
 }

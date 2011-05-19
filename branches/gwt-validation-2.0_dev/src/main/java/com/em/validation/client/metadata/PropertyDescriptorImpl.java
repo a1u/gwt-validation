@@ -58,7 +58,7 @@ public class PropertyDescriptorImpl extends ProtoDescriptor implements PropertyD
 
 	@Override
 	public boolean isCascaded() {
-		return false;
+		return this.backingReflector.isCascaded(this.propertyName);
 	}
 
 }

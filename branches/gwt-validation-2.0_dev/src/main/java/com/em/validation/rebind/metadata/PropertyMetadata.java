@@ -26,7 +26,7 @@ import java.util.List;
 public class PropertyMetadata {
 
 
-	private List<String> annotations = new ArrayList<String>();
+	private List<String> constraintDescriptors = new ArrayList<String>();
 	private List<Annotation> annotationInstances = new ArrayList<Annotation>();
 	
 	private String name;
@@ -49,31 +49,32 @@ public class PropertyMetadata {
 		this.accessor = accessor;
 	}
 
-	public List<String> getAnnotations() {
-		return annotations;
+	public List<String> getConstraintDescriptorClasses() {
+		return constraintDescriptors;
 	}
-	public void setAnnotations(List<String> annotations) {
-		this.annotations = annotations;
-	}
-	public String getClassString() {
-		return classString;
+	public void setConstraintDescriptorClasse(List<String> constraintDescriptors) {
+		this.constraintDescriptors = constraintDescriptors;
 	}
 	
+	public String getClassString() {
+		return classString;
+	}	
 	public void setClassString(String classString) {
 		this.classString = classString;
 	}
+	
 	public List<Annotation> getAnnotationInstances() {
 		return annotationInstances;
 	}
 	public void setAnnotationInstances(List<Annotation> annotationInstances) {
 		this.annotationInstances = annotationInstances;
 	}
+	
 	public boolean isField() {
 		return field;
 	}
 	public void setField(boolean field) {
 		this.field = field;
 	}
-	
 	
 }
