@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -67,28 +68,9 @@ public enum AnnotationInstanceFactoryGenerator {
 		for(Class<?> targetClass : constrainedClasses) {
 			constraintMetadataSet.addAll(ConstraintDescriptionResolver.INSTANCE.getAllMetadata(targetClass));
 		}
-		
-		//break down the metadata into signatures and constraints
-		for(ConstraintMetadata metadata : constraintMetadataSet) {
-			//set of constraint metadata
-			Set<ConstraintMetadata> localSet = annotationClassToMetadataMap.get(metadata.getInstance().annotationType());
-			//place new instance in map, if null
-			if(localSet == null) {
-				localSet = new LinkedHashSet<ConstraintMetadata>();
-				annotationClassToMetadataMap.put(metadata.getInstance().annotationType(), localSet);
-			}
-			//populate local set with the metadata instance
-			localSet.add(metadata);
-			
-			//set of method names
-			Set<ConstraintPropertyMetadata> methodNames = annotationMethodMetadata.get(metadata.getInstance().annotationType());
-			//place new instance in map, if null
-			if(methodNames == null) {
-				methodNames = new LinkedHashSet<ConstraintPropertyMetadata>();
-				annotationMethodMetadata.put(metadata.getInstance().annotationType(),methodNames);
-			}
-			methodNames.addAll(metadata.getMethodMap().values());
-		}
+
+		//recursively descend into every constraint and the composed constraints that they are made up of
+		this.recursiveResolveAllMetadata(constraintMetadataSet, annotationClassToMetadataMap, annotationMethodMetadata);
 		
 		//at this point we have a map of all of the values that we really need to start generating annotation instances
 		for(Class<?> annotationClass : annotationClassToMetadataMap.keySet()) {
@@ -153,4 +135,44 @@ public enum AnnotationInstanceFactoryGenerator {
 		return outerFactoryDescriptor;
 	}
 
+	private Set<ConstraintMetadata> recursiveBlocSet = new HashSet<ConstraintMetadata>();
+	
+	private void recursiveResolveAllMetadata(Set<ConstraintMetadata> sourceSet, Map<Class<?>,Set<ConstraintMetadata>> annotationClassToMetadataMap, Map<Class<?>,Set<ConstraintPropertyMetadata>> annotationMethodMetadata) {
+		//break down the metadata into signatures and constraints
+		for(ConstraintMetadata metadata : sourceSet) {
+			//continue if the metadata has already been processed
+			if(this.recursiveBlocSet.contains(metadata)) {
+				continue;
+			}
+			
+			//set of constraint metadata
+			Set<ConstraintMetadata> localSet = annotationClassToMetadataMap.get(metadata.getInstance().annotationType());
+			//place new instance in map, if null
+			if(localSet == null) {
+				localSet = new LinkedHashSet<ConstraintMetadata>();
+				annotationClassToMetadataMap.put(metadata.getInstance().annotationType(), localSet);
+			}
+			//populate local set with the metadata instance
+			localSet.add(metadata);
+			
+			//set of method names
+			Set<ConstraintPropertyMetadata> methodNames = annotationMethodMetadata.get(metadata.getInstance().annotationType());
+			//place new instance in map, if null
+			if(methodNames == null) {
+				methodNames = new LinkedHashSet<ConstraintPropertyMetadata>();
+				annotationMethodMetadata.put(metadata.getInstance().annotationType(),methodNames);
+			}
+			methodNames.addAll(metadata.getMethodMap().values());
+			
+			//add metadata as already processed to the recursive block
+			this.recursiveBlocSet.add(metadata);
+			
+			//do the same for children
+			if(metadata.getComposedOf() != null && metadata.getComposedOf().size() > 0) {
+				this.recursiveResolveAllMetadata(metadata.getComposedOf(), annotationClassToMetadataMap, annotationMethodMetadata);
+			}
+		}
+		
+	}
+	
 }

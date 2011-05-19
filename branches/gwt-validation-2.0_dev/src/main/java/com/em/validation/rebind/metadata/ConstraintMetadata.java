@@ -81,7 +81,7 @@ public class ConstraintMetadata {
 	 * A list of the constraints that the constraint is composed of
 	 * 
 	 */
-	private Set<ConstraintMetadata> composedOf = new HashSet<ConstraintMetadata>();
+	private Set<ConstraintMetadata> composedOf = new LinkedHashSet<ConstraintMetadata>();
 	
 	/**
 	 * Should this report any violations as multiple violations or all as one?

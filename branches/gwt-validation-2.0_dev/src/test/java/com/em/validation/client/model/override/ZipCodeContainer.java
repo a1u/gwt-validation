@@ -1,6 +1,6 @@
-package com.em.validation.client.cases;
+package com.em.validation.client.model.override;
 
-/*
+/* 
 (c) 2011 Eminent Minds, LLC
 	- Chris Ruffalo
 
@@ -19,25 +19,17 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import org.junit.Test;
+public class ZipCodeContainer {
 
-import com.em.validation.client.core.CoreConstraintsTest;
-import com.em.validation.client.model.tests.GwtValidationBaseTestCase;
+	@ZipCodeExample(size=12,pattern="[0-8]*")
+	private String zipCode = "";
 
-public class ConstraintsTest extends GwtValidationBaseTestCase {
-	
-	@Test
-	public void testConstraintGeneration() {
-		CoreConstraintsTest.testConstraintGeneration(this.getReflectorFactory());
+	public String getZipCode() {
+		return zipCode;
+	}
+
+	public void setZipCode(String zipCode) {
+		this.zipCode = zipCode;
 	}
 	
-	@Test
-	public void testComposedConstraints() {
-		CoreConstraintsTest.testComposedConstraints(this.getReflectorFactory());
-	}
-	
-	@Test
-	public void testOverridesConstraints() {
-		CoreConstraintsTest.testOverridesConstraints(this.getReflectorFactory());
-	}
 }

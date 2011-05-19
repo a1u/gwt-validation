@@ -35,5 +35,10 @@ public class ConstraintsTest extends CompiledValidationBaseTestClass {
 	public void testComposedConstraints() throws InstantiationException, IllegalAccessException {
 		CoreConstraintsTest.testComposedConstraints(this.getReflectorFactory());
 	}
+	
+	@Test
+	public void testOverridesConstraints() throws InstantiationException, IllegalAccessException {
+		CoreConstraintsTest.testOverridesConstraints(this.getReflectorFactory());
+	}
 
 }

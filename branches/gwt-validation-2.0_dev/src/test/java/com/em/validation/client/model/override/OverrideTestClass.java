@@ -1,6 +1,6 @@
-package com.em.validation.client.cases;
+package com.em.validation.client.model.override;
 
-/*
+/* 
 (c) 2011 Eminent Minds, LLC
 	- Chris Ruffalo
 
@@ -19,25 +19,18 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import org.junit.Test;
+import javax.validation.constraints.Size;
 
-import com.em.validation.client.core.CoreConstraintsTest;
-import com.em.validation.client.model.tests.GwtValidationBaseTestCase;
+public class OverrideTestClass {
+	
+	@Size(min=12,max=240)
+	private String testString = "testString";
 
-public class ConstraintsTest extends GwtValidationBaseTestCase {
-	
-	@Test
-	public void testConstraintGeneration() {
-		CoreConstraintsTest.testConstraintGeneration(this.getReflectorFactory());
+	public String getTestString() {
+		return testString;
 	}
-	
-	@Test
-	public void testComposedConstraints() {
-		CoreConstraintsTest.testComposedConstraints(this.getReflectorFactory());
-	}
-	
-	@Test
-	public void testOverridesConstraints() {
-		CoreConstraintsTest.testOverridesConstraints(this.getReflectorFactory());
-	}
+
+	public void setTestString(String testString) {
+		this.testString = testString;
+	}		
 }

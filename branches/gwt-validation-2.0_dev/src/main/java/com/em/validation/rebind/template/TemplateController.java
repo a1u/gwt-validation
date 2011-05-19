@@ -57,6 +57,7 @@ public enum TemplateController {
 		
 		//add hash method to map
 		templateModel.put("hash", new StringHashMethod());
+		templateModel.put("prep", new StringPrepareMethod());
 		
 		//add the template value that sets up using gwt features for code splitting and others
 		templateModel.put("usingGwtFeatures",GeneratorState.INSTANCE.isUsingGwtFeatures());

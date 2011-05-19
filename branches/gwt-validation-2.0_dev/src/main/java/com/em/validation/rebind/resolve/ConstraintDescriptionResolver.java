@@ -24,6 +24,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,7 +36,9 @@ import javax.validation.metadata.ConstraintDescriptor;
 import com.em.validation.rebind.metadata.ConstraintMetadata;
 import com.em.validation.rebind.metadata.ConstraintPropertyMetadata;
 import com.em.validation.rebind.metadata.OverridesMetadata;
+import com.em.validation.rebind.metadata.OverridesMetadata.OverrideValues;
 import com.em.validation.rebind.metadata.PropertyMetadata;
+import com.em.validation.rebind.reflector.AnnotationProxyFactory;
 import com.em.validation.rebind.reflector.factory.RuntimeConstraintDescriptorFactory;
 
 
@@ -140,6 +143,26 @@ public enum ConstraintDescriptionResolver {
 			for(Annotation subAnnotation : annotation.annotationType().getAnnotations()) {
 				if(subAnnotation.annotationType().getAnnotation(Constraint.class) != null){
 					metadata.getComposedOf().add(this.getConstraintMetadata(subAnnotation));
+				} else {
+					try {
+						//if the type isn't a @Constraint annotated class then check the value
+						//method as we would with other constraints to see if it is a .List
+						Method valueMethod = subAnnotation.annotationType().getMethod("value", new Class<?>[]{});
+						if(valueMethod != null && valueMethod.getReturnType().getComponentType() != null) {
+							Object[] componentConstraints = (Object[])valueMethod.invoke(subAnnotation, new Object[]{});
+							//confusing, i know, but these are sub annotations to the sub annotations
+							for(Object subSubObject : componentConstraints) {
+								if(subSubObject instanceof Annotation) {
+									Annotation subSubAnnotation = (Annotation)subSubObject;
+									if(subSubAnnotation.annotationType().getAnnotation(Constraint.class) != null) {
+										metadata.getComposedOf().add(this.getConstraintMetadata(subSubAnnotation));
+									}
+								}
+							}
+						}
+					} catch (Exception ex) {
+						//no value method exists
+					}
 				}
 			}
 			
@@ -157,7 +180,7 @@ public enum ConstraintDescriptionResolver {
 						} catch (Exception e) {
 							//could not invoke method, value is null
 						}						
-						overrides.addOverride(override.constraint(), method.getName(), value, this.createReturnValueAsString(value), override.constraintIndex());
+						overrides.addOverride(override.constraint(), override.name(), value, this.createReturnValueAsString(value), override.constraintIndex());
 					}
 					OverridesAttribute.List overrideList = method.getAnnotation(OverridesAttribute.List.class);
 					if(overrideList != null && overrideList.value() != null && overrideList.value().length > 0) {
@@ -169,12 +192,58 @@ public enum ConstraintDescriptionResolver {
 								} catch (Exception e) {
 									//could not invoke method, value is null
 								}						
-								overrides.addOverride(listedOverride.constraint(), method.getName(), value, this.createReturnValueAsString(value), listedOverride.constraintIndex());
+								overrides.addOverride(listedOverride.constraint(), listedOverride.name(), value, this.createReturnValueAsString(value), listedOverride.constraintIndex());
 							}							
 						}
 					}
 				}
-			}
+				
+				//update composed instances with overrides metadata
+				Map<Class<?>,Integer> oIndexMap = new HashMap<Class<?>, Integer>();
+				for(ConstraintMetadata desc : metadata.getComposedOf()) {
+					//get instance
+					Annotation instance = desc.getInstance();
+					
+					//get index for the annotation type
+					Integer oIndex = oIndexMap.get(instance.annotationType());
+					if(oIndex == null) {
+						oIndex = new Integer(0);
+					}
+					int index = oIndex.intValue();
+					
+					//get the overridden properties
+					Set<String> props = overrides.getOverridenProperties(instance.annotationType());
+					
+					//create override map
+					Map<String,Object> overrideMap = new HashMap<String, Object>();
+					
+					//cycle through them and add them to the override map
+					for(String prop : props) {
+						List<OverrideValues> propOverrides = overrides.getOverrideValues(instance.annotationType(), prop);
+						for(OverrideValues oValue : propOverrides) {
+							//if the index matches the index of the class or the index is -1, then apply
+							if(index == oValue.getIndex() || oValue.getIndex() == -1) {
+								//set override in property map
+								overrideMap.put(prop, oValue.getValue());
+								//set override in method map
+								ConstraintPropertyMetadata pMeta = desc.getMethodMap().get(prop);
+								pMeta.setReturnValue(oValue.getValueAsString());
+							}
+						}
+					}					
+					
+					//if the override map has a size > 0, then use it as the override for the proxy
+					if(overrideMap.size() > 0) {
+						Annotation newAnnotationInstance = AnnotationProxyFactory.INSTANCE.getProxy(instance, overrideMap);
+						desc.setInstance(newAnnotationInstance);
+					}
+					
+					//increment and put away index
+					index++;
+					oIndexMap.put(instance.annotationType(), index);
+				}
+				
+			}			
 		}
 		
 		return metadata;

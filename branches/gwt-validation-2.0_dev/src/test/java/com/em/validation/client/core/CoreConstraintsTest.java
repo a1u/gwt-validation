@@ -21,6 +21,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import java.util.Set;
 
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import javax.validation.metadata.BeanDescriptor;
 import javax.validation.metadata.ConstraintDescriptor;
 
@@ -31,6 +33,8 @@ import com.em.validation.client.model.composed.ComposedTestClass;
 import com.em.validation.client.model.composed.CyclicalComposedConstraintPart1;
 import com.em.validation.client.model.composed.CyclicalComposedConstraintPart2;
 import com.em.validation.client.model.generic.TestClass;
+import com.em.validation.client.model.override.ZipCodeContainer;
+import com.em.validation.client.model.override.ZipCodeExample;
 import com.em.validation.client.model.tests.GwtValidationBaseTestCase;
 import com.em.validation.client.reflector.IReflector;
 import com.em.validation.client.reflector.IReflectorFactory;
@@ -80,6 +84,48 @@ public class CoreConstraintsTest extends GwtValidationBaseTestCase {
 			}
 		}
 		
+	}
+	
+	public static void testOverridesConstraints(IReflectorFactory factory) {
+		
+		BeanDescriptor beanDescriptor = DescriptorFactory.INSTANCE.getBeanDescriptor(ZipCodeContainer.class);		
+		
+		Set<ConstraintDescriptor<?>> descriptors = beanDescriptor.getConstraintsForProperty("zipCode").getConstraintDescriptors();
+		
+		assertTrue(descriptors.size() > 0);
+		
+		//get the parent constraint
+		ConstraintDescriptor<?> parent = descriptors.iterator().next();
+		assertEquals(ZipCodeExample.class, parent.getAnnotation().annotationType());
+		
+		//get the composed constraints
+		Set<ConstraintDescriptor<?>> composedOf = parent.getComposingConstraints();
+		
+		//assert that there are two composing constraints for the ZipCodeExample
+		assertEquals(5,composedOf.size());					
+
+		//go through the list and apply tests
+		for(ConstraintDescriptor<?> composer : composedOf) {
+			if(Size.class.equals(composer.getAnnotation().annotationType())) {
+				Size s = (Size)composer.getAnnotation();
+				if("TEST1".equals(s.message())) {
+					assertEquals(400, s.max());
+					assertEquals(12, s.min());
+				} else if("TEST2".equals(s.message())) {
+					assertEquals(-400, s.min());
+					assertEquals(12, s.max());
+				} else if("TEST3".equals(s.message())) {
+					assertEquals(22, s.min());
+					assertEquals(22, s.max());
+				} else if("TEST4".equals(s.message())) {
+					assertEquals(6, s.min());
+					assertEquals(6, s.max());
+				}
+			} else if(Pattern.class.equals(composer.getAnnotation().annotationType())) {
+				Pattern p = (Pattern)composer.getAnnotation();
+				assertEquals("[0-8]*", p.regexp());
+			}			
+		}
 	}
 
 }

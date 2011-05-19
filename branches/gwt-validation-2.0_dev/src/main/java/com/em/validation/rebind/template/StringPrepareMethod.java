@@ -1,4 +1,4 @@
-package com.em.validation.rebind.reflector;
+package com.em.validation.rebind.template;
 
 /* 
 (c) 2011 Eminent Minds, LLC
@@ -19,28 +19,35 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Proxy;
-import java.util.Map;
 
-public enum AnnotationProxyFactory {
+import java.util.List;
 
-	INSTANCE;
-	
-	private AnnotationProxyFactory() {
+import freemarker.template.TemplateMethodModel;
+import freemarker.template.TemplateModelException;
+
+public class StringPrepareMethod implements TemplateMethodModel {
+
+	@Override
+	public Object exec(@SuppressWarnings("rawtypes") List args) throws TemplateModelException {
+
+		if(args.size() != 1) {
+			throw new TemplateModelException("Prepare requires 1 argument");
+		}
 		
-	}
-	
-	@SuppressWarnings("unchecked")
-	public <T extends Annotation> T getProxy(T annotation, Map<String, Object> overrides) {
-		//create invocation handler for target class
-		InvocationHandler handler = new AnnotationInvocationHandler(annotation,overrides);
+		//get string
+		String toPrepare = (String)args.get(0);
 		
-		//get proxy class instance
-		T instance = (T)Proxy.newProxyInstance(annotation.getClass().getClassLoader(), new Class<?>[]{annotation.annotationType()}, handler);
-				
-		return instance;
-	}
+		//remove the \" from the begining
+		if(toPrepare.startsWith("\"")) {
+			toPrepare = toPrepare.substring(1);
+		}
+		
+		//remove the \" from the end
+		if(toPrepare.endsWith("\"")) {
+			toPrepare = toPrepare.substring(0,toPrepare.length()-1);
+		}
+
+		return toPrepare;
+	}	
 	
 }

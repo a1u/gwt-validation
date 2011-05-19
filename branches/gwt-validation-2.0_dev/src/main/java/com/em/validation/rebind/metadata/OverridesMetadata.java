@@ -19,30 +19,49 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class OverridesMetadata {
 	
-	/**
-	 * The map that relates property names to their override value 
-	 */
-	private Map<Class<?>, Map<String,Object>> overrides = new HashMap<Class<?>, Map<String,Object>>();
+	public class OverrideValues {
+		private String valueAsString = "null";
+		private Object value = null;
+		private int index = -1;
+		private String propertyName = null;
+		
+		public String getValueAsString() {
+			return valueAsString;
+		}
+		public void setValueAsString(String valueAsString) {
+			this.valueAsString = valueAsString;
+		}
+		public Object getValue() {
+			return value;
+		}
+		public void setValue(Object value) {
+			this.value = value;
+		}
+		public int getIndex() {
+			return index;
+		}
+		public void setIndex(int index) {
+			this.index = index;
+		}
+		public String getPropertyName() {
+			return propertyName;
+		}
+		public void setPropertyName(String propertyName) {
+			this.propertyName = propertyName;
+		}		
+	}
 	
-	/**
-	 * Map to the string values for use in code generation
-	 * 
-	 */
-	private Map<Class<?>, Map<String,String>> overridesAsString = new HashMap<Class<?>, Map<String,String>>();
+	Map<Class<?>,List<OverrideValues>> metadataMap = new HashMap<Class<?>, List<OverrideValues>>();
 	
-	/**
-	 * The map that relates a value to a specific override instance in a list
-	 */
-	private Map<Class<?>, Map<String,Integer>> overrideIndex = new HashMap<Class<?>, Map<String,Integer>>();
-
-
 	/**
 	 * Add the metadata from an OverridesAttribute line to this class
 	 * 
@@ -53,74 +72,45 @@ public class OverridesMetadata {
 	 * @param index
 	 */
 	public void addOverride(Class<?> targetAnotationClass, String propertyToOverride, Object value, String valueString, int index) {
-		Map<String,Object> objectMap = this.overrides.get(targetAnotationClass);
-		Map<String,String> stringMap = this.overridesAsString.get(targetAnotationClass);
-		Map<String,Integer> intMap = this.overrideIndex.get(targetAnotationClass);
+		//create value container object to place in map
+		OverrideValues values = new OverrideValues();
+		values.setIndex(index);
+		values.setValueAsString(valueString);
+		values.setValue(value);
+		values.setPropertyName(propertyToOverride);
 		
-		//create and store object map
-		if(objectMap == null) {
-			objectMap = new HashMap<String, Object>();
-			this.overrides.put(targetAnotationClass, objectMap);
+		//get list from metadata map that represents the list of overrides for the given class
+		List<OverrideValues> valueList = this.metadataMap.get(targetAnotationClass);
+		if(valueList == null) {
+			valueList = new ArrayList<OverridesMetadata.OverrideValues>();
+			this.metadataMap.put(targetAnotationClass, valueList);
 		}
 		
-		//create and store string map
-		if(stringMap == null) {
-			stringMap = new HashMap<String, String>();
-			this.overridesAsString.put(targetAnotationClass, stringMap);
-		}
-		
-		//create and store int map
-		if(intMap == null) {
-			intMap = new HashMap<String, Integer>();
-			this.overrideIndex.put(targetAnotationClass,intMap);
-		}
-		
-		//set values
-		objectMap.put(propertyToOverride, value);
-		stringMap.put(propertyToOverride, valueString);
-		intMap.put(propertyToOverride, index);
+		//add to value list
+		valueList.add(values);
 	}
 	
-	public Object getValue(Class<?> targetClass, String property) {
-		Object value = null;
-		if(this.overrides.containsKey(targetClass)) {
-			value = this.overrides.get(targetClass).get(property);
-		}		
-		return value;
-	}
-	
-	public String getValueString(Class<?> targetClass, String property) {
-		String value = "null";
-		if(this.overridesAsString.containsKey(targetClass)) {
-			value = this.overridesAsString.get(targetClass).get(property);
-			if(value == null) {
-				value = "null";
+	public List<OverrideValues> getOverrideValues(Class<?> targetClass, String property) {
+		List<OverrideValues> list = this.metadataMap.get(targetClass);
+		List<OverrideValues> result = new ArrayList<OverridesMetadata.OverrideValues>();
+		if(list != null) {
+			for(OverrideValues value : list) {
+				if(property.equals(value.getPropertyName())) {
+					result.add(value);
+				}
 			}
 		}		
-		return value;
+		return result;
 	}
 	
-	public int getIndex(Class<?> targetClass, String property) {
-		int index = -1;
-		if(this.overrideIndex.containsKey(targetClass)) {
-			Integer indexInteger = this.overrideIndex.get(targetClass).get(property);
-			if(indexInteger == null) {
-				index = -1;
-			} else {
-				index = indexInteger.intValue();
-			}
-		}		
-		return index;
-	}
-	
-	public Set<Class<?>> getTargetAnnotations() {
-		return this.overrides.keySet();
-	}
 	
 	public Set<String> getOverridenProperties(Class<?> targetClass) {
 		Set<String> properties = new HashSet<String>();
-		if(this.overrides.containsKey(targetClass)) {
-			properties.addAll(this.overrides.get(targetClass).keySet());
+		List<OverrideValues> list = this.metadataMap.get(targetClass);
+		if(list != null) {
+			for(OverrideValues value : list) {
+				properties.add(value.getPropertyName());
+			}
 		}
 		return properties;
 	}

@@ -1,6 +1,6 @@
 package ${targetPackage};
 
-<!-- 
+/* 
 (c) 2011 Eminent Minds, LLC
 	- Chris Ruffalo
 
@@ -17,7 +17,7 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
--->
+*/
 
 //generic imports
 import java.lang.annotation.Annotation;
@@ -57,7 +57,7 @@ public enum ${generatedName} implements IConcreteAnnotationInstanceFactory<${tar
 		this.signatureToValueMap.put("${hash(constraint.instance.toString())}",new HashMap<String,Object>());
 		<#list constraint.methodMap?values as property>
 		<#if property.returnType == "String">
-		this.signatureToValueMap.get("${hash(constraint.instance.toString())}").put("${property.methodName}","${property.returnValue?j_string}");
+		this.signatureToValueMap.get("${hash(constraint.instance.toString())}").put("${property.methodName}","${prep(property.returnValue)?j_string}");
 		<#else>
 		this.signatureToValueMap.get("${hash(constraint.instance.toString())}").put("${property.methodName}",${property.returnValue});
 		</#if>
