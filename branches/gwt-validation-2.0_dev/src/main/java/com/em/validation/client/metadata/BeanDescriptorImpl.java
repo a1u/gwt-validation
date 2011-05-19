@@ -55,12 +55,19 @@ public class BeanDescriptorImpl extends ElementDescriptorImpl implements BeanDes
 
 	@Override
 	public PropertyDescriptor getConstraintsForProperty(String name) {
-		return DescriptorFactory.INSTANCE.getPropertyDescriptor(this.backingReflector, name);
+		if(!this.backingReflector.getPropertyNames().contains(name)) {
+			return null;
+		}
+		PropertyDescriptor descriptor = DescriptorFactory.INSTANCE.getPropertyDescriptor(this.backingReflector, name);
+		if(!descriptor.hasConstraints()) {
+			return null;
+		}
+		return descriptor;
 	}
 
 	@Override
 	public boolean isBeanConstrained() {
-		return this.hasConstraints();
+		return this.backingReflector.getConstraintDescriptors().size() > 0;
 	}
 
 }

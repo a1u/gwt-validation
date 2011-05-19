@@ -30,9 +30,6 @@ import javax.validation.metadata.ConstraintDescriptor;
 //super reflector and reflector interfaces
 import com.em.validation.client.reflector.IReflector;
 
-//decorate constraint descriptors so they show up as separate instances
-import com.em.validation.client.metadata.ConstraintDescriptorDecorator;
-
 //we need the full directory where all the generated constraints are stored
 import ${generatedConstraintPackage}.*;
 
@@ -54,7 +51,7 @@ public class ${concreteClassName} extends Reflector<${reflectionTargetName}> {
 		<#if property.constraintDescriptorClasses?size &gt; 0>
 		Set<ConstraintDescriptor<?>> ${property.name}ConstraintDescriptorList = new LinkedHashSet<ConstraintDescriptor<?>>();
 		<#list property.constraintDescriptorClasses as constraintDescriptor>
-		${property.name}ConstraintDescriptorList.add(new ConstraintDescriptorDecorator(${constraintDescriptor}.INSTANCE));			
+		${property.name}ConstraintDescriptorList.add(${constraintDescriptor}.INSTANCE);			
 		</#list>
 		this.constraintDescriptors.put("${property.name}",${property.name}ConstraintDescriptorList);
 		</#if>

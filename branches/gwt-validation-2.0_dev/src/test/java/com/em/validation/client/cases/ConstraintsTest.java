@@ -66,8 +66,8 @@ public class ConstraintsTest extends GwtValidationBaseTestCase {
 		assertEquals(overlay.getTestString(), overlayReflector.getValue("testString",overlay));
 		
 		//set constraints
-		assertEquals(2,descriptor.getConstraintDescriptors().size());
 		assertEquals(1,descriptor.getConstrainedProperties().size());
+		assertEquals(2,descriptor.getConstraintsForProperty("testString").getConstraintDescriptors().size());
 	}
 	
 	@Test

@@ -25,7 +25,6 @@ import java.util.Map;
 
 import javax.validation.metadata.ConstraintDescriptor;
 
-import com.em.validation.client.metadata.ConstraintDescriptorDecorator;
 import com.em.validation.rebind.metadata.ConstraintMetadata;
 import com.em.validation.rebind.metadata.RuntimeConstraintDescriptor;
 
@@ -48,12 +47,7 @@ public enum RuntimeConstraintDescriptorFactory {
 				descriptor.getComposingConstraints().add(this.getConstraintDescriptor(sub));
 			}
 		}
-		//decorate the result so that each instance will appear unique.  this means that the constraints will be counted 
-		//corectly and an instance will be returned for each constraint annotation.  this is a workaround introduced 
-		//because of the caching and reuse of the instances based on the signature.
-		@SuppressWarnings("unchecked")
-		ConstraintDescriptorDecorator<Annotation> decorator = new ConstraintDescriptorDecorator<Annotation>((ConstraintDescriptor<Annotation>)descriptor);
-		return decorator;
+		return descriptor;
 	}
 
 }

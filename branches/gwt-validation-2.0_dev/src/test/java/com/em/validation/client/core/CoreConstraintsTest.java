@@ -19,6 +19,7 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.validation.constraints.Pattern;
@@ -69,7 +70,11 @@ public class CoreConstraintsTest extends GwtValidationBaseTestCase {
 		//test composed constraint
 		BeanDescriptor beanDesc = DescriptorFactory.INSTANCE.getBeanDescriptor(ComposedTestClass.class);
 		
-		Set<ConstraintDescriptor<?>> constraints = beanDesc.getConstraintDescriptors();
+		Set<PropertyDescriptor> properties = beanDesc.getConstrainedProperties();
+		Set<ConstraintDescriptor<?>> constraints = new HashSet<ConstraintDescriptor<?>>();
+		for(PropertyDescriptor prop : properties) {
+			constraints.addAll(prop.getConstraintDescriptors());
+		}
 		
 		assertEquals(4, constraints.size());
 		
@@ -139,7 +144,6 @@ public class CoreConstraintsTest extends GwtValidationBaseTestCase {
 		
 		assertTrue(descriptor.isBeanConstrained());
 		assertEquals(2,descriptor.getConstrainedProperties().size());
-		assertEquals(2,descriptor.getConstraintDescriptors().size());
 		
 		//check cascade
 		PropertyDescriptor propDescriptor = descriptor.getConstraintsForProperty("inside");

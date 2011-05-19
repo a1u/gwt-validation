@@ -28,6 +28,7 @@ import java.util.Set;
 import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.ElementDescriptor;
 import javax.validation.metadata.ElementDescriptor.ConstraintFinder;
+import javax.validation.metadata.PropertyDescriptor;
 import javax.validation.metadata.Scope;
 
 import com.em.validation.client.reflector.IReflector;
@@ -102,11 +103,23 @@ public class ConstraintFinderImpl implements ConstraintFinder {
 			Set<ConstraintDescriptor<?>> startSet = null;
 			//use the scope to intially constrain the starting set
 			if(Scope.HIERARCHY.equals(this.scope)) {
-				startSet = this.backingDescriptor.getConstraintDescriptors();
+				if(this.backingDescriptor instanceof PropertyDescriptor) {
+					startSet = this.backingDescriptor.getConstraintDescriptors();
+				} else {
+					startSet = this.backingReflector.getConstraintDescriptors();
+				}
 			} else {
 				if(this.backingReflector instanceof Reflector) {
 					Reflector<?> reflector = (Reflector<?>)this.backingReflector;
 					startSet = reflector.getConstraintDescriptors(this.scope);
+					if(this.backingDescriptor instanceof PropertyDescriptor) {
+						Set<ConstraintDescriptor<?>> filterSet = this.backingDescriptor.getConstraintDescriptors();
+						for(ConstraintDescriptor<?> descriptor : startSet) {
+							if(!filterSet.contains(descriptor)) {
+								startSet.remove(descriptor);
+							}
+						}
+					}
 				}
 			}
 			

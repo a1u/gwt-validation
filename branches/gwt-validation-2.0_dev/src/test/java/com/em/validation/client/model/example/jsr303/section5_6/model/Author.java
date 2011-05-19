@@ -1,6 +1,8 @@
-package com.em.validation.reflective;
+package com.em.validation.client.model.example.jsr303.section5_6.model;
 
 /*
+Based on work in the JSR-303 for provable conformity to the standard 
+ 
 (c) 2011 Eminent Minds, LLC
 	- Chris Ruffalo
 
@@ -19,21 +21,32 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import javax.validation.constraints.Size;
 
-import com.em.validation.reflective.cases.ConstraintsTest;
-import com.em.validation.reflective.cases.MetadataTest;
-import com.em.validation.reflective.cases.defects.DefectSuite;
-import com.em.validation.reflective.cases.example.ExampleTestSuite;
+import com.em.validation.client.model.example.jsr303.section5_6.constraint.NotEmpty;
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
-	DefectSuite.class,
-	ConstraintsTest.class,
-	MetadataTest.class,
-	ExampleTestSuite.class
-})
-public class ReflectiveTestSuite {
-
+public class Author {
+	private String firstName;
+	
+	@NotEmpty(message="lastname must not be null")
+	private String lastName;
+	
+	@Size(max=30)
+	private String company;
+	
+	public String getFirstName() {
+		return firstName;
+	}
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	public String getLastName() {
+		return lastName;
+	}
+	public String getCompany() {
+		return company;
+	}
+	public void setCompany(String company) {
+		this.company = company;
+	}
 }

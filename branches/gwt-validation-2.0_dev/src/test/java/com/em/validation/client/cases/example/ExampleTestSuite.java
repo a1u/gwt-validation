@@ -1,4 +1,4 @@
-package com.em.validation.reflective;
+package com.em.validation.client.cases.example;
 
 /*
 (c) 2011 Eminent Minds, LLC
@@ -19,21 +19,20 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
-import com.em.validation.reflective.cases.ConstraintsTest;
-import com.em.validation.reflective.cases.MetadataTest;
-import com.em.validation.reflective.cases.defects.DefectSuite;
-import com.em.validation.reflective.cases.example.ExampleTestSuite;
+import com.em.validation.client.cases.example.jsr303.section5_6.Section5_6Test;
+import com.google.gwt.junit.tools.GWTTestSuite;
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
-	DefectSuite.class,
-	ConstraintsTest.class,
-	MetadataTest.class,
-	ExampleTestSuite.class
-})
-public class ReflectiveTestSuite {
+public class ExampleTestSuite extends GWTTestSuite {
 
+	public static Test suite() {
+		TestSuite suite = new TestSuite("GWT JSR-303 Example Test Suite");
+		
+		suite.addTestSuite(Section5_6Test.class);
+		
+		return suite;
+	}
+	
 }

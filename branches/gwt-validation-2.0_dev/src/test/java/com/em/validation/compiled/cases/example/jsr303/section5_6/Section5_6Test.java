@@ -1,4 +1,4 @@
-package com.em.validation.reflective;
+package com.em.validation.compiled.cases.example.jsr303.section5_6;
 
 /*
 (c) 2011 Eminent Minds, LLC
@@ -19,21 +19,16 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import org.junit.Test;
 
-import com.em.validation.reflective.cases.ConstraintsTest;
-import com.em.validation.reflective.cases.MetadataTest;
-import com.em.validation.reflective.cases.defects.DefectSuite;
-import com.em.validation.reflective.cases.example.ExampleTestSuite;
+import com.em.validation.client.core.example.jsr303.section5_6.CoreSection5_6Test;
+import com.em.validation.compiled.model.test.CompiledValidationBaseTestClass;
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
-	DefectSuite.class,
-	ConstraintsTest.class,
-	MetadataTest.class,
-	ExampleTestSuite.class
-})
-public class ReflectiveTestSuite {
+public class Section5_6Test extends CompiledValidationBaseTestClass {
 
+	@Test
+	public void testConstraintGeneration() throws InstantiationException, IllegalAccessException {
+		CoreSection5_6Test.testConstraintMetadataSectionTest(this.getReflectorFactory());
+	}
+	
 }

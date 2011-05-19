@@ -25,12 +25,14 @@ import org.junit.runners.Suite;
 import com.em.validation.compiled.cases.ConstraintsTest;
 import com.em.validation.compiled.cases.MetadataTest;
 import com.em.validation.compiled.cases.defects.DefectSuite;
+import com.em.validation.compiled.cases.example.ExampleTestSuite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	DefectSuite.class,
 	ConstraintsTest.class,
-	MetadataTest.class
+	MetadataTest.class,
+	ExampleTestSuite.class
 })
 public class CompiledTestSuite {
 

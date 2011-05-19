@@ -35,7 +35,7 @@ public abstract class ElementDescriptorImpl extends ProtoDescriptor implements E
 
 	@Override
 	public Set<ConstraintDescriptor<?>> getConstraintDescriptors() {
-		return backingReflector.getConstraintDescriptors();
+		return backingReflector.getClassConstraintDescriptors();
 	}
 
 	@Override
