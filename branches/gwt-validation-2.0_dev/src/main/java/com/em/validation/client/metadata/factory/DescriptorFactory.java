@@ -28,12 +28,33 @@ import com.em.validation.client.reflector.IReflector;
 import com.em.validation.client.reflector.IReflectorFactory;
 import com.em.validation.client.reflector.ReflectorFactory;
 
+/**
+ * A factory class to construct a bean descriptor when given a reflector.  It will also automatically
+ * use the reflector factory if not provided with a reflector instance.
+ * 
+ * This is a convenience method instead of constructing the BeanDescriptor with the backing reflector directly.
+ * 
+ * @author chris
+ *
+ */
 public enum DescriptorFactory {
 	
+	/**
+	 * Singleton pattern
+	 */
 	INSTANCE;
 	
+	/**
+	 * Private instance of the reflection factory
+	 * 
+	 */
 	private IReflectorFactory factory = null;
 	
+	/**
+	 * Default constructor that uses the ReflectorFactory singleton to grab an instance to a reflector factory.  In GWT compiled
+	 * mode this factory is replaced through code generation and deferred binding to be the generated factory
+	 * 
+	 */
 	private DescriptorFactory() {
 		this.factory = ReflectorFactory.INSTANCE;
 	}

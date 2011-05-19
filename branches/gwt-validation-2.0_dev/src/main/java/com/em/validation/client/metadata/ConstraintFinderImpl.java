@@ -30,19 +30,44 @@ import javax.validation.metadata.ElementDescriptor;
 import javax.validation.metadata.ElementDescriptor.ConstraintFinder;
 import javax.validation.metadata.Scope;
 
+/**
+ * The constraint finder implementation that uses the special properties of the implemented descriptors to do things
+ * like navigate the type hierarchy for local and other scopes.
+ * 
+ * @author chris
+ *
+ */
 public class ConstraintFinderImpl implements ConstraintFinder {
 
+	/**
+	 * The descriptor (which uses an IReflector instance) that provides the metadata for the search 
+	 */
 	private ElementDescriptor backingDescriptor;
 	
+	/**
+	 * When the state of the search values has changed, mark the cache as dirty so that the search will be re-run. 
+	 */
 	private boolean searchChanged = true; 
+
+	/**
+	 * The scope of the search
+	 * 
+	 * @see Scope
+	 */
+	private Scope scope = Scope.HIERARCHY;
 	
+	/**
+	 * List of types that the annotation can be declared on
+	 */
 	private Set<ElementType> declaredOnTypes = new HashSet<ElementType>();
-	private Set<Scope> onScope = new HashSet<Scope>();
+	
+	/**
+	 * List of groups that are being queried on
+	 */
 	private Set<Class<?>> matchingGroups = new HashSet<Class<?>>();
 	
 	/**
 	 * Set for caching the results of a search.  By default, the set is empty.
-	 * 
 	 */
 	private Set<ConstraintDescriptor<?>> cachedResults = new HashSet<ConstraintDescriptor<?>>();
 	
@@ -63,7 +88,17 @@ public class ConstraintFinderImpl implements ConstraintFinder {
 	public Set<ConstraintDescriptor<?>> getConstraintDescriptors() {
 		//if the state of the class has changed, re-search the constraints
 		if(this.searchChanged) {
-			Set<ConstraintDescriptor<?>> startSet = this.backingDescriptor.getConstraintDescriptors();
+			
+			Set<ConstraintDescriptor<?>> startSet = null;
+			//use the scope to intially constrain the starting set
+			if(Scope.HIERARCHY.equals(this.scope)) {
+				startSet = this.backingDescriptor.getConstraintDescriptors();
+			} else {
+				if(this.backingDescriptor instanceof BeanDescriptorImpl) {
+					startSet = new HashSet<ConstraintDescriptor<?>>();
+				}
+			}
+			
 			Set<ConstraintDescriptor<?>> resultSet = new HashSet<ConstraintDescriptor<?>>();
 			
 			for(ConstraintDescriptor<?> descriptor : startSet) {
@@ -76,9 +111,6 @@ public class ConstraintFinderImpl implements ConstraintFinder {
 				
 				//todo: get the element type the constraint was declared on
 				 
-				
-				//todo: get the scope of the annotation element
-				
 				
 				if(keep) {
 					resultSet.add(descriptor);
@@ -99,7 +131,7 @@ public class ConstraintFinderImpl implements ConstraintFinder {
 
 	@Override
 	public ConstraintFinder lookingAt(Scope scope) {
-		this.onScope.add(scope);
+		this.scope = scope;
 		//mark the cache as dirty
 		this.searchChanged = true;
 		return this;

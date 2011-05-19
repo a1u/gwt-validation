@@ -29,6 +29,12 @@ import javax.validation.metadata.PropertyDescriptor;
 import com.em.validation.client.metadata.factory.DescriptorFactory;
 import com.em.validation.client.reflector.IReflector;
 
+/**
+ * The implementation of the bean descriptor class
+ * 
+ * @author chris
+ *
+ */
 public class BeanDescriptorImpl extends ElementDescriptorImpl implements BeanDescriptor {
 
 	public BeanDescriptorImpl(IReflector<?> reflector) {

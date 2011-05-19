@@ -31,6 +31,13 @@ import javax.validation.Payload;
 import javax.validation.groups.Default;
 import javax.validation.metadata.ConstraintDescriptor;
 
+/**
+ * Describes the basic functions of the ConstraintDescriptor as implemented for both the gwt client and the runtime reflection mode.
+ * 
+ * @author chris
+ *
+ * @param <T>
+ */
 public abstract class AbstractConstraintDescriptor<T extends Annotation> implements ConstraintDescriptor<T> {
 
 	/**
@@ -57,6 +64,19 @@ public abstract class AbstractConstraintDescriptor<T extends Annotation> impleme
 	 */
 	protected Map<String,Object> propertyMap = new HashMap<String,Object>();
 	
+	/**
+	 * Construct a new abstract constraint descriptor
+	 */
+	public AbstractConstraintDescriptor() {
+		init();
+	}
+	
+	/**
+	 * Override for construction tasks.  On the instances used by the generated code the constructor cannot be used but the
+	 * init can be used to make the required map objects.
+	 */
+	public abstract void init();
+
 	@Override
 	public T getAnnotation() {
 		return this.annotation;
@@ -66,16 +86,6 @@ public abstract class AbstractConstraintDescriptor<T extends Annotation> impleme
 	public Map<String, Object> getAttributes() {
 		return this.propertyMap;
 	}
-	
-	public AbstractConstraintDescriptor() {
-		init();
-	}
-	
-	/**
-	 * Override for construction
-	 * 
-	 */
-	public abstract void init();
 	
 	@Override
 	public Set<ConstraintDescriptor<?>> getComposingConstraints() {
