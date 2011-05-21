@@ -1,5 +1,7 @@
 package com.em.validation.client.model.groups;
 
+import javax.validation.groups.Default;
+
 /*
 (c) 2011 Eminent Minds, LLC
 	- Chris Ruffalo
@@ -19,6 +21,6 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-public interface ExtendedGroup {
+public interface DefaultExtGroup extends Default {
 
 }

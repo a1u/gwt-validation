@@ -26,6 +26,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import com.em.validation.client.reflector.IReflector;
 import com.em.validation.client.reflector.ReflectorFactory;
@@ -48,8 +49,13 @@ public enum ReflectorGenerator {
 		//target of generation
 		String targetPackage = this.TARGET_PACKAGE;
 
-		//get the basic name of the target class and generate the reflector class name
-		String concreteClassName = targetClass.getSimpleName() + "Reflector";
+		UUID uuid = UUID.randomUUID();
+		String uuidString = uuid.toString();
+		uuidString = uuidString.replaceAll("\\-","");
+		
+		//get the basic name of the target class and generate the reflector class name, add uuid to avoid colisions with 
+		//classes from different trees (and groups) that may have otherwise stomped on each other
+		String concreteClassName = targetClass.getSimpleName() + "Reflector_" + uuidString;
 		
 		//the source listings
 		ClassDescriptor reflectorDescriptor = new ClassDescriptor();

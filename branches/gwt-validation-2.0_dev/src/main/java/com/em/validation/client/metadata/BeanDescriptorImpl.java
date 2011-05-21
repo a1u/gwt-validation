@@ -24,6 +24,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.validation.metadata.BeanDescriptor;
+import javax.validation.metadata.ConstraintDescriptor;
+import javax.validation.metadata.ElementDescriptor;
 import javax.validation.metadata.PropertyDescriptor;
 
 import com.em.validation.client.metadata.factory.DescriptorFactory;
@@ -35,7 +37,7 @@ import com.em.validation.client.reflector.IReflector;
  * @author chris
  *
  */
-public class BeanDescriptorImpl extends ElementDescriptorImpl implements BeanDescriptor {
+public class BeanDescriptorImpl extends ProtoDescriptor implements BeanDescriptor,ElementDescriptor {
 
 	public BeanDescriptorImpl(IReflector<?> reflector) {
 		super(reflector);
@@ -69,5 +71,31 @@ public class BeanDescriptorImpl extends ElementDescriptorImpl implements BeanDes
 	public boolean isBeanConstrained() {
 		return this.backingReflector.getConstraintDescriptors().size() > 0;
 	}
+	
+	@Override
+	public Set<ConstraintDescriptor<?>> getConstraintDescriptors() {
+		return backingReflector.getClassConstraintDescriptors();
+	}
 
+	@Override
+	public Class<?> getElementClass() {
+		return this.backingReflector.getTargetClass();
+	}
+
+	@Override
+	public boolean hasConstraints() {
+		return this.getConstraintDescriptors().size() > 0;
+	}
+
+	@Override
+	public ConstraintFinder findConstraints() {
+		final class PrivateConstraintFinderImpl extends BeanConstraintFinderImpl {
+			public PrivateConstraintFinderImpl(IReflector<?> reflector, ElementDescriptor descriptor) {
+				super(reflector,descriptor);
+			}			
+		}
+		
+		return new PrivateConstraintFinderImpl(this.backingReflector,this);
+	}
+	
 }

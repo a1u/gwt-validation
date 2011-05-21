@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import java.util.Set;
 
 import javax.validation.metadata.ConstraintDescriptor;
+import javax.validation.metadata.Scope;
 
 public interface IReflector<T> {
 
@@ -50,7 +51,14 @@ public interface IReflector<T> {
 	public Set<ConstraintDescriptor<?>> getConstraintDescriptors();
 	
 	/**
-	 * Given then name of the field or method, return a list of constraint descriptors for that annotation.
+	 * Returns all of the constraint descriptors declared on every field and on the class itself within the defined scope
+	 * 
+	 * @return
+	 */
+	public Set<ConstraintDescriptor<?>> getConstraintDescriptors(Scope scope);
+	
+	/**
+	 * Given then name of the field or method, return a list of constraint descriptors.
 	 * 
 	 * @param name
 	 * @return
@@ -58,11 +66,26 @@ public interface IReflector<T> {
 	public Set<ConstraintDescriptor<?>> getConstraintDescriptors(String name);
 	
 	/**
+	 * Given then name of the field or method, return a list of constraint descriptors.
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public Set<ConstraintDescriptor<?>> getConstraintDescriptors(String name, Scope scope);
+	
+	/**
 	 * Returns the descriptors from the class level
 	 * 
 	 * @return
 	 */
 	public Set<ConstraintDescriptor<?>> getClassConstraintDescriptors();
+	
+	/**
+	 * Returns the descriptors from the class level for the given scope
+	 * 
+	 * @return
+	 */
+	public Set<ConstraintDescriptor<?>> getClassConstraintDescriptors(Scope scope);
 	
 	/**
 	 * Get the class that this reflector is made to operate on
@@ -86,4 +109,19 @@ public interface IReflector<T> {
 	 * @return
 	 */
 	public boolean isCascaded(String propertyName);
+	
+	/**
+	 * Get the parent reflector
+	 * 
+	 * @return
+	 */
+	public IReflector<?> getParentReflector();
+	
+	/**
+	 * Get the set of reflector interfaces
+	 * 
+	 * @return
+	 */
+	public Set<IReflector<?>> getInterfaceReflectors();
+	
 }

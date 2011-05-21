@@ -20,32 +20,32 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.ElementDescriptor;
+import javax.validation.metadata.Scope;
 
 import com.em.validation.client.reflector.IReflector;
 
-public abstract class ElementDescriptorImpl extends ProtoDescriptor implements ElementDescriptor {
+/**
+ * The constraint finder implementation that uses the special properties of the implemented descriptors to do things
+ * like navigate the type hierarchy for local and other scopes.
+ * 
+ * @author chris
+ *
+ */
+public class BeanConstraintFinderImpl extends AbstractConstraintFinder {
 
-	public ElementDescriptorImpl(IReflector<?> reflector) {
-		super(reflector);
+	protected BeanConstraintFinderImpl(IReflector<?> reflector, ElementDescriptor descriptor) {
+		this.backingReflector = reflector;
 	}
 
 	@Override
-	public Set<ConstraintDescriptor<?>> getConstraintDescriptors() {
-		return backingReflector.getClassConstraintDescriptors();
-	}
-
-	@Override
-	public Class<?> getElementClass() {
-		return this.backingReflector.getTargetClass();
-	}
-
-	@Override
-	public boolean hasConstraints() {
-		return this.getConstraintDescriptors().size() > 0;
+	public Set<ConstraintDescriptor<?>> findConstraints(Scope scope) {
+		if(this.backingReflector == null) return new HashSet<ConstraintDescriptor<?>>();
+		return this.backingReflector.getConstraintDescriptors(scope);
 	}
 	
 }

@@ -68,6 +68,7 @@ public abstract class Reflector<T> implements IReflector<T> {
 	 */
 	protected Map<String, Set<ConstraintDescriptor<?>>> constraintDescriptors = new HashMap<String, Set<ConstraintDescriptor<?>>>();
 	
+	@Override
 	public Set<ConstraintDescriptor<?>> getConstraintDescriptors(Scope scope) {
 		Set<ConstraintDescriptor<?>> outputSet = new HashSet<ConstraintDescriptor<?>>();
 		for(Set<ConstraintDescriptor<?>> partialSet : this.constraintDescriptors.values()) {
@@ -78,7 +79,9 @@ public abstract class Reflector<T> implements IReflector<T> {
 				outputSet.addAll(this.superReflector.getConstraintDescriptors());
 			}
 			for(IReflector<?> iface : this.reflectorInterfaces) {
-				outputSet.addAll(iface.getConstraintDescriptors());
+				if(iface != null) {
+					outputSet.addAll(iface.getConstraintDescriptors());
+				}
 			}
 		}
 		return outputSet;
@@ -89,7 +92,8 @@ public abstract class Reflector<T> implements IReflector<T> {
 		return this.getConstraintDescriptors(Scope.HIERARCHY);
 	}
 	
-	private Set<ConstraintDescriptor<?>> getClassConstraintDescriptors(Scope scope) {
+	@Override
+	public Set<ConstraintDescriptor<?>> getClassConstraintDescriptors(Scope scope) {
 		Set<ConstraintDescriptor<?>> classDescriptors = this.constraintDescriptors.get(this.targetClass.getName());
 		if(classDescriptors == null) {
 			classDescriptors = new HashSet<ConstraintDescriptor<?>>();
@@ -111,6 +115,7 @@ public abstract class Reflector<T> implements IReflector<T> {
 		return this.getClassConstraintDescriptors(Scope.HIERARCHY);
 	}
 
+	@Override
 	public Set<ConstraintDescriptor<?>> getConstraintDescriptors(String name, Scope scope) {
 		Set<ConstraintDescriptor<?>> descriptors = this.constraintDescriptors.get(name);
 		if(descriptors == null) {
@@ -165,4 +170,16 @@ public abstract class Reflector<T> implements IReflector<T> {
 	public void addReflectorInterface(IReflector<?> reflectorInterface) {
 		this.reflectorInterfaces.add(reflectorInterface);
 	}
+
+	@Override
+	public IReflector<?> getParentReflector() {
+		return this.superReflector;
+	}
+
+	@Override
+	public Set<IReflector<?>> getInterfaceReflectors() {
+		return this.reflectorInterfaces;
+	}
+	
+	
 }

@@ -52,15 +52,25 @@ public class CoreMetadataTest extends GwtValidationBaseTestCase {
 		//test with no groups
 		assertEquals(8, finder.getConstraintDescriptors().size());
 		assertTrue(finder.hasConstraints());
-		
-		//add Default.class
-		finder.unorderedAndMatchingGroups(Default.class);
+
+		//test with the MaxGroup class alone
+		finder = descriptor.findConstraints();
+		finder.unorderedAndMatchingGroups(MaxGroup.class);
+		finder.lookingAt(Scope.HIERARCHY);
+		assertEquals(5, finder.getConstraintDescriptors().size());
+		finder.lookingAt(Scope.LOCAL_ELEMENT);
 		assertEquals(4, finder.getConstraintDescriptors().size());
+		
+		//add Default.class (INCLUDING EXTENSIONS)
+		finder = descriptor.findConstraints();
+		finder.unorderedAndMatchingGroups(Default.class);
+		assertEquals(5, finder.getConstraintDescriptors().size());
 		
 		//add MaxGroup.class
 		finder.unorderedAndMatchingGroups(MaxGroup.class);
+		finder.lookingAt(Scope.LOCAL_ELEMENT);
 		assertEquals(3, finder.getConstraintDescriptors().size());
-		
+
 		//add ExtendedGroup.class
 		finder.unorderedAndMatchingGroups(ExtendedGroup.class);
 		assertEquals(2, finder.getConstraintDescriptors().size());

@@ -60,5 +60,16 @@ public class PropertyDescriptorImpl extends ProtoDescriptor implements PropertyD
 	public boolean isCascaded() {
 		return this.backingReflector.isCascaded(this.propertyName);
 	}
+	
+	@Override
+	public ConstraintFinder findConstraints() {
+		final class PrivatePropertyConstraintFinderImpl extends PropertyConstraintFinderImpl {
+			public PrivatePropertyConstraintFinderImpl(IReflector<?> reflector, String propertyName) {
+				super(reflector,propertyName);
+			}			
+		}
+		
+		return new PrivatePropertyConstraintFinderImpl(this.backingReflector,this.propertyName);
+	}
 
 }

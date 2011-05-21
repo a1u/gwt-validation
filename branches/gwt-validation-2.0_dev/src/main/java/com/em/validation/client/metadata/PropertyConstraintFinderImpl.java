@@ -20,16 +20,32 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 
-import javax.validation.metadata.ElementDescriptor;
+import java.util.Set;
+
+import javax.validation.metadata.ConstraintDescriptor;
+import javax.validation.metadata.Scope;
 
 import com.em.validation.client.reflector.IReflector;
 
-public abstract class ProtoDescriptor implements ElementDescriptor{
+/**
+ * The constraint finder implementation that uses the special properties of the implemented descriptors to do things
+ * like navigate the type hierarchy for local and other scopes.
+ * 
+ * @author chris
+ *
+ */
+public class PropertyConstraintFinderImpl extends AbstractConstraintFinder {
+
+	private String propertyName = "";
 	
-	protected IReflector<?> backingReflector = null;
-	
-	public ProtoDescriptor(IReflector<?> reflector) {
+	protected PropertyConstraintFinderImpl(IReflector<?> reflector, String propertyName) {
 		this.backingReflector = reflector;
+		this.propertyName = propertyName;
 	}
 
+	@Override
+	public Set<ConstraintDescriptor<?>> findConstraints(Scope scope) {
+		return this.backingReflector.getConstraintDescriptors(this.propertyName,scope);
+	}
+	
 }

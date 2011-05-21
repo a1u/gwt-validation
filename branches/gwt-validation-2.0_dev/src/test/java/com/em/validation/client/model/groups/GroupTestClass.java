@@ -34,7 +34,7 @@ public class GroupTestClass extends ParentGroupClass {
 	@Min(value=-12, groups={Default.class,ExtendedGroup.class,MaxGroup.class})
 	private int testInt = 0;
 	
-	@NotNull(groups={BasicGroup.class,ExtendedGroup.class,MaxGroup.class,Default.class})
+	@NotNull(groups={BasicGroup.class,ExtendedGroup.class,MaxGroup.class,DefaultExtGroup.class})
 	@Size(min=5, max=12, groups={MaxGroup.class, Default.class})
 	private String testString = "";
 
