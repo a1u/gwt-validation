@@ -19,7 +19,6 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -71,7 +70,6 @@ public enum ReflectorFactoryGenerator {
 			//this need is caused by composed constraints.  the generation does not need
 			//to occur.
 			if(targetClass.isAnnotation()) {
-				System.out.println("remove: " + targetClass);
 				continue;
 			}
 			

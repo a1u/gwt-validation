@@ -107,8 +107,6 @@ public enum AnnotationInstanceFactoryGenerator {
 			descriptor.setClassName(generatedFactoryName);
 			descriptor.setClassContents(TemplateController.INSTANCE.processTemplate("templates/annotation/ConcreteAnnotationInstanceFactory.ftl", templateMap));
 			
-			//System.out.println(descriptor.getClassContents() + "\n");
-
 			//add to the factory map to generate the factory factory
 			factoryMap.put(annotationImportName, descriptor.getFullClassName());
 			
@@ -128,8 +126,6 @@ public enum AnnotationInstanceFactoryGenerator {
 
 		//set contents of class descriptor from the template
 		outerFactoryDescriptor.setClassContents(TemplateController.INSTANCE.processTemplate("templates/annotation/AnnotationInstanceFactory.ftl", factoryTemplateMap));
-		
-		//System.out.println(outerFactoryDescriptor.getClassContents());
 		
 		//return set
 		return outerFactoryDescriptor;
