@@ -32,7 +32,7 @@ public class ${className} implements IReflectorFactory {
 	public ${className}() {
 		<#list reflectorMetadata as reflector>
 		//create ${reflector.reflectorClass} for ${reflector.targetClass}
-		reflectorCache.put(${reflector.targetClass}.class,new ${reflector.reflectorClass}());
+		this.reflectorCache.put(${reflector.targetClass}.class,new ${reflector.reflectorClass}());
 		</#list>
 		
 		//now add all of the super reflectors

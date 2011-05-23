@@ -19,6 +19,7 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -66,13 +67,6 @@ public enum ReflectorFactoryGenerator {
 		
 		//get precursor/dependency classes
 		for(Class<?> targetClass : constrainedClasses) {
-			//if the class is an annotation, continue.  we don't need to generate reflectors
-			//this need is caused by composed constraints.  the generation does not need
-			//to occur.
-			if(targetClass.isAnnotation()) {
-				continue;
-			}
-			
 			//get all of the constraint descriptors for the class and use that to build the groups, then use those to create
 			//reflectors for themselves
 			BeanDescriptor targetBean = DescriptorFactory.INSTANCE.getBeanDescriptor(targetClass);
@@ -106,7 +100,7 @@ public enum ReflectorFactoryGenerator {
 		Set<ReflectorMetadata> metadata = new LinkedHashSet<ReflectorMetadata>();
 
 		//if Object or an Annotation or null, return empty set
-		if(Object.class.equals(targetClass) || targetClass == null || targetClass.isAnnotation()) {
+		if(Object.class.equals(targetClass) || Annotation.class.equals(targetClass) || targetClass == null || targetClass.isAnnotation()) {
 			return metadata;
 		}
 		
