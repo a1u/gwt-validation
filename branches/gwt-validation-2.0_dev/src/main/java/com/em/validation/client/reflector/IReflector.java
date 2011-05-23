@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 
+import java.lang.annotation.ElementType;
 import java.util.Set;
 
 import javax.validation.metadata.ConstraintDescriptor;
@@ -42,6 +43,13 @@ public interface IReflector<T> {
 	 * @return
 	 */
 	public Set<String> getPropertyNames();
+	
+	/**
+	 * Get the bean accessible name (short name) of all of the publicly accessible methods delcared on the bean itself (not on superclasses or interfaces)
+	 * 
+	 * @return
+	 */
+	public Set<String> getDeclaredPropertyNames();
 		
 	/**
 	 * Returns all of the constraint descriptors declared on every field and on the class itself
@@ -124,4 +132,12 @@ public interface IReflector<T> {
 	 */
 	public Set<IReflector<?>> getInterfaceReflectors();
 	
+	/**
+	 * Returns the set of element types that the given constraint descriptor is declared on
+	 * 
+	 * @param property
+	 * @param descriptor
+	 * @return
+	 */
+	public Set<ElementType> declaredOn(Scope scope, String property, ConstraintDescriptor<?> descriptor);
 }

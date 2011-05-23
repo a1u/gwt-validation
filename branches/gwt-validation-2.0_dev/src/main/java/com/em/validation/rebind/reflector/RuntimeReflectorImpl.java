@@ -19,14 +19,24 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.ElementType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.validation.Valid;
 import javax.validation.metadata.ConstraintDescriptor;
+import javax.validation.metadata.Scope;
 
 import com.em.validation.client.reflector.IReflector;
 import com.em.validation.client.reflector.Reflector;
@@ -172,5 +182,74 @@ public class RuntimeReflectorImpl<T> extends Reflector<T> {
 			}			
 		}
 		return result;
+	}
+
+	@Override
+	public Set<ElementType> declaredOn(Scope scope, String property, ConstraintDescriptor<?> descriptor) {
+		Set<ElementType> results = new LinkedHashSet<ElementType>();
+
+		//return if the property string is null or the descriptor is null
+		if(property == null || descriptor == null) return results;
+		
+		//get property descriptor from introspection
+		BeanInfo targetInfo = null;
+		try {
+			targetInfo = Introspector.getBeanInfo(targetClass);
+		} catch (IntrospectionException e) {
+			//do nothing
+		}
+		
+		//get annotation instance
+		Annotation annotation = descriptor.getAnnotation();
+		
+		//find the property descriptor by name
+		PropertyDescriptor prop = null;
+		for(PropertyDescriptor check : targetInfo.getPropertyDescriptors()) {
+			if(property.equals(check.getName())) {
+				prop = check;
+				break;
+			}
+		}
+		
+		//check the property and field for the declared annotation
+		if(prop != null) {
+			
+			try {
+				Field field = this.targetClass.getDeclaredField(property);
+				List<Annotation> annotationList = PropertyResolver.INSTANCE.getContstraintAnnotations(Arrays.asList(field.getAnnotations()));
+				for(Annotation checking : annotationList) {
+					if(checking.toString().equals(annotation.toString())) {
+						results.add(ElementType.FIELD);
+					}
+				}
+			} catch (Exception ex) {
+				
+			}
+			
+			try {
+				Method method = this.targetClass.getDeclaredMethod(prop.getReadMethod().getName(),new Class<?>[]{});
+				List<Annotation> annotationList = PropertyResolver.INSTANCE.getContstraintAnnotations(Arrays.asList(method.getAnnotations()));
+				for(Annotation checking : annotationList) {
+					if(checking.toString().equals(annotation.toString())) {
+						results.add(ElementType.METHOD);
+					}
+				}
+			} catch (Exception ex) {
+				
+			}
+		}
+		
+		if(Scope.HIERARCHY.equals(scope)) {
+			if(this.superReflector != null) {
+				results.addAll(this.superReflector.declaredOn(scope, property, descriptor));
+			}
+			for(IReflector<?> iface : this.reflectorInterfaces) {
+				if(iface != null){
+					results.addAll(iface.declaredOn(scope, property, descriptor));
+				}
+			}
+		}
+		
+		return results;
 	}	
 }

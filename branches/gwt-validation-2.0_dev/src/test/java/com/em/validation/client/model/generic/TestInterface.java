@@ -23,7 +23,7 @@ import javax.validation.constraints.NotNull;
 
 public interface TestInterface {
 
-	@NotNull
+	@NotNull(message="NOT NULL INTERFACE")
 	public String getTestInterfaceString();
 	
 }

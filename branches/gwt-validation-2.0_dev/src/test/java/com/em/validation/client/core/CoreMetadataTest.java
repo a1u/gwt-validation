@@ -19,15 +19,17 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+import java.lang.annotation.ElementType;
+
 import javax.validation.groups.Default;
 import javax.validation.metadata.BeanDescriptor;
+import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.ElementDescriptor.ConstraintFinder;
 import javax.validation.metadata.PropertyDescriptor;
 import javax.validation.metadata.Scope;
 
-import org.junit.Test;
-
 import com.em.validation.client.metadata.factory.DescriptorFactory;
+import com.em.validation.client.model.generic.TestClass;
 import com.em.validation.client.model.groups.BasicGroup;
 import com.em.validation.client.model.groups.ExtendedGroup;
 import com.em.validation.client.model.groups.GroupTestClass;
@@ -67,16 +69,19 @@ public class CoreMetadataTest extends GwtValidationBaseTestCase {
 		assertEquals(5, finder.getConstraintDescriptors().size());
 		
 		//add MaxGroup.class
-		finder.unorderedAndMatchingGroups(MaxGroup.class);
+		finder.unorderedAndMatchingGroups(Default.class,MaxGroup.class);
 		finder.lookingAt(Scope.LOCAL_ELEMENT);
+		for(ConstraintDescriptor<?> d : finder.getConstraintDescriptors()) {
+			System.out.println(d.getAnnotation().toString());
+		}		
 		assertEquals(3, finder.getConstraintDescriptors().size());
 
 		//add ExtendedGroup.class
-		finder.unorderedAndMatchingGroups(ExtendedGroup.class);
+		finder.unorderedAndMatchingGroups(Default.class,MaxGroup.class,ExtendedGroup.class);
 		assertEquals(2, finder.getConstraintDescriptors().size());
 		
 		//add BasicGroup.class
-		finder.unorderedAndMatchingGroups(BasicGroup.class);
+		finder.unorderedAndMatchingGroups(Default.class,MaxGroup.class,ExtendedGroup.class,BasicGroup.class);
 		assertEquals(1, finder.getConstraintDescriptors().size());
 		
 		//new finder, only max group
@@ -85,20 +90,12 @@ public class CoreMetadataTest extends GwtValidationBaseTestCase {
 		//new finder, only extended
 		assertEquals(3, descriptor.findConstraints().unorderedAndMatchingGroups(ExtendedGroup.class).getConstraintDescriptors().size());
 		
-		//new finder, showing chaining
-		finder = descriptor.findConstraints()
-					.unorderedAndMatchingGroups(Default.class)
-					.unorderedAndMatchingGroups(BasicGroup.class);
-		assertEquals(2, finder.getConstraintDescriptors().size());
-		
 		//new finder, looking at local (element) scope
 		finder = descriptor.findConstraints()
 				.lookingAt(Scope.LOCAL_ELEMENT);
 		assertEquals(6, finder.getConstraintDescriptors().size());
-		assertEquals(8, finder.lookingAt(Scope.HIERARCHY).getConstraintDescriptors().size());
 	}
 	
-	@Test
 	public static void testGroupFinderOnProperty(IReflectorFactory factory) {
 		//get property descriptor and initial finder
 		PropertyDescriptor propertyDescriptor = DescriptorFactory.INSTANCE.getBeanDescriptor(GroupTestClass.class).getConstraintsForProperty("testString");
@@ -110,6 +107,29 @@ public class CoreMetadataTest extends GwtValidationBaseTestCase {
 		//only the extended group
 		assertEquals(2, finder.unorderedAndMatchingGroups(ExtendedGroup.class).getConstraintDescriptors().size());
 		
+	}
+	
+	public static void testDeclaredOnFinder(IReflectorFactory factory) {
+		
+		//get bean descriptor for generic test class
+		BeanDescriptor descriptor = DescriptorFactory.INSTANCE.getBeanDescriptor(factory.getReflector(TestClass.class));
+		
+		//get finder
+		ConstraintFinder finder = descriptor.findConstraints().lookingAt(Scope.LOCAL_ELEMENT).declaredOn(ElementType.METHOD);
+				
+		//assert that the finder object is not null
+		assertNotNull(finder);
+		
+		//there are only 3 items declared on a method in that class
+		assertEquals(5, finder.getConstraintDescriptors().size());
+		
+		//change to Scope.HIERARCHY
+		finder.lookingAt(Scope.HIERARCHY);
+		assertEquals(12, finder.getConstraintDescriptors().size());
+		
+		//change to FIELDs in the LOCAL_ELEMENT scope
+		finder.lookingAt(Scope.LOCAL_ELEMENT).declaredOn(ElementType.FIELD);
+		assertEquals(5, finder.getConstraintDescriptors().size());
 	}
 	
 }

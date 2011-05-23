@@ -20,13 +20,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 
+import java.lang.annotation.ElementType;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.ElementDescriptor;
+import javax.validation.metadata.ElementDescriptor.ConstraintFinder;
+import javax.validation.metadata.PropertyDescriptor;
 import javax.validation.metadata.Scope;
 
+import com.em.validation.client.metadata.factory.DescriptorFactory;
 import com.em.validation.client.reflector.IReflector;
 
 /**
@@ -43,9 +47,33 @@ public class BeanConstraintFinderImpl extends AbstractConstraintFinder {
 	}
 
 	@Override
-	public Set<ConstraintDescriptor<?>> findConstraints(Scope scope) {
-		if(this.backingReflector == null) return new HashSet<ConstraintDescriptor<?>>();
-		return this.backingReflector.getConstraintDescriptors(scope);
+	public Set<ConstraintDescriptor<?>> findConstraints(Scope scope, Set<ElementType> declaredOnTypes, Set<Class<?>> matchingGroups) {
+		Set<ConstraintDescriptor<?>> initial = new HashSet<ConstraintDescriptor<?>>();
+		if(this.backingReflector == null) return initial;
+		
+		Set<ConstraintDescriptor<?>> results = new HashSet<ConstraintDescriptor<?>>();
+
+		Set<String> propertySet = new HashSet<String>();
+		if(Scope.HIERARCHY.equals(scope)) {
+			propertySet.addAll(this.backingReflector.getPropertyNames());
+		} else if(Scope.LOCAL_ELEMENT.equals(scope)) {
+			propertySet.addAll(this.backingReflector.getDeclaredPropertyNames());
+		}
+		
+		//get constraints for each property name
+		for(String propertyName : propertySet) {
+			PropertyDescriptor property = DescriptorFactory.INSTANCE.getPropertyDescriptor(this.backingReflector, propertyName);
+			
+			//create finder
+			ConstraintFinder finder = property.findConstraints()
+				.lookingAt(scope)
+				.declaredOn(declaredOnTypes.toArray(new ElementType[]{}))
+				.unorderedAndMatchingGroups(matchingGroups.toArray(new Class<?>[]{}));
+			
+			//find and add to results
+			results.addAll(finder.getConstraintDescriptors());
+		}
+		return results;
 	}
 	
 }

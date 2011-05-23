@@ -28,7 +28,7 @@ import javax.validation.groups.Default;
 
 public class GroupTestClass extends ParentGroupClass {
 
-	@Min(12)
+	@Min(value=12)
 	private double testDouble = 0;
 	
 	@Min(value=-12, groups={Default.class,ExtendedGroup.class,MaxGroup.class})

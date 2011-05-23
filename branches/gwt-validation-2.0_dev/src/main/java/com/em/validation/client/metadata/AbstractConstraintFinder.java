@@ -22,10 +22,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import java.lang.annotation.ElementType;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
-import javax.validation.groups.Default;
 import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.ElementDescriptor.ConstraintFinder;
 import javax.validation.metadata.Scope;
@@ -75,71 +73,13 @@ public abstract class AbstractConstraintFinder implements ConstraintFinder {
 	 */
 	private Set<Class<?>> matchingGroups = new HashSet<Class<?>>();
 	
-	public abstract Set<ConstraintDescriptor<?>> findConstraints(Scope scope);
+	public abstract Set<ConstraintDescriptor<?>> findConstraints(Scope scope, Set<ElementType> declaredOnTypes, Set<Class<?>> matchingGroups);
 	
 	@Override
 	public Set<ConstraintDescriptor<?>> getConstraintDescriptors() {
 		//if the state of the class has changed, re-search the constraints
 		if(this.searchChanged) {
-			Set<ConstraintDescriptor<?>> start = this.findConstraints(this.scope);
-			Set<ConstraintDescriptor<?>> results = new LinkedHashSet<ConstraintDescriptor<?>>();
-			
-			for(ConstraintDescriptor<?> descriptor : start) {
-				
-				//keep the descriptor in the set
-				boolean keep = true; 
-				
-				//if the size of declared on types is > 0, use it to filter
-				if(this.declaredOnTypes.size() > 0) {
-					//not yet implemented					
-				}
-
-				//skip this test if the decision has already been made not to keep the constraint descriptor
-				if(keep) {
-					//if there are matching groups at all, perform this test
-					if(this.matchingGroups.size() > 0) {
-						//get group set so we can manipulate
-						Set<Class<?>> groupSet = descriptor.getGroups();
-						
-						//account for the default group if no groups are present
-						if(groupSet.size() == 0) {
-							groupSet.add(Default.class);
-						}
-						
-						boolean foundAll = true;
-						
-						//for all groups in the group set
-						for(Class<?> uGroup : this.matchingGroups) {
-							
-							boolean found = false;
-							
-							for(Class<?> dGroup : groupSet) {
-								
-								//check to see if the group the user passed in is a superclass of the
-								//group found in the group set on the descriptor
-								IReflector<?> rSuper = ReflectorFactory.INSTANCE.getReflector(dGroup);
-								
-								//this group has not been found
-								found = this.foundIn(uGroup, rSuper);
-								
-								if(found) break;
-
-							}							
-
-							foundAll = foundAll && found;
-						}
-						
-						//the results of this test are combined with the results of the last test for a result
-						keep = keep && foundAll;
-					}
-				}
-				
-				if(keep) {
-					results.add(descriptor);
-				}
-			}
-			
-			this.cachedResults = results;
+			this.cachedResults = this.findConstraints(this.scope,this.declaredOnTypes,this.matchingGroups);
 			this.searchChanged = false;
 		}		
 		return this.cachedResults;
@@ -159,6 +99,7 @@ public abstract class AbstractConstraintFinder implements ConstraintFinder {
 	}
 	@Override
 	public ConstraintFinder unorderedAndMatchingGroups(Class<?>... groups) {
+		this.matchingGroups.clear();
 		this.matchingGroups.addAll(Arrays.asList(groups));
 		//mark the cache as dirty
 		this.searchChanged = true;
@@ -173,31 +114,41 @@ public abstract class AbstractConstraintFinder implements ConstraintFinder {
 		return this;
 	}
 	
-	private boolean foundIn(Class<?> matchingGroup, IReflector<?> lookingReflector) {
-		boolean result = false; 
+	protected Boolean foundIn(Set<Class<?>> groupSet, Class<?> mGroup) {
+		boolean result = false;
 		
-		if(lookingReflector == null || lookingReflector.getTargetClass() == null) return false;
-		
-		if(matchingGroup.equals(lookingReflector.getTargetClass())) {
+		if(groupSet.contains(mGroup)) {
 			result = true;
-		}
-
-		//check parent
-		if(!result) {
-			result = this.foundIn(matchingGroup, lookingReflector.getParentReflector());
-		}
-		
-		//check interfaces
-		if(!result) {
-			for(IReflector<?> iface : lookingReflector.getInterfaceReflectors()) {
-				result = this.foundIn(matchingGroup, iface);
-				if(result) {
-					break;
+		} else {
+			//create temp set
+			Set<Class<?>> tempSet = new HashSet<Class<?>>(groupSet);
+			
+			//create deeper set and check again
+			for(Class<?> group : groupSet) {
+				IReflector<?> gReflector = ReflectorFactory.INSTANCE.getReflector(group);
+				
+				if(gReflector != null) {
+					if(gReflector.getParentReflector() != null) {
+						tempSet.add(gReflector.getParentReflector().getTargetClass());
+					}
+					
+					if(gReflector.getInterfaceReflectors() != null) {
+						for(IReflector<?> ireflector : gReflector.getInterfaceReflectors()) {
+							if(ireflector != null) {
+								tempSet.add(ireflector.getTargetClass());
+							}
+						}
+					}
 				}
 			}
-		}
+			
+			if(groupSet.size() != tempSet.size()) {
+				//call with temp set				
+				result = this.foundIn(tempSet, mGroup);
+			}
+			//else the value is unchanged, drop from loop, and return
+		}		
 		
 		return result;
-	}
-	
+	}	
 }

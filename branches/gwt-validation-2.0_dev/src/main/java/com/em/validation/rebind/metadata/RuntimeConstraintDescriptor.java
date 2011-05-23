@@ -38,7 +38,7 @@ public class RuntimeConstraintDescriptor<T extends Annotation> extends AbstractC
 		this.annotationMetadata = annotationMetadata;
 		this.reportAsSingleViolation = annotationMetadata.isReportAsSingleViolation();
 		
-		for(Method method : this.annotation.getClass().getMethods()) {
+		for(Method method : this.annotation.getClass().getDeclaredMethods()) {
 			try {
 				Object value = method.invoke(this.annotation, new Object[]{});
 				this.propertyMap.put(method.getName(), value);

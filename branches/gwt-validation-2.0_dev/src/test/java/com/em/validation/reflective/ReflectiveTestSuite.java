@@ -26,13 +26,15 @@ import com.em.validation.reflective.cases.ConstraintsTest;
 import com.em.validation.reflective.cases.MetadataTest;
 import com.em.validation.reflective.cases.defects.DefectSuite;
 import com.em.validation.reflective.cases.example.ExampleTestSuite;
+import com.em.validation.reflective.cases.validators.ValidatorTestSuite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	DefectSuite.class,
 	ConstraintsTest.class,
 	MetadataTest.class,
-	ExampleTestSuite.class
+	ExampleTestSuite.class,
+	ValidatorTestSuite.class
 })
 public class ReflectiveTestSuite {
 

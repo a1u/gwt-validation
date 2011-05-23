@@ -26,6 +26,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ArrayList;
 import javax.validation.metadata.ConstraintDescriptor;
+import java.lang.annotation.ElementType;
+import javax.validation.metadata.Scope;
 
 //super reflector and reflector interfaces
 import com.em.validation.client.reflector.IReflector;
@@ -127,4 +129,11 @@ public class ${concreteClassName} extends Reflector<${reflectionTargetName}> {
 		
 		return result;
 	}
+	
+	@Override
+	public Set<ElementType> declaredOn(Scope scope, String property, ConstraintDescriptor<?> descriptor) {
+		Set<ElementType> results = new LinkedHashSet<ElementType>();
+		
+		return results;
+	}	
 }

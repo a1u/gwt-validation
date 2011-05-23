@@ -54,7 +54,8 @@ public enum RuntimeReflectorFactory implements IReflectorFactory {
 			
 			//add constraint descriptors
 			reflector.setConstraintDescriptorMap(ConstraintDescriptionResolver.INSTANCE.getConstraintDescriptors(targetClass));
-			
+
+			//add the super reflector and interface reflectors
 			RuntimeReflectorImpl<T> runtime = (RuntimeReflectorImpl<T>)reflector;
 			runtime.setSuperReflector((Reflector<?>)ReflectorFactory.INSTANCE.getReflector(targetClass.getSuperclass()));
 			for(Class<?> iface : targetClass.getInterfaces()) {

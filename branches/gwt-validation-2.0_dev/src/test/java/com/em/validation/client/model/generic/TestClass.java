@@ -29,7 +29,7 @@ import com.em.validation.client.model.constraint.FakeConstraint;
 
 public class TestClass extends ParentClass implements TestInterface {
 
-	@NotNull
+	@NotNull(message="NOT NULL 1")
 	@Pattern.List( {
 		@Pattern(regexp=".+"),
 		@Pattern(regexp="--")
@@ -38,14 +38,14 @@ public class TestClass extends ParentClass implements TestInterface {
 	@Size(min=2, max=12)
 	public String publicTestString = "publicTestString";
 	
-	@Min(5)
+	@Min(4)
 	public int publicTestInt = 0;
 	
 	private String testString = "testString";
 	
 	private int testInt = 0;
 
-	@NotNull
+	@NotNull(message="NOT NULL 2")
 	public String getTestString() {
 		return testString;
 	}
@@ -71,7 +71,7 @@ public class TestClass extends ParentClass implements TestInterface {
 		return "testInterfaceString";
 	}
 
-	@Size(min=1)
+	@Size(min=2)
 	@Override
 	public String getParentAbstractString() {
 		return "parentAbstractString";

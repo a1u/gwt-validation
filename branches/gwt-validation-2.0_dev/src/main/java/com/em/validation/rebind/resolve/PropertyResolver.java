@@ -136,7 +136,7 @@ public enum PropertyResolver {
 				Class<?> infoClass = method.getDeclaringClass();
 				for(Class<?> infoInterface : infoClass.getInterfaces()) {
 					if(this.hasMethod(infoInterface, methodName, new Class<?>[]{})) {
-						Method interfaceMethod = infoInterface.getMethod(methodName, new Class<?>[]{});
+						Method interfaceMethod = infoInterface.getDeclaredMethod(methodName, new Class<?>[]{});
 						for(Annotation a : interfaceMethod.getAnnotations()) {
 							String id = methodName + ":" + a.annotationType().getName();
 							potentialAnnotations.put(id, a);
@@ -186,7 +186,7 @@ public enum PropertyResolver {
 	private boolean hasField(Class<?> targetClass, String targetFieldName) {
 		if(targetClass == null) return false;
 		try {
-			if(targetClass.getField(targetFieldName) != null) {
+			if(targetClass.getDeclaredField(targetFieldName) != null) {
 				return true;
 			}
 		} catch (SecurityException e) {
@@ -198,7 +198,7 @@ public enum PropertyResolver {
 	private boolean hasMethod(Class<?> targetClass, String targetFieldName, Class<?>[] parameterTypes) {
 		if(targetClass == null) return false;
 		try {
-			if(targetClass.getMethod(targetFieldName,parameterTypes) != null) {
+			if(targetClass.getDeclaredMethod(targetFieldName,parameterTypes) != null) {
 				return true;
 			}
 		} catch (SecurityException e) {
@@ -239,7 +239,7 @@ public enum PropertyResolver {
 			if(!annotationType.isAnnotationPresent(Constraint.class)) {
 				Method valueMethod = null;
 				try {
-					valueMethod = annotationType.getMethod("value", new Class<?>[]{});
+					valueMethod = annotationType.getDeclaredMethod("value", new Class<?>[]{});
 				} catch (SecurityException e) {
 				} catch (NoSuchMethodException e) {
 				}

@@ -59,6 +59,26 @@ public abstract class Reflector<T> implements IReflector<T> {
 	 * @return
 	 */
 	public Set<String> getPropertyNames() {
+		Set<String> results = new HashSet<String>();
+		
+		results.addAll(this.getDeclaredPropertyNames());
+		
+		if(this.superReflector != null) {
+			results.addAll(this.superReflector.getPropertyNames());
+		}
+		
+		if(this.reflectorInterfaces != null && this.reflectorInterfaces.size() > 0) {
+			for(IReflector<?> iface : this.reflectorInterfaces) {
+				if(iface != null) {
+					results.addAll(iface.getPropertyNames());
+				}
+			}
+		}
+		
+		return results;
+	}
+	
+	public Set<String> getDeclaredPropertyNames() {
 		return this.properties;
 	}
 	

@@ -1,4 +1,4 @@
-package com.em.validation.compiled;
+package com.em.validation.compiled.cases.validators;
 
 /*
 (c) 2011 Eminent Minds, LLC
@@ -22,20 +22,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import com.em.validation.compiled.cases.ConstraintsTest;
-import com.em.validation.compiled.cases.MetadataTest;
-import com.em.validation.compiled.cases.defects.DefectSuite;
-import com.em.validation.compiled.cases.example.ExampleTestSuite;
-import com.em.validation.compiled.cases.validators.ValidatorTestSuite;
-
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	DefectSuite.class,
-	ConstraintsTest.class,
-	MetadataTest.class,
-	ExampleTestSuite.class,
-	ValidatorTestSuite.class
+	NotNullObjectValidatorTest.class
 })
-public class CompiledTestSuite {
+public class ValidatorTestSuite {
 
 }

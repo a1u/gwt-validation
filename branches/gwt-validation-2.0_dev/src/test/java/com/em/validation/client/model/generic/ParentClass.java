@@ -26,7 +26,7 @@ import javax.validation.constraints.Size;
 
 public abstract class ParentClass implements ParentInterface {
 
-	@NotNull
+	@NotNull(message="NOT NULL PARENT")
 	@Size(min=4)
 	public String publicParentString = "publicParentString";
 	
