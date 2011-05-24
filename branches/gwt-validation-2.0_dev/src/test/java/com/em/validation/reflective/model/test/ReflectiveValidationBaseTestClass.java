@@ -19,6 +19,9 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+import javax.validation.ConstraintValidatorFactory;
+
+import com.em.validation.client.ConstraintValidatorFactoryImpl;
 import com.em.validation.client.model.tests.ITestCase;
 import com.em.validation.client.reflector.IReflectorFactory;
 import com.em.validation.client.reflector.ReflectorFactory;
@@ -28,6 +31,11 @@ public class ReflectiveValidationBaseTestClass implements ITestCase {
 	@Override
 	public IReflectorFactory getReflectorFactory() {
 		return ReflectorFactory.INSTANCE;
+	}
+
+	@Override
+	public ConstraintValidatorFactory getConstraintValidationFactory() {
+		return ConstraintValidatorFactoryImpl.INSTANCE;
 	}
 	
 }

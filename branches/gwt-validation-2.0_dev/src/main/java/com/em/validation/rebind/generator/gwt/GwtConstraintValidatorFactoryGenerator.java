@@ -1,4 +1,4 @@
-package com.em.validation.client.model.tests;
+package com.em.validation.rebind.generator.gwt;
 
 /*
 (c) 2011 Eminent Minds, LLC
@@ -19,28 +19,23 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import javax.validation.ConstraintValidatorFactory;
+import com.em.validation.rebind.generator.source.ConstraintValidatorFactoryGenerator;
+import com.em.validation.rebind.metadata.ClassDescriptor;
+import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.TreeLogger;
+import com.google.gwt.core.ext.UnableToCompleteException;
 
-import com.em.validation.client.ConstraintValidatorFactoryImpl;
-import com.em.validation.client.reflector.IReflectorFactory;
-import com.em.validation.client.reflector.ReflectorFactory;
-import com.google.gwt.junit.client.GWTTestCase;
-
-public class GwtValidationBaseTestCase extends GWTTestCase implements ITestCase{
+public class GwtConstraintValidatorFactoryGenerator extends GwtGenerator {
 	
 	@Override
-	public String getModuleName() {
-		return "com.em.validation.ValidationTest";
+	public String generate(TreeLogger logger, GeneratorContext context,	String typeName) throws UnableToCompleteException {
+		
+		ClassDescriptor factoryDescriptor = ConstraintValidatorFactoryGenerator.INSTANCE.generateConstraintValidatorFactory();
+		
+		this.generateClass(factoryDescriptor,logger,context);		
+		
+		return factoryDescriptor.getFullClassName();
 	}
 
-	@Override
-	public IReflectorFactory getReflectorFactory() {
-		return ReflectorFactory.INSTANCE;
-	}
-
-	@Override
-	public ConstraintValidatorFactory getConstraintValidationFactory() {
-		return ConstraintValidatorFactoryImpl.INSTANCE;
-	}
 	
 }

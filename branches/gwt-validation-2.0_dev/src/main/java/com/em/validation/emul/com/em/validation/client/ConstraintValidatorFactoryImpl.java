@@ -1,4 +1,4 @@
-package com.em.validation.client.model.tests;
+package com.em.validation.client.reflector;
 
 /*
 (c) 2011 Eminent Minds, LLC
@@ -19,28 +19,25 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorFactory;
 
-import com.em.validation.client.ConstraintValidatorFactoryImpl;
 import com.em.validation.client.reflector.IReflectorFactory;
-import com.em.validation.client.reflector.ReflectorFactory;
-import com.google.gwt.junit.client.GWTTestCase;
+import com.em.validation.rebind.reflector.factory.RuntimeReflectorFactory;
+import com.google.gwt.core.client.GWT;
 
-public class GwtValidationBaseTestCase extends GWTTestCase implements ITestCase{
+public enum ConstraintValidatorFactoryImpl implements ConstraintValidatorFactory {
 	
-	@Override
-	public String getModuleName() {
-		return "com.em.validation.ValidationTest";
-	}
-
-	@Override
-	public IReflectorFactory getReflectorFactory() {
-		return ReflectorFactory.INSTANCE;
-	}
-
-	@Override
-	public ConstraintValidatorFactory getConstraintValidationFactory() {
-		return ConstraintValidatorFactoryImpl.INSTANCE;
-	}
+	INSTANCE;
 	
+	private ConstraintValidatorFactory factory = null;
+	
+	private ReflectorFactory(){
+		this.factory = (ConstraintValidatorFactory)GWT.create(ConstraintValidatorFactory.class);
+	}
+
+	@Override
+	public <T extends ConstraintValidator<?, ?>> T getInstance(Class<T> key) {
+		return this.factory.getInstance(key);
+	}
 }

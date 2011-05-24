@@ -19,10 +19,13 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+import javax.validation.ConstraintValidatorFactory;
+
 import com.em.validation.client.reflector.IReflectorFactory;
 
 public interface ITestCase {
    
 	public IReflectorFactory getReflectorFactory();
+	public ConstraintValidatorFactory getConstraintValidationFactory();
 	
 }

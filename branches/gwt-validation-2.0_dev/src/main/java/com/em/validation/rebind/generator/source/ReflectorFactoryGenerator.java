@@ -32,7 +32,7 @@ import javax.validation.metadata.ConstraintDescriptor;
 import com.em.validation.client.metadata.factory.DescriptorFactory;
 import com.em.validation.rebind.metadata.ClassDescriptor;
 import com.em.validation.rebind.metadata.ReflectorMetadata;
-import com.em.validation.rebind.scan.ConstrainedClassScanner;
+import com.em.validation.rebind.scan.ClassScanner;
 import com.em.validation.rebind.template.TemplateController;
 
 public enum ReflectorFactoryGenerator {
@@ -62,7 +62,7 @@ public enum ReflectorFactoryGenerator {
 		factoryDescriptor.getDependencies().add(AnnotationInstanceFactoryGenerator.INSTANCE.getAnnotationFactoryDescriptor());
 		
 		//create reflector metadata
-		Set<Class<?>> constrainedClasses = ConstrainedClassScanner.INSTANCE.getConstrainedClasses();
+		Set<Class<?>> constrainedClasses = ClassScanner.INSTANCE.getConstrainedClasses();
 		Set<ReflectorMetadata> metadata = new LinkedHashSet<ReflectorMetadata>();
 		
 		//get precursor/dependency classes

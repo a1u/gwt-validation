@@ -23,7 +23,6 @@ import java.lang.annotation.ElementType;
 
 import javax.validation.groups.Default;
 import javax.validation.metadata.BeanDescriptor;
-import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.ElementDescriptor.ConstraintFinder;
 import javax.validation.metadata.PropertyDescriptor;
 import javax.validation.metadata.Scope;
@@ -71,9 +70,6 @@ public class CoreMetadataTest extends GwtValidationBaseTestCase {
 		//add MaxGroup.class
 		finder.unorderedAndMatchingGroups(Default.class,MaxGroup.class);
 		finder.lookingAt(Scope.LOCAL_ELEMENT);
-		for(ConstraintDescriptor<?> d : finder.getConstraintDescriptors()) {
-			System.out.println(d.getAnnotation().toString());
-		}		
 		assertEquals(3, finder.getConstraintDescriptors().size());
 
 		//add ExtendedGroup.class

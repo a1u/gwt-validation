@@ -103,8 +103,6 @@ public class PropertyConstraintFinderImpl extends AbstractConstraintFinder {
 			}
 		}
 		
-		System.out.println("\n\n");
-		
 		return results;
 	}
 

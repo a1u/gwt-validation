@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import com.em.validation.compiled.cases.ConstraintValidatorFactoryTest;
 import com.em.validation.compiled.cases.ConstraintsTest;
 import com.em.validation.compiled.cases.MetadataTest;
 import com.em.validation.compiled.cases.defects.DefectSuite;
@@ -34,7 +35,8 @@ import com.em.validation.compiled.cases.validators.ValidatorTestSuite;
 	ConstraintsTest.class,
 	MetadataTest.class,
 	ExampleTestSuite.class,
-	ValidatorTestSuite.class
+	ValidatorTestSuite.class,
+	ConstraintValidatorFactoryTest.class
 })
 public class CompiledTestSuite {
 

@@ -19,15 +19,19 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+import javax.validation.ConstraintValidatorFactory;
+
 import com.em.validation.client.metadata.factory.DescriptorFactory;
 import com.em.validation.client.model.tests.ITestCase;
 import com.em.validation.client.reflector.IReflectorFactory;
 import com.em.validation.compiler.TestCompiler;
+import com.em.validation.rebind.generator.source.ConstraintValidatorFactoryGenerator;
 import com.em.validation.rebind.generator.source.ReflectorFactoryGenerator;
 
 public class CompiledValidationBaseTestClass implements ITestCase {
 
-	private static IReflectorFactory factory = null;
+	private static IReflectorFactory reflectorFactory = null;
+	private static ConstraintValidatorFactory validatorFactory = null;
 	
 	public CompiledValidationBaseTestClass() {
 		DescriptorFactory.INSTANCE.setReflectorFactory(this.getReflectorFactory());
@@ -35,17 +39,32 @@ public class CompiledValidationBaseTestClass implements ITestCase {
 	
 	@Override
 	public IReflectorFactory getReflectorFactory() {
-		if(factory == null) {
+		if(reflectorFactory == null) {
 			Class<?> factoryClass = TestCompiler.INSTANCE.loadClass(ReflectorFactoryGenerator.INSTANCE.getReflectorFactoryDescriptors());
 			try {
-				CompiledValidationBaseTestClass.factory = (IReflectorFactory)factoryClass.newInstance();
+				CompiledValidationBaseTestClass.reflectorFactory = (IReflectorFactory)factoryClass.newInstance();
 			} catch (InstantiationException e) {
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
 			} 
 		}
-		return CompiledValidationBaseTestClass.factory;
+		return CompiledValidationBaseTestClass.reflectorFactory;
+	}
+
+	@Override
+	public ConstraintValidatorFactory getConstraintValidationFactory() {
+		if(validatorFactory == null) {
+			Class<?> factoryClass = TestCompiler.INSTANCE.loadClass(ConstraintValidatorFactoryGenerator.INSTANCE.generateConstraintValidatorFactory());
+			try {
+				CompiledValidationBaseTestClass.validatorFactory = (ConstraintValidatorFactory)factoryClass.newInstance();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} 
+		}
+		return CompiledValidationBaseTestClass.validatorFactory;
 	}	
 	
 }

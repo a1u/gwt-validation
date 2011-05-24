@@ -31,7 +31,7 @@ import com.em.validation.rebind.metadata.ClassDescriptor;
 import com.em.validation.rebind.metadata.ConstraintMetadata;
 import com.em.validation.rebind.metadata.ConstraintPropertyMetadata;
 import com.em.validation.rebind.resolve.ConstraintDescriptionResolver;
-import com.em.validation.rebind.scan.ConstrainedClassScanner;
+import com.em.validation.rebind.scan.ClassScanner;
 import com.em.validation.rebind.template.TemplateController;
 
 public enum AnnotationInstanceFactoryGenerator {
@@ -52,7 +52,7 @@ public enum AnnotationInstanceFactoryGenerator {
 		ClassDescriptor outerFactoryDescriptor = new ClassDescriptor();
 		
 		//get all constrained classes
-		Set<Class<?>> constrainedClasses = ConstrainedClassScanner.INSTANCE.getConstrainedClasses();
+		Set<Class<?>> constrainedClasses = ClassScanner.INSTANCE.getConstrainedClasses();
 		
 		//a place to store all of the constraint metadata
 		Set<ConstraintMetadata> constraintMetadataSet = new LinkedHashSet<ConstraintMetadata>();

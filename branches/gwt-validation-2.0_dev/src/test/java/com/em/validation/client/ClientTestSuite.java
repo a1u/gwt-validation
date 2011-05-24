@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import com.em.validation.client.cases.ConstraintValidatorFactoryTest;
 import com.em.validation.client.cases.ConstraintsTest;
 import com.em.validation.client.cases.MetadataTest;
 import com.em.validation.client.cases.defects.DefectTestSuite;
@@ -39,6 +40,7 @@ public class ClientTestSuite extends GWTTestSuite {
 		suite.addTestSuite(MetadataTest.class);
 		suite.addTest(ExampleTestSuite.suite());
 		suite.addTest(ValidatorTestSuite.suite());
+		suite.addTestSuite(ConstraintValidatorFactoryTest.class);
 		
 		return suite;
 	}

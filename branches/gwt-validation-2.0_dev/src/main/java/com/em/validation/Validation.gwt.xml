@@ -23,9 +23,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 	<!-- inherit regex provider form gwt libs -->
 	<inherits name='com.google.gwt.regexp.RegExp'/>
 	
-	<!-- Scan the classpath and build the reflector factory, which builds all the other source -->
+	<!-- Scan the classpath and build the reflector factory, which builds a lot of the other source -->
 	<generate-with class="com.em.validation.rebind.generator.gwt.GwtReflectorFactoryGenerator">
 	      <when-type-assignable class="com.em.validation.client.reflector.IReflectorFactory" />
+	</generate-with>
+	
+	<!-- Scan the classpath and build the constraint validation factory, which builds this one factory class -->
+	<generate-with class="com.em.validation.rebind.generator.gwt.GwtConstraintValidatorFactoryGenerator">
+	      <when-type-assignable class="javax.validation.ConstraintValidatorFactory" />
 	</generate-with>
 
 	<!-- Super Source Emulation -->
