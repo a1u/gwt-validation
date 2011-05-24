@@ -1,4 +1,4 @@
-package com.em.validation.client.reflector;
+package com.em.validation.client;
 
 /*
 (c) 2011 Eminent Minds, LLC
@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorFactory;
+import javax.validation.ValidationException;
 
 import com.em.validation.client.reflector.IReflectorFactory;
 import com.em.validation.rebind.reflector.factory.RuntimeReflectorFactory;
@@ -32,12 +33,15 @@ public enum ConstraintValidatorFactoryImpl implements ConstraintValidatorFactory
 	
 	private ConstraintValidatorFactory factory = null;
 	
-	private ReflectorFactory(){
+	private ConstraintValidatorFactoryImpl(){
 		this.factory = (ConstraintValidatorFactory)GWT.create(ConstraintValidatorFactory.class);
 	}
 
 	@Override
 	public <T extends ConstraintValidator<?, ?>> T getInstance(Class<T> key) {
+		if(this.factory == null) {
+			throw new ValidationException("ConstraintValidatorFactory was not generated.");
+		}
 		return this.factory.getInstance(key);
 	}
 }
