@@ -55,9 +55,9 @@ public enum ConstraintDescriptionGenerator {
 		
 	}
 	
-	public ClassDescriptor generateConstraintDescriptor(Annotation annotation) {
+	public ClassDescriptor generateConstraintDescriptor(Annotation annotation, Class<?> elementType) {
 		//get annotation metadata
-		ConstraintMetadata metadata = ConstraintDescriptionResolver.INSTANCE.getConstraintMetadata(annotation);
+		ConstraintMetadata metadata = ConstraintDescriptionResolver.INSTANCE.getConstraintMetadata(annotation,elementType);
 		
 		return this.getDescriptorFromMetadata(metadata);
 	}
@@ -88,7 +88,11 @@ public enum ConstraintDescriptionGenerator {
 							
 			Set<String> constraintValidatorClassNames = new HashSet<String>();
 			for(Class<? extends ConstraintValidator<?, ?>> validator : metadata.getValidatedBy()) {
-				constraintValidatorClassNames.add(validator.getClass().getName());
+				String className = validator.getName();
+				if(validator.isMemberClass()) {
+					className = className.replaceAll("\\$", ".");
+				}
+				constraintValidatorClassNames.add(className);
 			}			
 			
 			//push into cache

@@ -96,16 +96,20 @@ public enum ClassScanner {
 		return this.getConstrainedClasses(".*");
 	}
 	
-	public Set<Class<?>> getConstraintValidatorClasses(String pattern) {
+	@SuppressWarnings("unchecked")
+	public Set<Class<? extends ConstraintValidator<?, ?>>> getConstraintValidatorClasses(String pattern) {
 		//create empty result set
-		Set<Class<?>> result = new LinkedHashSet<Class<?>>();
+		Set<Class<? extends ConstraintValidator<?, ?>>> result = new LinkedHashSet<Class<? extends ConstraintValidator<?,?>>>();
 		
-		result.addAll(this.reflections.getSubTypesOf(ConstraintValidator.class));
+		for(@SuppressWarnings("rawtypes") Class<? extends ConstraintValidator> validatorClass : this.reflections.getSubTypesOf(ConstraintValidator.class)) {
+			result.add((Class<? extends ConstraintValidator<?, ?>>) validatorClass);			
+		}
+
 		
 		return result;
 	}
 	
-	public Set<Class<?>> getConstraintValidatorClasses() {
+	public Set<Class<? extends ConstraintValidator<?, ?>>> getConstraintValidatorClasses() {
 		return this.getConstraintValidatorClasses(".*");
 	}
 	

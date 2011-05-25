@@ -33,6 +33,8 @@ public class PropertyMetadata {
 	private String accessor;
 	private String classString;
 	
+	private Class<?> returnType = null;
+	
 	private boolean field = true;
 	
 	public String getName() {
@@ -75,6 +77,13 @@ public class PropertyMetadata {
 	}
 	public void setField(boolean field) {
 		this.field = field;
+	}
+	
+	public void setReturnType(Class<?> returnType) {
+		this.returnType = returnType;
+	}
+	public Class<?> getReturnType() {
+		return returnType;
 	}
 	
 }

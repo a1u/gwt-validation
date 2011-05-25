@@ -74,7 +74,7 @@ public enum ReflectorGenerator {
 		for(PropertyMetadata propertyMetadata : metadataMap.values()) {
 			//generate for each targetClass, property, annotation
 			for(Annotation annotation : propertyMetadata.getAnnotationInstances()) {
-				ClassDescriptor descriptor = ConstraintDescriptionGenerator.INSTANCE.generateConstraintDescriptor(annotation);
+				ClassDescriptor descriptor = ConstraintDescriptionGenerator.INSTANCE.generateConstraintDescriptor(annotation,propertyMetadata.getReturnType());
 				propertyMetadata.getConstraintDescriptorClasses().add(descriptor.getClassName());
 				reflectorDescriptor.getDependencies().add(descriptor);
 			}

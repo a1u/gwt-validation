@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.validation.Constraint;
+import javax.validation.ConstraintValidator;
 import javax.validation.OverridesAttribute;
 import javax.validation.ReportAsSingleViolation;
 import javax.validation.metadata.ConstraintDescriptor;
@@ -66,7 +67,7 @@ public enum ConstraintDescriptionResolver {
 		List<Annotation> classLevelAnnotations = PropertyResolver.INSTANCE.getContstraintAnnotations(Arrays.asList(targetClass.getAnnotations()));
 		Set<ConstraintDescriptor<?>> classLevelDescriptors = new LinkedHashSet<ConstraintDescriptor<?>>();
 		for(Annotation classAnnotation : classLevelAnnotations) {
-			ConstraintMetadata metadata = this.getConstraintMetadata(classAnnotation);
+			ConstraintMetadata metadata = this.getConstraintMetadata(classAnnotation,targetClass);
 			ConstraintDescriptor<?> descriptor = RuntimeConstraintDescriptorFactory.INSTANCE.getConstraintDescriptor(metadata);
 			classLevelDescriptors.add(descriptor);
 		}
@@ -86,7 +87,7 @@ public enum ConstraintDescriptionResolver {
 		for(String propertyName : propertyMetadata.keySet()) {
 			PropertyMetadata property = propertyMetadata.get(propertyName);
 			for(Annotation annotation : property.getAnnotationInstances()) {
-				metadataResult.add(this.getConstraintMetadata(annotation));
+				metadataResult.add(this.getConstraintMetadata(annotation,property.getReturnType()));
 			}
 		}		
 		return metadataResult;
@@ -96,14 +97,15 @@ public enum ConstraintDescriptionResolver {
 		Set<ConstraintDescriptor<?>> descriptors = new LinkedHashSet<ConstraintDescriptor<?>>();
 		PropertyMetadata property = PropertyResolver.INSTANCE.getPropertyMetadata(targetClass, propertyName);
 		for(Annotation annotation : property.getAnnotationInstances()) {
-			ConstraintMetadata metadata = this.getConstraintMetadata(annotation);
+			ConstraintMetadata metadata = this.getConstraintMetadata(annotation,property.getReturnType());
 			ConstraintDescriptor<?> descriptor = RuntimeConstraintDescriptorFactory.INSTANCE.getConstraintDescriptor(metadata);
 			descriptors.add(descriptor);
 		}		
 		return descriptors;
 	}
 	
-	public ConstraintMetadata getConstraintMetadata(Annotation annotation) {
+	@SuppressWarnings("unchecked")
+	public ConstraintMetadata getConstraintMetadata(Annotation annotation, Class<?> elementType) {
 		
 		//create annotation metadata
 		ConstraintMetadata metadata = this.metadataCache.get(annotation.toString()); 
@@ -138,9 +140,10 @@ public enum ConstraintDescriptionResolver {
 				metadata.getMethodMap().put(aMeta.getMethodName(), aMeta);
 			}
 			
-			//constraint 
-			Constraint constraint = annotation.annotationType().getAnnotation(Constraint.class);
-			metadata.getValidatedBy().addAll(Arrays.asList(constraint.validatedBy()));
+			//constraint valdiators
+			for(Class<?> validatorClass : ValidatorResolver.INSTANCE.getValidatorClassesForAnnotation(annotation.annotationType(), elementType)) {
+				metadata.getValidatedBy().add((Class<? extends ConstraintValidator<?, ?>>)validatorClass);	
+			}			
 			
 			//report as single or not
 			metadata.setReportAsSingleViolation(annotation.annotationType().getAnnotation(ReportAsSingleViolation.class) != null);  
@@ -153,7 +156,7 @@ public enum ConstraintDescriptionResolver {
 			//get composing constraints
 			for(Annotation subAnnotation : annotation.annotationType().getAnnotations()) {
 				if(subAnnotation.annotationType().getAnnotation(Constraint.class) != null){
-					metadata.getComposedOf().add(this.getConstraintMetadata(subAnnotation));
+					metadata.getComposedOf().add(this.getConstraintMetadata(subAnnotation,elementType));
 				} else {
 					try {
 						//if the type isn't a @Constraint annotated class then check the value
@@ -166,7 +169,7 @@ public enum ConstraintDescriptionResolver {
 								if(subSubObject instanceof Annotation) {
 									Annotation subSubAnnotation = (Annotation)subSubObject;
 									if(subSubAnnotation.annotationType().getAnnotation(Constraint.class) != null) {
-										metadata.getComposedOf().add(this.getConstraintMetadata(subSubAnnotation));
+										metadata.getComposedOf().add(this.getConstraintMetadata(subSubAnnotation,elementType));
 									}
 								}
 							}
