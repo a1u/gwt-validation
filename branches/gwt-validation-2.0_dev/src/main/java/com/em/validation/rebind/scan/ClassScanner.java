@@ -104,7 +104,6 @@ public enum ClassScanner {
 		for(@SuppressWarnings("rawtypes") Class<? extends ConstraintValidator> validatorClass : this.reflections.getSubTypesOf(ConstraintValidator.class)) {
 			result.add((Class<? extends ConstraintValidator<?, ?>>) validatorClass);			
 		}
-
 		
 		return result;
 	}

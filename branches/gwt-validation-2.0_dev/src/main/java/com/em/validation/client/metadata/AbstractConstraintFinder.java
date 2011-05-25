@@ -87,7 +87,7 @@ public abstract class AbstractConstraintFinder implements ConstraintFinder {
 
 	@Override
 	public boolean hasConstraints() {
-		return this.getConstraintDescriptors().size() > 0;
+		return !this.getConstraintDescriptors().isEmpty();
 	}
 
 	@Override

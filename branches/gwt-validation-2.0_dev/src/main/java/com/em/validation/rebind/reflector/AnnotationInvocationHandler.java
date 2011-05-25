@@ -69,11 +69,6 @@ public class AnnotationInvocationHandler implements InvocationHandler {
 			result = method.invoke(this.annotation, args);
 		}
 		
-		//finally invoke on object, should return default
-		if(result == null) {
-			result = method.invoke(proxy, args);
-		}
-		
 		//return result
 		return result;
 	}

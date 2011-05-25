@@ -30,7 +30,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -49,14 +48,6 @@ public enum PropertyResolver {
 	
 	private PropertyResolver() {
 		
-	}
-	
-	public Set<String> getPropertyNames(Class<?> targetClass) {
-		Map<String,PropertyMetadata> properties = this.getPropertyMetadata(targetClass);
-		if(properties == null) {
-			return new HashSet<String>();
-		}
-		return properties.keySet();
 	}
 	
 	public Map<String,PropertyMetadata> getPropertyMetadata(Class<?> targetClass) {

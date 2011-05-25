@@ -84,7 +84,7 @@ public class BeanDescriptorImpl extends ProtoDescriptor implements BeanDescripto
 
 	@Override
 	public boolean hasConstraints() {
-		return this.getConstraintDescriptors().size() > 0;
+		return !this.getConstraintDescriptors().isEmpty();
 	}
 
 	@Override
