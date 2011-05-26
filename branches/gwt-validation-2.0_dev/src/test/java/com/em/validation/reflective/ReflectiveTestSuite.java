@@ -25,6 +25,7 @@ import org.junit.runners.Suite;
 import com.em.validation.reflective.cases.ConstraintValidatorFactoryTest;
 import com.em.validation.reflective.cases.ConstraintsTest;
 import com.em.validation.reflective.cases.MetadataTest;
+import com.em.validation.reflective.cases.ValidatorTest;
 import com.em.validation.reflective.cases.defects.DefectSuite;
 import com.em.validation.reflective.cases.example.ExampleTestSuite;
 import com.em.validation.reflective.cases.validators.ValidatorTestSuite;
@@ -36,7 +37,8 @@ import com.em.validation.reflective.cases.validators.ValidatorTestSuite;
 	MetadataTest.class,
 	ExampleTestSuite.class,
 	ValidatorTestSuite.class,
-	ConstraintValidatorFactoryTest.class
+	ConstraintValidatorFactoryTest.class,
+	ValidatorTest.class
 })
 public class ReflectiveTestSuite {
 

@@ -38,7 +38,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 package javax.validation;
 
+import javax.validation.Configuration;
+import javax.validation.ValidationProviderResolver;
+import javax.validation.ValidatorFactory;
 import javax.validation.bootstrap.GenericBootstrap;
+
+import com.em.validation.client.ValidatorFactoryImpl;
 
 /**
  * This class is the entry point for Bean Validation. There are three ways
@@ -135,6 +140,19 @@ public class Validation {
 	 *         compliant with the bootstrap state provided.
 	 */
 	public static GenericBootstrap byDefaultProvider() {
-		return null;
+		GenericBootstrap bootstrap = new GenericBootstrap() {
+			
+			@Override
+			public GenericBootstrap providerResolver(ValidationProviderResolver resolver) {
+				return this;
+			}
+			
+			@Override
+			public Configuration<?> configure() {
+				return null;
+			}
+			
+		};		
+		return bootstrap;
 	}
 }

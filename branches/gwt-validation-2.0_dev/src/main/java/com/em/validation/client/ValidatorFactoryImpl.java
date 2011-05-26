@@ -32,8 +32,7 @@ public enum ValidatorFactoryImpl implements ValidatorFactory {
 
 	@Override
 	public MessageInterpolator getMessageInterpolator() {
-		throw new ValidationException("The method \"getMessageInterpolator\" is not yet implemented.");
-		//return null;
+		return null;
 	}
 
 	@Override

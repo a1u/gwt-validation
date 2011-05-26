@@ -46,7 +46,7 @@ public enum ClassScanner {
 
 	INSTANCE;
 	
-	Reflections reflections = null;
+	private Reflections reflections = null;
 	
 	private ClassScanner() {
 		ConfigurationBuilder builder = new ConfigurationBuilder()

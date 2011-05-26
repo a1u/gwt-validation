@@ -25,6 +25,7 @@ import org.junit.runners.Suite;
 import com.em.validation.compiled.cases.ConstraintValidatorFactoryTest;
 import com.em.validation.compiled.cases.ConstraintsTest;
 import com.em.validation.compiled.cases.MetadataTest;
+import com.em.validation.compiled.cases.ValidatorTest;
 import com.em.validation.compiled.cases.defects.DefectSuite;
 import com.em.validation.compiled.cases.example.ExampleTestSuite;
 import com.em.validation.compiled.cases.validators.ValidatorTestSuite;
@@ -36,7 +37,8 @@ import com.em.validation.compiled.cases.validators.ValidatorTestSuite;
 	MetadataTest.class,
 	ExampleTestSuite.class,
 	ValidatorTestSuite.class,
-	ConstraintValidatorFactoryTest.class
+	ConstraintValidatorFactoryTest.class,
+	ValidatorTest.class
 })
 public class CompiledTestSuite {
 

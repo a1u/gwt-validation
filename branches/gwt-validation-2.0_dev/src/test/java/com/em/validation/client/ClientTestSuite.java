@@ -25,6 +25,7 @@ import junit.framework.TestSuite;
 import com.em.validation.client.cases.ConstraintValidatorFactoryTest;
 import com.em.validation.client.cases.ConstraintsTest;
 import com.em.validation.client.cases.MetadataTest;
+import com.em.validation.client.cases.ValidatorTest;
 import com.em.validation.client.cases.defects.DefectTestSuite;
 import com.em.validation.client.cases.example.ExampleTestSuite;
 import com.em.validation.client.cases.validators.ValidatorTestSuite;
@@ -41,6 +42,7 @@ public class ClientTestSuite extends GWTTestSuite {
 		suite.addTest(ExampleTestSuite.suite());
 		suite.addTest(ValidatorTestSuite.suite());
 		suite.addTestSuite(ConstraintValidatorFactoryTest.class);
+		suite.addTestSuite(ValidatorTest.class);
 		
 		return suite;
 	}
