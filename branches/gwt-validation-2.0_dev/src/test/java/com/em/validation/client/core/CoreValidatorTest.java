@@ -22,6 +22,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 import com.em.validation.client.ValidatorImpl;
 import com.em.validation.client.model.cyclic.Cycle;
@@ -32,7 +35,9 @@ public class CoreValidatorTest extends GwtValidationBaseTestCase{
 
 	
 	public static void testCyclicValidator(ITestCase testCase) {
-		ValidatorImpl vImpl = new ValidatorImpl();
+		ValidatorFactory factory = Validation.byDefaultProvider().configure().buildValidatorFactory();
+		
+		Validator validator = factory.getValidator();
 		
 		Cycle a = new Cycle();
 		Cycle b = new Cycle();
@@ -41,19 +46,21 @@ public class CoreValidatorTest extends GwtValidationBaseTestCase{
 		b.setOther(a);
 		
 		//validated cyclic object
-		Set<ConstraintViolation<Cycle>> violations = vImpl.validate(a);
+		Set<ConstraintViolation<Cycle>> violations = validator.validate(a);
 		
 		assertEquals(3, violations.size());
 	}
 	
 	public static void testRecurisveValidator(ITestCase testCase) {
-		ValidatorImpl vImpl = new ValidatorImpl();
+		ValidatorFactory factory = Validation.byDefaultProvider().configure().buildValidatorFactory();
+		
+		Validator validator = factory.getValidator();
 		
 		Cycle recursive = new Cycle();
 		recursive.setOther(recursive);
 		
 		//validated cyclic object
-		Set<ConstraintViolation<Cycle>> violations = vImpl.validate(recursive);
+		Set<ConstraintViolation<Cycle>> violations = validator.validate(recursive);
 		
 		assertEquals(2, violations.size());
 	}

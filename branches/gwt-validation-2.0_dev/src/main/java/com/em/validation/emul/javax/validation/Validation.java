@@ -43,6 +43,7 @@ import javax.validation.ValidationProviderResolver;
 import javax.validation.ValidatorFactory;
 import javax.validation.bootstrap.GenericBootstrap;
 
+import com.em.validation.client.ConfigurationImpl;
 import com.em.validation.client.ValidatorFactoryImpl;
 
 /**
@@ -149,7 +150,7 @@ public class Validation {
 			
 			@Override
 			public Configuration<?> configure() {
-				return null;
+				return new ConfigurationImpl();
 			}
 			
 		};		
