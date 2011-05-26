@@ -145,7 +145,7 @@ public class ValidatorImpl implements Validator{
 			
 			//if the property is cascaded, follow the rabbit hole so that it can pick up the earlier cascades
 			if(property.isCascaded()) {
-				
+				//perform validation on each map value
 				if(value instanceof Map) {
 					for(Object key : ((Map)value).keySet()) {
 						Object subValue = ((Map)value).get(key);
@@ -162,6 +162,7 @@ public class ValidatorImpl implements Validator{
 							violations.add(convertedViolation);
 						}
 					}
+				//perform validation on each iterable object
 				} else if (value instanceof Iterable) {
 					for(Object subValue : ((Iterable)value)) {
 						Set<ConstraintViolation<Object>> cascadeViolations = new LinkedHashSet<ConstraintViolation<Object>>();
@@ -176,6 +177,7 @@ public class ValidatorImpl implements Validator{
 							violations.add(convertedViolation);
 						}
 					}
+				//perform validation on the object itself
 				} else {
 					Set<ConstraintViolation<Object>> cascadeViolations = new LinkedHashSet<ConstraintViolation<Object>>();
 
