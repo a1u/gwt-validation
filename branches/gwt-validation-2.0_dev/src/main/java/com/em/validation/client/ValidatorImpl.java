@@ -100,7 +100,7 @@ public class ValidatorImpl implements Validator{
 		return this.validateProperty(validationCache, object, propertyName, groups);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private <T> Set<ConstraintViolation<T>> validateValue(Map<Class<?>,Map<String,Map<Object,Set<ConstraintViolation<?>>>>> validationCache, Class<T> beanType, String propertyName, Object value, Class<?>... groups) {
 		
 		//create empty constraint violation set
@@ -145,15 +145,51 @@ public class ValidatorImpl implements Validator{
 			
 			//if the property is cascaded, follow the rabbit hole so that it can pick up the earlier cascades
 			if(property.isCascaded()) {
-				Set<ConstraintViolation<Object>> cascadeViolations = new LinkedHashSet<ConstraintViolation<Object>>();
-				cascadeViolations.addAll(this.validate(validationCache, value, groups));
-				for(ConstraintViolation<?> violation : cascadeViolations) {
-					ConstraintViolation<T> convertedViolation = new ConstraintViolationImpl<T>();
-					
-					//todo: get details from violation object and populate converted violation
-					
-					violations.add(convertedViolation);
+				
+				if(value instanceof Map) {
+					for(Object key : ((Map)value).keySet()) {
+						Object subValue = ((Map)value).get(key);
+						
+						Set<ConstraintViolation<Object>> cascadeViolations = new LinkedHashSet<ConstraintViolation<Object>>();
+
+						cascadeViolations.addAll(this.validate(validationCache, subValue, groups));	
+						
+						for(ConstraintViolation<?> violation : cascadeViolations) {
+							ConstraintViolation<T> convertedViolation = new ConstraintViolationImpl<T>();
+							
+							//todo: get details from violation object and populate converted violation
+							
+							violations.add(convertedViolation);
+						}
+					}
+				} else if (value instanceof Iterable) {
+					for(Object subValue : ((Iterable)value)) {
+						Set<ConstraintViolation<Object>> cascadeViolations = new LinkedHashSet<ConstraintViolation<Object>>();
+
+						cascadeViolations.addAll(this.validate(validationCache, subValue, groups));	
+						
+						for(ConstraintViolation<?> violation : cascadeViolations) {
+							ConstraintViolation<T> convertedViolation = new ConstraintViolationImpl<T>();
+							
+							//todo: get details from violation object and populate converted violation
+							
+							violations.add(convertedViolation);
+						}
+					}
+				} else {
+					Set<ConstraintViolation<Object>> cascadeViolations = new LinkedHashSet<ConstraintViolation<Object>>();
+
+					cascadeViolations.addAll(this.validate(validationCache, value, groups));	
+
+					for(ConstraintViolation<?> violation : cascadeViolations) {
+						ConstraintViolation<T> convertedViolation = new ConstraintViolationImpl<T>();
+						
+						//todo: get details from violation object and populate converted violation
+						
+						violations.add(convertedViolation);
+					}
 				}
+				
 			}
 		} else {
 			violations.addAll((Collection<? extends ConstraintViolation<T>>) cachedViolations);
