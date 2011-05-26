@@ -1,32 +1,50 @@
-#summary One-sentence summary of this page.
+#summary gwt-validation-2.0 summary and explanation
 
 = Introduction =
 
-Add your content here.
+Even though the GWT SDK will include (some or all) JSR-303 compatibility with version 2.3 or 2.4 it still requires (from what knowledge is available) a non-client check of the file for constraint violations.  This is, at the very least, undesirable.
+
+
+= Why? =
+
+It is entirely possible to create a fully, or almost fully, complete JSR-303 validation solution, with GWT, that has the following features:
+
+ * No special markers - naturally, fluently, use the JSR-303 (javax.validation) annotations without marker interfaces or annotations.
+ * Metadata support - all of javax.valiation.metadata is supported.
+ * All levels of validation (field, class, cascading).
+ * Full group, message, and payload support.
+ * Composed constraint support.
+ * Full i8n support and message interpolation/parameterization support.
 
 = Progress (60%) =
+
 JSR-303 Supported Sections 
+<ul>
+<li>
   Chapter 2: Constraint Definition 
     2.1: Constraint Annotation (100%) 
     2.2: Applying multiple constraints of the same type (100%) 
     2.3: Constraint composition (100%) 
     2.4: Constraint Validation Implementation (5%) 
     2.5: ConstraintValidatorFactory (100%) 
+</li>
+<li>
   Chapter 3: Constraint declaration and validation process 
-    3.1:  Requirements on classes to be validated [implemented with 
-Introspector] (100%) 
+    3.1:  Requirements on classes to be validated [implemented with Introspector] (100%) 
     3.2:  Constraint declaration (100%) 
     3.3:  Inheritance (100%) 
-    3.4:  Group and group sequence (50% - 100% group and 0% group 
-sequence) 
-    3.5:  Validation Routine (75% - needs testing with complex object 
-graphs) 
+    3.4:  Group and group sequence (50% - 100% group and 0% group sequence) 
+    3.5:  Validation Routine (75% - needs testing with complex object graphs) 
     3.6:  Examples [implemented in JUnit] (0%) 
+</li>
+<li>
   Chapter 4: Validation APIs 
     4.1  Validator API (100%) 
     4.2  ConstraintViolation (25%) 
     4.3  Message Interpolation (0%) 
     4.4  Bootstrapping (10%) 
+</li>
+<li>
   Chapter 5: Constraint metadata request APIs 
     5.1: Validator (100%) 
     5.2: ElementDescriptor (90%) 
@@ -35,7 +53,8 @@ graphs)
     5.4: PropertyDescriptor (100%) 
     5.5: ConstraintDescriptor (100%) 
     5.6: Example [implemented as JUnit test] (100%) 
-
+</li>
+</ul>
 
 = Details =
 
