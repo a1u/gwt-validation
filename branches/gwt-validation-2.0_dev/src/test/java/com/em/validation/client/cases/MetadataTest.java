@@ -35,4 +35,9 @@ public class MetadataTest extends GwtValidationBaseTestCase {
 	public void testGroupFinderOnProperty() {
 		CoreMetadataTest.testGroupFinderOnProperty(this.getReflectorFactory());
 	}
+	
+	@Test
+	public void testDeclaredOnFinder() {
+		CoreMetadataTest.testDeclaredOnFinder(this.getReflectorFactory());
+	}
 }
