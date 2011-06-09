@@ -26,7 +26,6 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
-import com.em.validation.client.ValidatorImpl;
 import com.em.validation.client.model.cyclic.Cycle;
 import com.em.validation.client.model.tests.GwtValidationBaseTestCase;
 import com.em.validation.client.model.tests.ITestCase;

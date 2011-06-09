@@ -19,7 +19,7 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import java.lang.annotation.Annotation;
+import java.lang.annotation.ElementType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -27,6 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+
+import javax.validation.metadata.ConstraintDescriptor;
+import javax.validation.metadata.Scope;
 
 import com.em.validation.client.reflector.IReflector;
 import com.em.validation.client.reflector.ReflectorFactory;
@@ -69,16 +72,35 @@ public enum ReflectorGenerator {
 		
 		//list of cascaded properties
 		Set<String> cascadedProperties = new LinkedHashSet<String>();
+		Set<String> declaredOnMethod = new LinkedHashSet<String>();
+		Set<String> declaredOnField = new LinkedHashSet<String>(); 
 
 		//generate class descriptors for each metadata on each annotation
 		for(PropertyMetadata propertyMetadata : metadataMap.values()) {
-			//generate for each targetClass, property, annotation
-			for(Annotation annotation : propertyMetadata.getAnnotationInstances()) {
-				ClassDescriptor descriptor = ConstraintDescriptionGenerator.INSTANCE.generateConstraintDescriptor(annotation,propertyMetadata.getReturnType());
+
+			for(ConstraintDescriptor<?> constraint : runtimeReflector.getConstraintDescriptors(propertyMetadata.getName(), Scope.LOCAL_ELEMENT)) {
+				//generate the class descriptor (the actual ascii data that makes up the class) from the annotation and property metadata
+				ClassDescriptor descriptor = ConstraintDescriptionGenerator.INSTANCE.generateConstraintDescriptor(constraint.getAnnotation(),propertyMetadata.getReturnType());
+
+				//set up the dependencies in the property metadata and in the class descriptor
 				propertyMetadata.getConstraintDescriptorClasses().add(descriptor.getClassName());
 				reflectorDescriptor.getDependencies().add(descriptor);
+				
+				//get declared on
+				Set<ElementType> declaredOn = runtimeReflector.declaredOn(Scope.LOCAL_ELEMENT, propertyMetadata.getName(), constraint);
+				
+				//if the return list contains "field" then it has been declared on a field and we pass this info to the template
+				if(declaredOn.contains(ElementType.FIELD)) {
+					declaredOnField.add(descriptor.getClassName());
+				} 
+				
+				//if the return list contains "method" then it has been declared on a method and we pass this info to the template
+				if(declaredOn.contains(ElementType.METHOD)) {
+					declaredOnMethod.add(descriptor.getClassName());					
+				} 
 			}
 			
+			//save cascaded property
 			if(runtimeReflector.isCascaded(propertyMetadata.getName())) {
 				cascadedProperties.add(propertyMetadata.getName());
 			}
@@ -93,6 +115,8 @@ public enum ReflectorGenerator {
 		templateDataModel.put("targetPackage", targetPackage);
 		templateDataModel.put("generatedConstraintPackage",ConstraintDescriptionGenerator.INSTANCE.getTargetPackage());
 		templateDataModel.put("cascades",cascadedProperties);
+		templateDataModel.put("declaredOnMethod", declaredOnMethod);
+		templateDataModel.put("declaredOnField", declaredOnField);
 
 		//create class descriptor from generated code
 		reflectorDescriptor.setClassContents(TemplateController.INSTANCE.processTemplate("templates/reflector/ReflectorImpl.ftl", templateDataModel));

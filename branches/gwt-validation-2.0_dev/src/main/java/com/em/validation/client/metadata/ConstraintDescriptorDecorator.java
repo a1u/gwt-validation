@@ -76,5 +76,20 @@ public class ConstraintDescriptorDecorator<T extends Annotation> implements Cons
 	public boolean isReportAsSingleViolation() {
 		return this.descriptor.isReportAsSingleViolation();
 	}
+
+	@Override
+	public int hashCode() {
+		return this.descriptor.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null) return false;
+		if(obj instanceof ConstraintDescriptorDecorator) {
+			ConstraintDescriptorDecorator<?> input = (ConstraintDescriptorDecorator<?>)obj;
+			return this.descriptor.equals(input.descriptor);
+		} 
+		return this.descriptor.equals(obj);
+	}
 	
 }

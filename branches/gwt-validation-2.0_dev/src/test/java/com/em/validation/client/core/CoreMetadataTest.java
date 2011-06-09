@@ -111,21 +111,18 @@ public class CoreMetadataTest extends GwtValidationBaseTestCase {
 		BeanDescriptor descriptor = DescriptorFactory.INSTANCE.getBeanDescriptor(factory.getReflector(TestClass.class));
 		
 		//get finder
-		ConstraintFinder finder = descriptor.findConstraints().lookingAt(Scope.LOCAL_ELEMENT).declaredOn(ElementType.METHOD);
+		ConstraintFinder finder = descriptor.findConstraints().declaredOn(ElementType.METHOD);
 				
 		//assert that the finder object is not null
 		assertNotNull(finder);
 		
-		//there are only 3 items declared on a method in that class
-		assertEquals(5, finder.getConstraintDescriptors().size());
-		
-		//change to Scope.HIERARCHY
-		finder.lookingAt(Scope.HIERARCHY);
-		assertEquals(12, finder.getConstraintDescriptors().size());
+		//check local and hierarchy scope for the proper number of constraints
+		assertEquals(10, finder.lookingAt(Scope.HIERARCHY).getConstraintDescriptors().size());
+		assertEquals(5, finder.lookingAt(Scope.LOCAL_ELEMENT).getConstraintDescriptors().size());
 		
 		//change to FIELDs in the LOCAL_ELEMENT scope
 		finder.lookingAt(Scope.LOCAL_ELEMENT).declaredOn(ElementType.FIELD);
-		assertEquals(5, finder.getConstraintDescriptors().size());
+		assertEquals(6, finder.getConstraintDescriptors().size());
 	}
 	
 }

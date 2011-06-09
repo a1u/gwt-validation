@@ -41,6 +41,7 @@ public class TestClass extends ParentClass implements TestInterface {
 	@Min(4)
 	public int publicTestInt = 0;
 	
+	@Size(min=3,max=15)
 	private String testString = "testString";
 	
 	private int testInt = 0;

@@ -20,14 +20,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 import java.util.Set;
-import com.em.validation.client.reflector.Reflector;
+import com.em.validation.client.reflector.AbstractCompiledReflector;
 import java.lang.annotation.Annotation;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.ArrayList;
 import javax.validation.metadata.ConstraintDescriptor;
-import java.lang.annotation.ElementType;
-import javax.validation.metadata.Scope;
 
 //super reflector and reflector interfaces
 import com.em.validation.client.reflector.IReflector;
@@ -42,23 +42,31 @@ import ${generatedConstraintPackage}.*;
 import ${import};
 </#list>
 
-public class ${concreteClassName} extends Reflector<${reflectionTargetName}> {
+public class ${concreteClassName} extends AbstractCompiledReflector<${reflectionTargetName}> {
 	
-	private Set<String> cascadedProperties = new LinkedHashSet<String>();
-
 	public ${concreteClassName}() {
 		//set the available property names in the constructor
-		
 		<#list properties as property>
 		//${property.name}
 		this.properties.add("${property.name}");
 		this.propertyTypes.put("${property.name}",${property.classString});
+		this.declaredOnMethod.put("${property.name}",new LinkedHashSet<ConstraintDescriptor<?>>());
+		this.declaredOnField.put("${property.name}",new LinkedHashSet<ConstraintDescriptor<?>>());
 		<#if property.constraintDescriptorClasses?size &gt; 0>
 		Set<ConstraintDescriptor<?>> ${property.name}ConstraintDescriptorList = new LinkedHashSet<ConstraintDescriptor<?>>();
 		<#list property.constraintDescriptorClasses as constraintDescriptor>
-		${property.name}ConstraintDescriptorList.add(new ConstraintDescriptorDecorator(${constraintDescriptor}.INSTANCE));			
+		if(true) {
+			ConstraintDescriptor<?> decorated = new ConstraintDescriptorDecorator(${constraintDescriptor}.INSTANCE);
+			${property.name}ConstraintDescriptorList.add(decorated);	
+		<#if declaredOnField?seq_contains(constraintDescriptor)>
+			this.declaredOnField.get("${property.name}").add(decorated);					
+		<#elseif declaredOnMethod?seq_contains(constraintDescriptor)>
+			this.declaredOnMethod.get("${property.name}").add(decorated);
+		</#if>
+		}
 		</#list>
 		this.constraintDescriptors.put("${property.name}",${property.name}ConstraintDescriptorList);
+		
 		</#if>
 		</#list>
 		
@@ -84,56 +92,4 @@ public class ${concreteClassName} extends Reflector<${reflectionTargetName}> {
 		
 		return value;
 	}
-	
-	@Override
-	public boolean isCascaded(String propertyName) {
-		boolean result = false;
-		
-		//check the cascaded properties set first
-		result = this.cascadedProperties.contains(propertyName);
-		
-		//if still false after checking property and field, continue to check other values
-		if(result == false) {
-			if(this.superReflector != null) {
-				result = this.superReflector.isCascaded(propertyName);
-			}
-			if(result == false) {
-				for(IReflector<?> iface : this.reflectorInterfaces) {
-					result = iface.isCascaded(propertyName);
-					if(result) break;
-				}
-			}			
-		}
-		
-		return result;
-	}
-	
-		
-	/**
-	 * Get the return type of a given property name
-	 */
-	public Class<?> getPropertyType(String name) {
-		Class<?> result = this.propertyTypes.get(name);
-		
-		if(result == null) {
-			if(this.superReflector != null) {
-				result = this.superReflector.getPropertyType(name);
-			}
-			if(result == null) {
-				for(IReflector<?> iface : this.reflectorInterfaces) {
-					result = iface.getPropertyType(name);
-					if(result != null) break;
-				}
-			}	
-		}
-		
-		return result;
-	}
-	
-	@Override
-	public Set<ElementType> declaredOn(Scope scope, String property, ConstraintDescriptor<?> descriptor) {
-		Set<ElementType> results = new LinkedHashSet<ElementType>();
-		
-		return results;
-	}	
 }

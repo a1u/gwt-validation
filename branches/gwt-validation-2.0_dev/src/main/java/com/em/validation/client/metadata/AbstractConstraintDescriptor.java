@@ -24,9 +24,11 @@ import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.validation.ConstraintValidator;
 import javax.validation.Payload;
 import javax.validation.groups.Default;
 import javax.validation.metadata.ConstraintDescriptor;
@@ -120,4 +122,41 @@ public abstract class AbstractConstraintDescriptor<T extends Annotation> impleme
 		return result;
 	}
 
+	@Override
+	public List<Class<? extends ConstraintValidator<T, ?>>> getConstraintValidatorClasses() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AbstractConstraintDescriptor<?> other = (AbstractConstraintDescriptor<?>) obj;
+		if (annotation == null) {
+			if (other.annotation != null)
+				return false;
+		} else if (!annotation.equals(other.annotation))
+			return false;
+		if (composedOf == null) {
+			if (other.composedOf != null)
+				return false;
+		} else if (!composedOf.equals(other.composedOf))
+			return false;
+		if (propertyMap == null) {
+			if (other.propertyMap != null)
+				return false;
+		} else if (!propertyMap.equals(other.propertyMap))
+			return false;
+		if (reportAsSingleViolation != other.reportAsSingleViolation)
+			return false;
+		return true;
+	}
+
+	
+	
 }
