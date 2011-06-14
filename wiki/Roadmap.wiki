@@ -15,10 +15,8 @@ Release 1.0
  * @GroupSequence annotation.
  * InvalidConstraint is as JSR-303 compliant as it is likely to get
 
-Release 1.1
+Release 2.0
  * The validateValue method fully implemented.
  * Generation of server side code through javassist or some other mechanism to reduce reliance on introspection and reflection and to increase similarity to client side process.
  * Code templates for client side generation to make modification easier and increase 
-
-Release 1.2
- * Message interpolation and i8n support for messages
+ * Built-in message interpolation and i8n support for messages
