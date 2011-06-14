@@ -43,16 +43,15 @@ As a product of the Validation process an Invalid Constraint (see [InvalidConstr
 First the user defines a class with some constraint annotations.  These can be from the built in constraints or from ones defined by the user.  
 
 {{{
-public class Person implements IValidatable {
+public class Person {
   
-  @NotEmpty
+  @Size(min=1)
   @NotNull
   @Length(minimum=3)
   private String lastName;
 
   @NotNull
-  @NotEmpty
-  @Length(minimum=3)
+  @Size(min=3)
   private String firstName;
 
   public String getLastName() { return this.lastName; }
@@ -60,27 +59,31 @@ public class Person implements IValidatable {
   public void setLastName(String lastName) { this.lastName = lastName; }
   public void setFirstName(String firstName) { this.firstName = firstName; }
 
-  @Pattern(pattern="(.*), (.*)")
+  @Pattern(regexp="(.*), (.*)")
   public String getFullName() {
      return this.lastName + ", " + this.firstName;
   }
 }
 }}}
 
-The the user would then go about writing their application.  At one point they would need to have a call to create the validator on the the client side.
+At this point the user can begin to use the validation framework.  First they will need a ValidatorFactory which can be easily built with the default method.
 {{{
-IValidator<Person> validator = GWT.create(Person.class);
+ValidatorFactory factory = Validation.byDefaultProvider().configure().buildValidatorFactory();
 }}}
-This does a few things which we'll come to later but for the time being it gives a Validator instance that can be used to validate objects of the type Person.  In JVM mode code the same statement would look be slightly different.
+
+Once the factory has been created, individual validators can be built.  In this case, for the person factory.  Because of the "magic" of deferred binding in version 2.0, the same code is used on the client and server side.
+
 {{{
-IValidator<Person> validator = new ServerValidator<Person>();
+Person p = new Person();
+Validator validator = factory.getValidator();
+Set<ConstraintViolation<Person>> violations = validator.validate(p);
 }}}
-When the code is compiled GWT's generator process takes over and uses a process contained in GWTVF to create a class called (in this case) "PersonValidator" which is simply a custom created validator that implements the validation process specific to the annotations found on the Person class.  The same process occurs on the server side by using introspection and reflection.
+
+At the end of this example the {{{violations}}} set would contain a list of all of the violations that occurred during the validation on Person.
 
 The process of validation occurs as specified in the JSR-303 standard and basically occurs in the following order:
- * Fields
- * Methods
- * Class Level
+ * Property constraings
+ * Class level constraints
  * Object Graph (which consists of the following)
   *  Lists
   *  Collections
@@ -96,6 +99,6 @@ p.setFirstName("Bob");
 p.setLastName("Ti");
 }}}
 
-Validating the p instance of Person would cause one invalid constraint for @Length on the property lastName.  This is because a minimum length of 3 is specified by the @Length constraint on the lastName property.
+Validating the p instance of Person would cause one invalid constraint for @Length on the property lastName.  This is because a minimum length of 3 is specified by the @Size constraint on the lastName property.
 
 Once the project linking against the GWTVF is compiled and the validators for each used validation are created the validation can be performed on the client or server side based on the validations.
