@@ -1,4 +1,4 @@
-package com.em.validation.client.validators.min2;
+package com.em.validation.client.validators.min;
 
 /*
 (c) 2011 Eminent Minds, LLC
@@ -21,14 +21,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import javax.validation.ConstraintValidatorContext;
 
-public class MinFloatValidator extends MinValdiator<Float> {
+public class MinLongValidator extends MinValdiator<Long> {
 
 	@Override
-	public boolean isValid(Float value, ConstraintValidatorContext context) {
+	public boolean isValid(Long value, ConstraintValidatorContext context) {
 		
 		if(value == null) return true;
-		
-		float unwrappedValue = value.floatValue(); 
+
+		long unwrappedValue = value.longValue(); 
 		
 		return unwrappedValue >= this.minValue;
 	}

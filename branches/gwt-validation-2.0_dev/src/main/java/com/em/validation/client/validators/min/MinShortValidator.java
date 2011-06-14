@@ -1,4 +1,4 @@
-package com.em.validation.client.validators.min2;
+package com.em.validation.client.validators.min;
 
 /*
 (c) 2011 Eminent Minds, LLC
@@ -19,20 +19,18 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import java.math.BigDecimal;
-
 import javax.validation.ConstraintValidatorContext;
 
-public class MinBigDecimalValidator extends MinValdiator<BigDecimal> {
+public class MinShortValidator extends MinValdiator<Short> {
 
 	@Override
-	public boolean isValid(BigDecimal value, ConstraintValidatorContext context) {
+	public boolean isValid(Short value, ConstraintValidatorContext context) {
 		
 		if(value == null) return true;
 		
-		BigDecimal minValue = new BigDecimal(this.minValue);
+		short unwrappedValue = value.shortValue(); 
 		
-		return minValue.compareTo(value) <= 0;
+		return unwrappedValue >= this.minValue;
 	}
 
 }

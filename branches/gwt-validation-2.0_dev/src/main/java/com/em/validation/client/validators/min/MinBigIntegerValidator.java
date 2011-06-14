@@ -1,4 +1,4 @@
-package com.em.validation.client.validators.min2;
+package com.em.validation.client.validators.min;
 
 /*
 (c) 2011 Eminent Minds, LLC
@@ -19,18 +19,22 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+import java.math.BigInteger;
+
 import javax.validation.ConstraintValidatorContext;
 
-public class MinLongValidator extends MinValdiator<Long> {
+public class MinBigIntegerValidator extends MinValdiator<BigInteger> {
 
 	@Override
-	public boolean isValid(Long value, ConstraintValidatorContext context) {
+	public boolean isValid(BigInteger value, ConstraintValidatorContext context) {
 		
 		if(value == null) return true;
-
-		long unwrappedValue = value.longValue(); 
 		
-		return unwrappedValue >= this.minValue;
+		Long minValueLong = new Long(this.minValue);
+		
+		BigInteger minValue = new BigInteger(minValueLong.toString());
+		
+		return minValue.compareTo(value) <= 0;
 	}
 
 }

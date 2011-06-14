@@ -1,4 +1,4 @@
-package com.em.validation.client.validators.min2;
+package com.em.validation.client.validators.min;
 
 /*
 (c) 2011 Eminent Minds, LLC
@@ -21,14 +21,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import javax.validation.ConstraintValidatorContext;
 
-public class MinIntegerValidator extends MinValdiator<Integer> {
+public class MinByteValidator extends MinValdiator<Byte> {
 
 	@Override
-	public boolean isValid(Integer value, ConstraintValidatorContext context) {
+	public boolean isValid(Byte value, ConstraintValidatorContext context) {
 		
 		if(value == null) return true;
 		
-		int unwrappedValue = value.intValue(); 
+		byte unwrappedValue = value.byteValue(); 
 		
 		return unwrappedValue >= this.minValue;
 	}

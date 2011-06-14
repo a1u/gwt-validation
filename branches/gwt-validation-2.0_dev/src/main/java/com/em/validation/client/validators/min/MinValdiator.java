@@ -1,4 +1,4 @@
-package com.em.validation.client.validators.min2;
+package com.em.validation.client.validators.min;
 
 /*
 (c) 2011 Eminent Minds, LLC
@@ -19,18 +19,16 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import javax.validation.ConstraintValidatorContext;
+import javax.validation.ConstraintValidator;
+import javax.validation.constraints.Min;
 
-public class MinByteValidator extends MinValdiator<Byte> {
+public abstract class MinValdiator<T> implements ConstraintValidator<Min, T> {
+
+	protected long minValue = 0;
 
 	@Override
-	public boolean isValid(Byte value, ConstraintValidatorContext context) {
-		
-		if(value == null) return true;
-		
-		byte unwrappedValue = value.byteValue(); 
-		
-		return unwrappedValue >= this.minValue;
+	public void initialize(Min constraintAnnotation) {
+		this.minValue = constraintAnnotation.value();
 	}
-
+	
 }
