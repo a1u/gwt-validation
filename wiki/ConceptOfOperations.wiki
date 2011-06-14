@@ -47,7 +47,6 @@ public class Person {
   
   @Size(min=1)
   @NotNull
-  @Length(minimum=3)
   private String lastName;
 
   @NotNull
