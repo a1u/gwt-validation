@@ -1,38 +1,14 @@
-<!--
-GWT-Validation Framework - Annotation based validation for the GWT Framework
-
-Copyright (C) 2008  Christopher Ruffalo
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
--->
-
 <project name="GWT Validation Framework" basedir=".">
 
 	<description>
         Builds, Tests, and Packages the GWT Validation Framework
     </description>
 	
-	<!-- build locations -->
 	<property name="src" location="src"/>
 	<property name="test" location="test"/>
 	<property name="build" location="build"/> 
 	<property name="dist"  location="dist"/>
 	<property name="libraries"  location="lib"/> 
-	
-	<!-- environment variables -->
-	<property environment="env"/>
 	
 	<!-- build! -->
 	<target name="build" depends="clean" description="compile the source " >
@@ -50,9 +26,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 		
 			<classpath>
 				<fileset dir="${libraries}">
-					<include name="**/*.jar"/>
-				</fileset>
-				<fileset dir="${env.GWT_HOME}">
 					<include name="**/*.jar"/>
 				</fileset>
 			</classpath>
@@ -79,24 +52,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 				<fileset dir="${libraries}">
 					<include name="**/*.jar"/>
 				</fileset>
-				<fileset dir="${env.GWT_HOME}">
-					<include name="**/*.jar"/>
-				</fileset>
 			</classpath>
 		
 		</javac>
 		
 		<!-- hosted mode tests -->
-		<junit printsummary="on" haltonfailure="no" fork="yes" maxmemory="1024m">
+		<junit printsummary="on" haltonfailure="no" fork="yes" maxmemory="512m">
 
 			<classpath>
 				<pathelement path="${src}" />
 				<pathelement path="${test}" />
 				<pathelement path="${build}\test" />
 				<fileset dir="${libraries}">
-					<include name="**/*.jar"/>
-				</fileset>
-				<fileset dir="${env.GWT_HOME}">
 					<include name="**/*.jar"/>
 				</fileset>
 			</classpath>
@@ -106,7 +73,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 		</junit>
 			
 		<!-- web mode tests -->
-		<junit printsummary="on" haltonfailure="no" fork="yes" maxmemory="1024m">
+		<junit printsummary="on" haltonfailure="no" fork="yes" maxmemory="512m">
 			<jvmarg value="-Dgwt.args=&quot;-web&quot;"/>
 			
 			<classpath>
@@ -114,9 +81,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 				<pathelement path="${test}" />
 				<pathelement path="${build}\test" />
 				<fileset dir="${libraries}">
-					<include name="**/*.jar"/>
-				</fileset>
-				<fileset dir="${env.GWT_HOME}">
 					<include name="**/*.jar"/>
 				</fileset>
 			</classpath>
@@ -132,9 +96,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 				<pathelement path="${test}" />
 				<pathelement path="${build}\test" />
 				<fileset dir="${libraries}">
-					<include name="**/*.jar"/>
-				</fileset>
-				<fileset dir="${env.GWT_HOME}">
 					<include name="**/*.jar"/>
 				</fileset>
 			</classpath>
@@ -179,9 +140,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 			
 			<classpath>
 				<fileset dir="${libraries}">
-					<include name="**/*.jar"/>
-				</fileset>
-				<fileset dir="${env.GWT_HOME}">
 					<include name="**/*.jar"/>
 				</fileset>
 			</classpath>

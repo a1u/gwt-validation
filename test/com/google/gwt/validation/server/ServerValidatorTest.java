@@ -1,34 +1,10 @@
 package com.google.gwt.validation.server;
 
-/*
-GWT-Validation Framework - Annotation based validation for the GWT Framework
-
-Copyright (C) 2008  Christopher Ruffalo
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-*/
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
 import java.util.Date;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
 import org.junit.Test;
 
@@ -50,10 +26,10 @@ public class ServerValidatorTest {
 	@Test
 	public void testServerValidator() {
 		//validate
-		final IValidator<TestModel> testModelValidator = new ServerValidator<TestModel>();
+		IValidator<TestModel> testModelValidator = new ServerValidator<TestModel>();
 		
 		//crate model
-		final TestModel tm = new TestModel();
+		TestModel tm = new TestModel();
 		
 		//validate 
 		Set<InvalidConstraint<TestModel>> icSet = testModelValidator.validate(tm);
@@ -109,10 +85,10 @@ public class ServerValidatorTest {
 	@Test
 	public void testClassLevel() {
 		//annotated class instance
-		final AnnotatedSuperClass ac = new AnnotatedSuperClass();
+		AnnotatedSuperClass ac = new AnnotatedSuperClass();
 		
 		//get class level validator
-		final IValidator<AnnotatedSuperClass> validator = new ServerValidator<AnnotatedSuperClass>();
+		IValidator<AnnotatedSuperClass> validator = new ServerValidator<AnnotatedSuperClass>();
 		
 		//get invalid constraint
 		Set<InvalidConstraint<AnnotatedSuperClass>> icSet = validator.validate(ac);
@@ -133,10 +109,10 @@ public class ServerValidatorTest {
 	@Test
 	public void testClassLevelWithFullInheritence() {
 		//annotated class instance
-		final AnnotatedClass ac = new AnnotatedClass();
+		AnnotatedClass ac = new AnnotatedClass();
 		
 		//get class level validator
-		final IValidator<AnnotatedClass> validator = new ServerValidator<AnnotatedClass>();
+		IValidator<AnnotatedClass> validator = new ServerValidator<AnnotatedClass>();
 		
 		//get invalid constraint
 		Set<InvalidConstraint<AnnotatedClass>> icSet = validator.validate(ac);
@@ -157,10 +133,10 @@ public class ServerValidatorTest {
 	@Test
 	public void testValidAnnotationOnClass() {
 		//object graph thingy
-		final ObjectGraphTest ogt = new ObjectGraphTest();
+		ObjectGraphTest ogt = new ObjectGraphTest();
 		
 		//get class level validator
-		final IValidator<ObjectGraphTest> validator = new ServerValidator<ObjectGraphTest>();
+		IValidator<ObjectGraphTest> validator = new ServerValidator<ObjectGraphTest>();
 		
 		//get invalid constraints
 		Set<InvalidConstraint<ObjectGraphTest>> icSet = validator.validate(ogt);
@@ -195,20 +171,19 @@ public class ServerValidatorTest {
 		assertEquals("Should be 6 from the TestModel", 6, icSet.size());
 	}
 	
-	
 	@Test
 	public void testRecursive() {
 		
 		//recursive thingy
-		final RecursiveValidationTest rvt = new RecursiveValidationTest();
+		RecursiveValidationTest rvt = new RecursiveValidationTest();
 		rvt.setRvt(new RecursiveValidationTest());
 		rvt.getRvt().setRvt(new RecursiveValidationTest());
 		
 		//get class level validator
-		final IValidator<RecursiveValidationTest> validator = new ServerValidator<RecursiveValidationTest>();
+		IValidator<RecursiveValidationTest> validator = new ServerValidator<RecursiveValidationTest>();
 		
 		//get invalid constraints
-		final Set<InvalidConstraint<RecursiveValidationTest>> icSet = validator.validate(rvt);
+		Set<InvalidConstraint<RecursiveValidationTest>> icSet = validator.validate(rvt);
 		
 		//should be three things, one from each level
 		assertEquals("Should be three not null constraints.", 3, icSet.size());		
@@ -218,13 +193,13 @@ public class ServerValidatorTest {
 	public void testCyclic() {
 		
 		//cyclic test class
-		final CyclicTestParent ctp = new CyclicTestParent();
+		CyclicTestParent ctp = new CyclicTestParent();
 		
 		//get class level validator
-		final IValidator<CyclicTestParent> validator = new ServerValidator<CyclicTestParent>();
+		IValidator<CyclicTestParent> validator = new ServerValidator<CyclicTestParent>();
 		
 		//get invalid constraints
-		final Set<InvalidConstraint<CyclicTestParent>> icSet = validator.validate(ctp);
+		Set<InvalidConstraint<CyclicTestParent>> icSet = validator.validate(ctp);
 		
 		//should be two things
 		assertEquals("Should be two not null constraints.", 2, icSet.size());
@@ -234,10 +209,10 @@ public class ServerValidatorTest {
 	public void testGroupSequence() {
 		
 		//group test class
-		final GroupSequenceClassTest gsct = new GroupSequenceClassTest();
+		GroupSequenceClassTest gsct = new GroupSequenceClassTest();
 		
 		//get class level validator
-		final IValidator<GroupSequenceClassTest> validator = new ServerValidator<GroupSequenceClassTest>();
+		IValidator<GroupSequenceClassTest> validator = new ServerValidator<GroupSequenceClassTest>();
 		
 		//get invalid constraints
 		Set<InvalidConstraint<GroupSequenceClassTest>> icSet = validator.validate(gsct);
@@ -268,14 +243,14 @@ public class ServerValidatorTest {
 	public void testJSR303_GroupSequenceExamples() {
 
 		//create new author
-		final Author author = new Author();
+		Author author = new Author();
 		author.setLastName("Baudelaire");
 		author.setFirstName("");
-		final Book book = new Book();
+		Book book = new Book();
 		book.setAuthor(author);
 		
 		//create validator for book
-		final IValidator<Book> validator = new ServerValidator<Book>();
+		IValidator<Book> validator = new ServerValidator<Book>();
 		
 		//should return
 		//	NotEmpty failure on the title field
@@ -301,7 +276,7 @@ public class ServerValidatorTest {
 		boolean notempty = false;
 		
 		//check
-		for(final InvalidConstraint<Book> ic : icSet) {
+		for(InvalidConstraint<Book> ic : icSet) {
 			if(ic.getMessage().equals("{constraint.length}")) length = true;
 			if(ic.getMessage().equals("{constraint.notempty}")) notempty = true;
 			
@@ -317,102 +292,17 @@ public class ServerValidatorTest {
 	public void testJSR303_Address1Example() {
 		
 		//create address (#1 has no @Valid annotation and conforms to what is expected in JSR-303's example)
-		final Address1 address = new Address1();
+		Address1 address = new Address1();
 		address.setAddressline1( null );
 		address.setAddressline2( null );
 		address.setCity("Llanfairpwllgwyngyllgogerychwyrndrobwyll-llantysiliogogogoch");
 		//town in North Wales <- preserving the joke for posterity
 		
 		//create validator for address
-		final IValidator<Address1> validator = new ServerValidator<Address1>();
+		IValidator<Address1> validator = new ServerValidator<Address1>();
 		
 		//validate
 		assertEquals("One for addressline1 violating NotNull, one for addressline2 violating NotNull and one for city violating Length.", 3, validator.validate(address).size());
 		assertEquals("city violates Length and only city is validated", 1, validator.validateProperty(address, "city").size());
 	}
-	
-	public void testInvalidConstraintPath(){
-	       
-           //object graph thingy
-        final ObjectGraphTest ogt = new ObjectGraphTest();
-        
-        //get class level validator
-        final IValidator<ObjectGraphTest> validator = new ServerValidator<ObjectGraphTest>();
-        
-        //get invalid constraints
-        final Set<InvalidConstraint<ObjectGraphTest>> icSet = validator.validate(ogt);
-        
-        //should fail 4(one child) + 6(other child)
-        assertEquals("Should be 54 invalid constraints", 54, icSet.size());
-        
-        //build map of invalid constraints paths and its count
-        final Map<String,Integer> icPaths = new TreeMap<String,Integer>();
-        for (final InvalidConstraint<ObjectGraphTest> invalidConstraint : icSet) {
-            Integer count = icPaths.get(invalidConstraint.getPropertyPath());
-            
-            //if new path set count to 0
-            if(count == null) { 
-                count = 0;
-            }
-            
-            //increase path count
-            count += 1;
-            
-            //put current count into map
-            icPaths.put(invalidConstraint.getPropertyPath(),count);
-        }
-        
-        //prepare testable strings - '<path> (<count>)'
-        final Set<String> testablePaths = new TreeSet<String>();
-        for (final String path : icPaths.keySet()) {
-            testablePaths.add(path + " (" + icPaths.get(path) + ")");
-        }
-        
-        //define test patterns - '<path> (<count>)'
-        final String [] testPatterns = {
-                "ac (4)",
-                "acList[0] (4)",
-                "acList[1] (4)",
-                "acList[2] (4)",
-                "acSet[0] (4)",
-                "acSet[1] (4)",
-                "tm.date (1)",
-                "tm.failFutureDate (1)",
-                "tm.notInFuture (1)",
-                "tm.shouldBeFalse (1)",
-                "tm.shouldBeTrue (1)",
-                "tm.shouldNotBeEmpty (1)",
-                "tmArray[0].date (1)",
-                "tmArray[0].failFutureDate (1)",
-                "tmArray[0].notInFuture (1)",
-                "tmArray[0].shouldBeFalse (1)",
-                "tmArray[0].shouldBeTrue (1)",
-                "tmArray[0].shouldNotBeEmpty (1)",
-                "tmArray[1].date (1)",
-                "tmArray[1].failFutureDate (1)",
-                "tmArray[1].notInFuture (1)",
-                "tmArray[1].shouldBeFalse (1)",
-                "tmArray[1].shouldBeTrue (1)",
-                "tmArray[1].shouldNotBeEmpty (1)",
-                "tmMap[\"string1\"].date (1)",
-                "tmMap[\"string1\"].failFutureDate (1)",
-                "tmMap[\"string1\"].notInFuture (1)",
-                "tmMap[\"string1\"].shouldBeFalse (1)",
-                "tmMap[\"string1\"].shouldBeTrue (1)",
-                "tmMap[\"string1\"].shouldNotBeEmpty (1)",
-                "tmMap[\"string2\"].date (1)",
-                "tmMap[\"string2\"].failFutureDate (1)",
-                "tmMap[\"string2\"].notInFuture (1)",
-                "tmMap[\"string2\"].shouldBeFalse (1)",
-                "tmMap[\"string2\"].shouldBeTrue (1)",
-                "tmMap[\"string2\"].shouldNotBeEmpty (1)"
-        };
-        
-        //sort patterns strings
-        final Set<String> patternsPaths = new TreeSet<String>(Arrays.asList(testPatterns));
-        
-        //all paths should be the same
-        assertTrue("All paths should be equals.", patternsPaths.equals(testablePaths));
-                
-    }
 }

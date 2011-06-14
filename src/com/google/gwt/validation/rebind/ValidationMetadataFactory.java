@@ -1,27 +1,6 @@
 package com.google.gwt.validation.rebind;
 
-/*
-GWT-Validation Framework - Annotation based validation for the GWT Framework
-
-Copyright (C) 2008  Christopher Ruffalo
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-*/
-
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -30,11 +9,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import javax.validation.Valid;
-
 import com.google.gwt.validation.client.ConstraintValidator;
 import com.google.gwt.validation.client.GroupSequence;
 import com.google.gwt.validation.client.GroupSequences;
+import com.google.gwt.validation.client.Valid;
 import com.google.gwt.validation.client.interfaces.IConstraint;
 
 public class ValidationMetadataFactory {
@@ -535,7 +513,7 @@ public class ValidationMetadataFactory {
 			if(fieldGetter != null) {
 				
 			    //find a @Valid annotation on the given annotation type (for the annotation on the field)!
-				Annotation checkForValid = checkForValidAnnotation(field);
+				Annotation checkForValid = field.getAnnotation(Valid.class);
 			
 				//if the annotation is not null, add the annotation on field to the annotation mapping for the given method name
 				if(checkForValid != null) {
@@ -561,7 +539,7 @@ public class ValidationMetadataFactory {
 			if(!methodOrder.contains(method) && method.getParameterTypes().length == 0 && !Modifier.isPrivate(methodModifiers) && !Modifier.isProtected(methodModifiers)) {
 				
 			    //find a @Valid annotation on the given annotation type (for the annotation on the field)!
-				Annotation checkForValid = checkForValidAnnotation(method);
+				Annotation checkForValid = method.getAnnotation(Valid.class);
 			
 				//if the annotation is not null, add the annotation on field to the annotation mapping for the given method name
 				if(checkForValid != null) {
@@ -589,9 +567,9 @@ public class ValidationMetadataFactory {
 				String[] groups = new String[]{};
 				
 				//get valid annotation
-				Annotation annotation = checkForValidAnnotation(method);
+				Annotation annotation = method.getAnnotation(Valid.class);
 				if(annotation == null) {
-					annotation = checkForValidAnnotation(field);
+					annotation = field.getAnnotation(Valid.class);
 				}
 				
 				if(annotation != null) {
@@ -628,21 +606,6 @@ public class ValidationMetadataFactory {
 		//return this list of annoated packages
 		return validAnnotationPackageList;
 	}
-
-	/**
-	 * Checks accessible object if it contains Valid annotation.
-	 * 
-	 * @param accessible
-	 * @return If null, there is no such annotation.
-	 */
-	private static Annotation checkForValidAnnotation(AccessibleObject accessible) {
-		Annotation valid = accessible.getAnnotation(Valid.class);
-		if(valid != null) {
-			return valid;
-		}
-		valid = accessible.getAnnotation(com.google.gwt.validation.client.Valid.class);
-		return valid;
-	}
 	
 	
 	/**
@@ -652,7 +615,7 @@ public class ValidationMetadataFactory {
 	 * @param inputField
 	 * @return
 	 */
-	static Method convertFieldToGetter(Class<?> inputClass, Field inputField) {
+	private static Method convertFieldToGetter(Class<?> inputClass, Field inputField) {
 		
 		//get field name
 		String name = inputField.getName();
@@ -710,7 +673,7 @@ public class ValidationMetadataFactory {
 	 * @param inputMethod
 	 * @return
 	 */
-	final static Field extrapolateFieldForGetter(Class<?> inputClass, Method inputMethod) {
+	private static Field extrapolateFieldForGetter(Class<?> inputClass, Method inputMethod) {
 		
 		//get field name
 		String name = "";
@@ -750,7 +713,7 @@ public class ValidationMetadataFactory {
 	 * @param inputClass
 	 * @return
 	 */
-	static HashSet<Field> getAllFields(Class<?> inputClass) {
+	private static HashSet<Field> getAllFields(Class<?> inputClass) {
 	
 		//condition to quit recursive search
 		if(inputClass == null || inputClass.equals(Object.class)) return new HashSet<Field>();
@@ -788,7 +751,7 @@ public class ValidationMetadataFactory {
 	 * @param inputClass
 	 * @return
 	 */
-	final static HashSet<Method> getAllMethods(Class<?> inputClass) {
+	private static HashSet<Method> getAllMethods(Class<?> inputClass) {
 		
 		//condition to quit recursive search
 		if(inputClass == null || inputClass.equals(Object.class)) return new HashSet<Method>();

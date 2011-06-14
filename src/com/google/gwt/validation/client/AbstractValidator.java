@@ -1,34 +1,12 @@
 package com.google.gwt.validation.client;
 
-/*
-GWT-Validation Framework - Annotation based validation for the GWT Framework
-
-Copyright (C) 2008  Christopher Ruffalo
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-*/
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.validation.client.interfaces.IValidator;
-import com.google.gwt.validation.client.interfaces.IInternalValidator;
 
 /**
  * Wrapper for IValidator that contains utility methods for validation
@@ -37,7 +15,7 @@ import com.google.gwt.validation.client.interfaces.IInternalValidator;
  *
  * @param <IValidatable> the validatable class to validate
  */
-public abstract class AbstractValidator<T> implements IValidator<T>, IInternalValidator<T> {
+public abstract class AbstractValidator<T> implements IValidator<T> {
 	
 	/**
 	 * Gets the group sequence mapping from the implementing class
@@ -46,6 +24,18 @@ public abstract class AbstractValidator<T> implements IValidator<T>, IInternalVa
 	 * @return
 	 */
 	protected abstract HashMap<String, ArrayList<String>> getGroupSequenceMapping(Class<?> inputClass);
+	
+	/**
+	 * Actual validation engine class that performs validation internally
+	 * 
+	 * @param object
+	 * @param propertyName
+	 * @param groups
+	 * @param processedGroups
+	 * @param processedObjects
+	 * @return
+	 */
+	public abstract Set<InvalidConstraint<T>> performValidation(T object, String propertyName, ArrayList<String> groups, HashSet<String> processedGroups, HashSet<String> processedObjects);
 	
 	public Set<InvalidConstraint<T>> validate(T object, String... groups) {
 		//call validate property with null property
@@ -75,7 +65,7 @@ public abstract class AbstractValidator<T> implements IValidator<T>, IInternalVa
 	protected Set<InvalidConstraint<T>> validateProperty(T object, String propertyName, ArrayList<String> groups) {
 		
 		//do inner call to processing method
-		return this.prepareValidation(object, propertyName, null, groups);
+		return this.performValidation(object, propertyName, null, groups);
 	}
 
 	/**
@@ -86,7 +76,7 @@ public abstract class AbstractValidator<T> implements IValidator<T>, IInternalVa
 	 * @param groups
 	 * @return
 	 */
-	protected Set<InvalidConstraint<T>> prepareValidation(T object, String propertyName, Object inputValue, ArrayList<String> groups) {
+	protected Set<InvalidConstraint<T>> performValidation(T object, String propertyName, Object inputValue, ArrayList<String> groups) {
 		//hash set for results
 		HashSet<InvalidConstraint<T>> icSet = new HashSet<InvalidConstraint<T>>();
 		
@@ -105,7 +95,7 @@ public abstract class AbstractValidator<T> implements IValidator<T>, IInternalVa
 		HashSet<String> processedGroups = new HashSet<String>();
 		
 		//if group sequences exist
-		if(groupSequences != null && groupSequences.size() > 0 && groups.size() > 0) {
+		if(groupSequences.size() > 0 && groups.size() > 0) {
 			
 			//go through the groups by each group name so that
 			//we can get the proper ordering for the groups in that 
@@ -272,7 +262,4 @@ public abstract class AbstractValidator<T> implements IValidator<T>, IInternalVa
 		return icSet;
 	}
 	
-	protected void logError(Throwable ex) {
-		GWT.log("Error while checking constraint", ex);
-	}
 }
