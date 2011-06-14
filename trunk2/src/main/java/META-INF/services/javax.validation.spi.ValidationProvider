@@ -1,2 +1,0 @@
-#the validation provider resolver for the bootstrap mechanism
-com.em.validation.client.spi.ValidationProviderImpl
