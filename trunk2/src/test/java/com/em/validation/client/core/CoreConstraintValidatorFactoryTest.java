@@ -1,0 +1,67 @@
+package com.em.validation.client.core;
+
+/*
+(c) 2011 Eminent Minds, LLC
+	- Chris Ruffalo
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+import javax.validation.ConstraintValidatorFactory;
+import javax.validation.ValidationException;
+
+import com.em.validation.client.model.example.jsr303.section5_6.constraint.NotEmpty;
+import com.em.validation.client.model.tests.GwtValidationBaseTestCase;
+import com.em.validation.client.model.tests.ITestCase;
+import com.em.validation.client.validators.NotNullObjectValidator;
+
+public class CoreConstraintValidatorFactoryTest extends GwtValidationBaseTestCase {
+
+	public static void testConstraintValidatorFactory(ITestCase testCase) {
+
+		//get the factory from the test constraints
+		ConstraintValidatorFactory factory = testCase.getConstraintValidationFactory();
+		
+		//the factory cannot be null
+		assertNotNull(factory);
+		
+		//the factory returns an instance (for member and declared classes)
+		assertNotNull(factory.getInstance(NotNullObjectValidator.class));
+		assertNotNull(factory.getInstance(NotEmpty.NotEmptyValidator.class));
+	
+		try {
+			//get an instance of a factory than COULD NOT be created at runtime or generation time (anonymous)
+			factory.getInstance((new ConstraintValidator<NotEmpty,Object>() {
+				@Override
+				public void initialize(NotEmpty constraintAnnotation) {
+				
+				}
+
+				@Override
+				public boolean isValid(Object value, ConstraintValidatorContext context) {
+					return false;
+				}
+			}).getClass());
+			//execution should not reach this point, an exception should be thrown
+			assertTrue("Execution should not reach this point.",false);
+		} catch(Exception ex) {
+			//a validation exception should be thrown
+			assertEquals(ValidationException.class, ex.getClass());
+		}
+	}
+	
+}
