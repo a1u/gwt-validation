@@ -72,40 +72,33 @@ public enum ValidatorResolver {
 			//abstract classes don't help either, they can't be initialized and so... don't work for us
 			if(Modifier.isAbstract(validator.getModifiers())) continue;
 			
-			//check initialize method to see if the annotation type matches the constraint annotation's type
+			//check isValid method to see if the element type
 			try {
-				Set<Method> validSet = new LinkedHashSet<Method>();
-				for(Method method : validator.getMethods()) { 
+				for(Method method : validator.getDeclaredMethods()) { 
 					if("isValid".equals(method.getName()) && method.getParameterTypes().length == 2) {
-						validSet.add(method);
-					}
-				}
-				
-				//if the valid set is not empty
-				if(!validSet.isEmpty()) {
-					for(Method isValid : validSet) {
-						Class<?> parameterType = isValid.getParameterTypes()[0];						
+						Class<?> parameterType = method.getParameterTypes()[0];						
 						
 						//exact equality makes a candidate a result
 						if(elementType.equals(parameterType)) {
 							results.add(validator);
-							break;
-						}
+						} else 											
 						//if parameterType is higher on the type hierarchy tree then the elementType it means that 
-						//the elementType could be used to call the method and that this canidate is a result
+						//the elementType could be used to call the method and that this candidate is a result
 						if(parameterType.isAssignableFrom(elementType)) {
 							results.add(validator);
-							break;
-						}
+						} 
+
+						//the first match to isValid is the one we should use
+						break;
 					}
 				}
-				
+						
 			} catch (Exception ex) {
 				//method isn't there, do nothing
 			}
 			
 		}		
-			
+		
 		//return
 		return results;
 	}
