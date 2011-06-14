@@ -5,19 +5,8 @@
 
 First use the Source tab to check the content out from the repository.
 
-= Dependencies =
-
-  * JUnit 4 (for testing)
-  * GWT libraries (gwt-dev-platform.jar, gwt-user.jar)
-
-  These libraries are usually placed in the ./lib/ directory.  Something may be done in    the future to ensure that proper dependencies are downloaded as part of the build process.
-
 = Building =
 
-The build process was written using ant 1.7.
+No build process has been defined yet.
 
-Targets:
- * clean - removes all intermediate files
- * test - runs just the unit tests
- * dist - runs the tests and builds the distributable jar
- * dist-no-test - builds the distributable jar without running any tests
+You will need the [Dependencies dependencies listed here] to build the project.  They are, at the moment, included in subversion.
