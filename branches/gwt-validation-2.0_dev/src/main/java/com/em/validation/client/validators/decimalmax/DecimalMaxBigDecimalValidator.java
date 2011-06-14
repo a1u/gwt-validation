@@ -1,4 +1,4 @@
-package com.em.validation.client.validators;
+package com.em.validation.client.validators.decimalmax;
 
 /*
 (c) 2011 Eminent Minds, LLC
@@ -19,18 +19,20 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import javax.validation.ConstraintValidator;
-import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 
-public abstract class SizeValdiator<T> implements ConstraintValidator<Size, T> {
+import javax.validation.ConstraintValidatorContext;
 
-	protected int min = Integer.MIN_VALUE;
-	protected int max = Integer.MAX_VALUE;
-	
+public class DecimalMaxBigDecimalValidator extends DecimalMaxValdiator<BigDecimal> {
+
 	@Override
-	public void initialize(Size constraintAnnotation) {
-		this.min = constraintAnnotation.min();
-		this.max = constraintAnnotation.max();
+	public boolean isValid(BigDecimal value, ConstraintValidatorContext context) {
+		
+		if(value == null) return true;
+		
+		BigDecimal minValue = new BigDecimal(this.maxValue);
+		
+		return minValue.compareTo(value) >= 0;
 	}
 
 }

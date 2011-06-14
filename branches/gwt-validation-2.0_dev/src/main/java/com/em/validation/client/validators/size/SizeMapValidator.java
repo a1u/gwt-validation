@@ -1,4 +1,4 @@
-package com.em.validation.client.validators;
+package com.em.validation.client.validators.size;
 
 import java.util.Map;
 

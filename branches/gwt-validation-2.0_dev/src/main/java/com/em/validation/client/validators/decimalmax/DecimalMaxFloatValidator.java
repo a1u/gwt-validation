@@ -1,4 +1,4 @@
-package com.em.validation.client.validators;
+package com.em.validation.client.validators.decimalmax;
 
 /*
 (c) 2011 Eminent Minds, LLC
@@ -19,16 +19,18 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import javax.validation.ConstraintValidator;
-import javax.validation.constraints.Min;
+import javax.validation.ConstraintValidatorContext;
 
-public abstract class MinValdiator<T> implements ConstraintValidator<Min, T> {
-
-	protected long value = 0;
+public class DecimalMaxFloatValidator extends DecimalMaxValdiator<Float> {
 
 	@Override
-	public void initialize(Min constraintAnnotation) {
-		this.value = constraintAnnotation.value();
+	public boolean isValid(Float value, ConstraintValidatorContext context) {
+		
+		if(value == null) return true;
+		
+		float unwrappedValue = value.floatValue(); 
+		
+		return unwrappedValue <= this.maxValue;
 	}
-	
+
 }
