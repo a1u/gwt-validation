@@ -1,0 +1,13 @@
+#summary binary dependencies for the gwt-validation project.
+
+= Dependencies =
+
+  * Validation libraries (javax.validation)
+  * JUnit 4 (for testing)
+  * GWT libraries (gwt-dev.jar, gwt-user.jar)
+  * [http://freemarker.sourceforge.net/ Freemarker] (for creating code from templates)
+  * [http://code.google.com/p/reflections/ Reflections] for class path scanning.
+    * Simple Log4J, logback
+    * DOM4J
+    * Javassist
+    * Google collections
