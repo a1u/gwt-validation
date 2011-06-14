@@ -8,9 +8,8 @@ public class MessageInterpolatorImpl implements MessageInterpolator {
 
 	@Override
 	public String interpolate(String messageTemplate, Context context) {
-		Locale nativeLocale = new Locale("default");
 		
-		return this.interpolate(messageTemplate, context, nativeLocale);
+		return this.interpolate(messageTemplate, context, null);
 	}
 
 	@Override
