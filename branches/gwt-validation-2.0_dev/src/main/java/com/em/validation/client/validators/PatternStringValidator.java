@@ -21,19 +21,30 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Pattern.Flag;
 
-public class NotNullObjectValidator implements ConstraintValidator<NotNull,Object> {
+import com.em.validation.client.regex.RegexProvider;
 
+public class PatternStringValidator implements ConstraintValidator<Pattern, String> {
+
+	private String pattern = "";
+	private Flag[] flags = new Flag[]{};
+	
 	@Override
-	public void initialize(NotNull constraintAnnotation) {
-				
+	public void initialize(Pattern constraintAnnotation) {
+		this.pattern = constraintAnnotation.regexp();
+		this.flags = constraintAnnotation.flags();
 	}
 
 	@Override
-	public boolean isValid(Object value, ConstraintValidatorContext context) {
-		return null != value;
+	public boolean isValid(String value, ConstraintValidatorContext context) {
+		
+		if(value == null) return true;
+		
+		boolean result = RegexProvider.INSTANCE.matches(this.pattern, value, this.flags);
+		
+		return result;
 	}
-
 
 }

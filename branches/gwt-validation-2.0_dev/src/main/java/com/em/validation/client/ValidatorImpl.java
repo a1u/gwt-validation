@@ -30,10 +30,8 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorFactory;
 import javax.validation.ConstraintViolation;
 import javax.validation.MessageInterpolator;
-import javax.validation.TraversableResolver;
 import javax.validation.ValidationException;
 import javax.validation.Validator;
-import javax.validation.ValidatorContext;
 import javax.validation.metadata.BeanDescriptor;
 import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.PropertyDescriptor;
@@ -46,16 +44,16 @@ public class ValidatorImpl implements Validator{
 	
 	private ConstraintValidatorFactory cvFactory = null;
 	
-	private ValidatorContext context = null;
+	//private ValidatorContext context = new ValidatorContextImpl();
 	
-	private TraversableResolver resolver = null;
+	//private TraversableResolver resolver = null;
 	
 	private MessageInterpolator interpolator = null;
 	
 	public ValidatorImpl() {		
 		this.cvFactory = ValidatorFactoryImpl.INSTANCE.getConstraintValidatorFactory();
-		this.context = ValidatorFactoryImpl.INSTANCE.usingContext();
-		this.resolver = ValidatorFactoryImpl.INSTANCE.getTraversableResolver();
+		//this.context = ValidatorFactoryImpl.INSTANCE.usingContext();
+		//this.resolver = ValidatorFactoryImpl.INSTANCE.getTraversableResolver();
 		this.interpolator = ValidatorFactoryImpl.INSTANCE.getMessageInterpolator();
 	}	
 
@@ -248,9 +246,22 @@ public class ValidatorImpl implements Validator{
 					//when the result is false, create a constraint violation for the local element
 					if(!result) {
 						//craft single constraint violation on this node
-						ConstraintViolation<T> localViolation = new ConstraintViolationImpl<T>();
+						ConstraintViolationImpl<T> localViolation = new ConstraintViolationImpl<T>();
 						
-						//todo: meat of the violation, message, etc
+						//create context
+						MessageInterpolatorContextImpl context = new MessageInterpolatorContextImpl();
+						context.setConstraintDescriptor(descriptor);
+						context.setValidatedValue(value);
+						
+						String messageKey = (String)descriptor.getAttributes().get("message");
+						if(messageKey == null) {
+							messageKey = "";
+						}
+						String interpolatedMessage = this.interpolator.interpolate(messageKey, context);
+						
+						//set violation
+						localViolation.setMessage(interpolatedMessage);
+						localViolation.setMessageTemplate(messageKey);
 						
 						//add local violation
 						violations.add(localViolation);

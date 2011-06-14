@@ -19,21 +19,27 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+
+import java.util.Date;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 
-public class NotNullObjectValidator implements ConstraintValidator<NotNull,Object> {
+public class PastDateValdiator implements ConstraintValidator<Past, Date> {
 
 	@Override
-	public void initialize(NotNull constraintAnnotation) {
-				
+	public void initialize(Past constraintAnnotation) {
+		
 	}
 
 	@Override
-	public boolean isValid(Object value, ConstraintValidatorContext context) {
-		return null != value;
+	public boolean isValid(Date value, ConstraintValidatorContext context) {
+
+		if(value == null) return true;
+		
+		Date now = new Date();
+		
+		return now.after(value);
 	}
-
-
 }

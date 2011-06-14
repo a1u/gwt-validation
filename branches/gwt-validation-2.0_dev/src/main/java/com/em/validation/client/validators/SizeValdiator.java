@@ -20,20 +20,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-public class NotNullObjectValidator implements ConstraintValidator<NotNull,Object> {
+public abstract class SizeValdiator<T> implements ConstraintValidator<Size, T> {
 
+	protected int min = Integer.MIN_VALUE;
+	protected int max = Integer.MAX_VALUE;
+	
 	@Override
-	public void initialize(NotNull constraintAnnotation) {
-				
+	public void initialize(Size constraintAnnotation) {
+		this.min = constraintAnnotation.min();
+		this.max = constraintAnnotation.max();
 	}
-
-	@Override
-	public boolean isValid(Object value, ConstraintValidatorContext context) {
-		return null != value;
-	}
-
 
 }

@@ -19,6 +19,8 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+import javax.validation.constraints.Pattern.Flag;
+
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
@@ -30,7 +32,7 @@ public enum RegexProvider {
 		
 	}
 	
-	public boolean matches(String regex, String check) {
+	public boolean matches(String regex, String check, Flag[] flags) {
 		RegExp exp = RegExp.compile(regex);
 		MatchResult result = exp.exec(check);
 		return result.getIndex() >= 0;

@@ -20,20 +20,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Min;
 
-public class NotNullObjectValidator implements ConstraintValidator<NotNull,Object> {
+public abstract class MinValdiator<T> implements ConstraintValidator<Min, T> {
 
-	@Override
-	public void initialize(NotNull constraintAnnotation) {
-				
-	}
+	protected long value = 0;
 
 	@Override
-	public boolean isValid(Object value, ConstraintValidatorContext context) {
-		return null != value;
+	public void initialize(Min constraintAnnotation) {
+		this.value = constraintAnnotation.value();
 	}
-
-
+	
 }

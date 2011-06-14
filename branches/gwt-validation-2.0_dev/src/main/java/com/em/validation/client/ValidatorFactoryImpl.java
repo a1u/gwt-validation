@@ -16,6 +16,8 @@ public enum ValidatorFactoryImpl implements ValidatorFactory {
 	
 	private ValidatorContext context = new ValidatorContextImpl();
 	
+	private MessageInterpolator interpolator = new MessageInterpolatorImpl();
+	
 	private ValidatorFactoryImpl() {
 		
 	}
@@ -32,7 +34,7 @@ public enum ValidatorFactoryImpl implements ValidatorFactory {
 
 	@Override
 	public MessageInterpolator getMessageInterpolator() {
-		return null;
+		return this.interpolator;
 	}
 
 	@Override
@@ -51,7 +53,7 @@ public enum ValidatorFactoryImpl implements ValidatorFactory {
 		if(ValidatorFactoryImpl.class.equals(type)) {
 			return (T) ValidatorFactoryImpl.INSTANCE;
 		}
-		throw new ValidationException("This API only supports unrapping " + ValidatorFactoryImpl.class.getName() + " (and not " + type.getName() + ").");
+		throw new ValidationException("This API only supports unwrapping " + ValidatorFactoryImpl.class.getName() + " (and not " + type.getName() + ").");
 	}
 	
 	

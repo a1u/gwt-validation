@@ -19,6 +19,7 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -56,12 +57,13 @@ public enum ConstraintValidatorFactoryGenerator {
 		Set<String> constraintValidators = new LinkedHashSet<String>();
 		
 		for(Class<?> validator : scannedValidators) {
+			if(validator.isAnonymousClass()) continue;
+			if(Modifier.isAbstract(validator.getModifiers())) continue;
+			
 			if(validator.isMemberClass()) {
 				String memberClass = validator.getName();
 				memberClass = memberClass.replaceAll("\\$", ".");
 				constraintValidators.add(memberClass);
-			} else if(validator.isAnonymousClass()) {
-				//nothing to do?
 			} else {
 				constraintValidators.add(validator.getName());
 			}

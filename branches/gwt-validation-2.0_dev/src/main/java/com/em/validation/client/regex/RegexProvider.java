@@ -22,6 +22,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.validation.constraints.Pattern.Flag;
+
 public enum RegexProvider {
 
 	INSTANCE;
@@ -30,7 +32,7 @@ public enum RegexProvider {
 		
 	}
 	
-	public boolean matches(String regex, String check) {
+	public boolean matches(String regex, String check, Flag[] flags) {
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(check);
 		return matcher.matches();

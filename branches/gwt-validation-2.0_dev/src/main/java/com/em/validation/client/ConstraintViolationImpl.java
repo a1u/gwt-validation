@@ -13,16 +13,30 @@ public class ConstraintViolationImpl<T> implements ConstraintViolation<T>, Seria
 	 */
 	private static final long serialVersionUID = 1L;
 
+	
+	private String message = "";
+	
+	private String messageTemplate = "";
+
+	
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	
+	public void setMessageTemplate(String messageTemplate) {
+		this.messageTemplate = messageTemplate;
+	}
+	
+
 	@Override
 	public String getMessage() {
-		// TODO Auto-generated method stub
-		return null;
+		return message;
 	}
 
 	@Override
 	public String getMessageTemplate() {
 		// TODO Auto-generated method stub
-		return null;
+		return messageTemplate;
 	}
 
 	@Override

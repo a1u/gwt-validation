@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -68,6 +69,8 @@ public enum ValidatorResolver {
 		for(Class<?> validator : candidates) {
 			//no anonymous classes
 			if(validator.isAnonymousClass()) continue;
+			//abstract classes don't help either, they can't be initialized and so... don't work for us
+			if(Modifier.isAbstract(validator.getModifiers())) continue;
 			
 			//check initialize method to see if the annotation type matches the constraint annotation's type
 			try {
