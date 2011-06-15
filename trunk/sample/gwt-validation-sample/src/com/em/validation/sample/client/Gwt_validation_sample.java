@@ -40,9 +40,15 @@ public class Gwt_validation_sample implements EntryPoint {
 		//get bean information
 		BeanDescriptor personDescriptor = validator.getConstraintsForClass(Person.class);
 		
-		//create vertical panel
+		//create horizontal panel
+		HorizontalPanel displayPanel = new HorizontalPanel();
+		displayPanel.setHeight("100%");
+		displayPanel.setWidth("100%");
+		
+		//create vertical panels
 		VerticalPanel personPropertyPanel = new VerticalPanel();
-		personPropertyPanel.add(new Label("Person contains the following properties and constraints: "));
+				
+		VerticalPanel personUpdatePanel = new VerticalPanel();
 		
 		//display properties
 		for(PropertyDescriptor personPropertyDescriptor : personDescriptor.getConstrainedProperties()) {
@@ -71,8 +77,12 @@ public class Gwt_validation_sample implements EntryPoint {
 			personPropertyPanel.add(new HTML(htmlString));
 		}
 
+		//add side by side panels
+		displayPanel.add(personUpdatePanel);
+		displayPanel.add(personPropertyPanel);
+		
 		//add person property panel to root
-		RootPanel.get().add(personPropertyPanel);
+		RootPanel.get().add(displayPanel);
 		
 		Label firstNameLabel = new Label("First Name: ");
 		final TextBox firstNameBox = new TextBox();
@@ -86,17 +96,17 @@ public class Gwt_validation_sample implements EntryPoint {
 		lastPanel.add(lastNameLabel);
 		lastPanel.add(lastNameBox);
 		
-		personPropertyPanel.add(firstPanel);
-		personPropertyPanel.add(lastPanel);
+		personUpdatePanel.add(firstPanel);
+		personUpdatePanel.add(lastPanel);
 		
 		Button changeAndValidate = new Button();
 		changeAndValidate.setText("Validate");
 		
-		personPropertyPanel.add(changeAndValidate);
+		personUpdatePanel.add(changeAndValidate);
 		
 		//box
 		final VerticalPanel errorBox = new VerticalPanel();
-		personPropertyPanel.add(errorBox);
+		personUpdatePanel.add(errorBox);
 		
 		changeAndValidate.addClickHandler(new ClickHandler() {
 			
