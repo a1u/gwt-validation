@@ -192,7 +192,9 @@ public class ValidatorImpl implements Validator{
 				
 			}
 		} else {
-			violations.addAll((Collection<? extends ConstraintViolation<T>>) cachedViolations);
+			for(ConstraintViolation<?> constraintViolation : cachedViolations) {
+				violations.add((ConstraintViolation<T>)constraintViolation);
+			}
 		}
 		
 		return violations;

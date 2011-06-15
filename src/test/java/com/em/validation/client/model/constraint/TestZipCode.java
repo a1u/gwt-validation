@@ -71,7 +71,7 @@ public @interface TestZipCode {
 	
 	@OverridesAttribute.List({
 			@OverridesAttribute(constraint=Size.class,name="min",constraintIndex=0),
-			@OverridesAttribute(constraint=Size.class,name="max",constraintIndex=1),
+			@OverridesAttribute(constraint=Size.class,name="max",constraintIndex=1)
 	})
 	int size() default 5;
 	
