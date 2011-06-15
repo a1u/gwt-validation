@@ -1,6 +1,8 @@
 package com.em.validation.client.model.constraint;
 
 /* 
+GWT Validation Framework - A JSR-303 validation framework for GWT
+
 (c) 2011 Eminent Minds, LLC
 	- Chris Ruffalo
 
@@ -34,6 +36,8 @@ import javax.validation.constraints.Size;
 import com.em.validation.client.model.composed.ComposedConstraint;
 
 /* 
+GWT Validation Framework - A JSR-303 validation framework for GWT
+
 (c) 2011 Eminent Minds, LLC
 	- Chris Ruffalo
 
