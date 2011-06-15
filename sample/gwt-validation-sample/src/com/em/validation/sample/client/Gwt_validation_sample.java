@@ -7,6 +7,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import javax.validation.metadata.BeanDescriptor;
+import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.PropertyDescriptor;
 
 import com.em.validation.sample.client.model.Person;
@@ -41,12 +42,33 @@ public class Gwt_validation_sample implements EntryPoint {
 		
 		//create vertical panel
 		VerticalPanel personPropertyPanel = new VerticalPanel();
-		personPropertyPanel.add(new Label("Person contains the following properties: "));
+		personPropertyPanel.add(new Label("Person contains the following properties and constraints: "));
 		
 		//display properties
 		for(PropertyDescriptor personPropertyDescriptor : personDescriptor.getConstrainedProperties()) {
 			String property = personPropertyDescriptor.getPropertyName();
-			personPropertyPanel.add(new Label(property));
+			
+			String htmlString = "<b>" + property + "</b><br/>";
+			
+			for(ConstraintDescriptor<?> constraint : personPropertyDescriptor.getConstraintDescriptors()) {
+				
+				String constraintName = constraint.getAnnotation().annotationType().getName();
+				
+				htmlString += "<i>" + constraintName + "</i><br/><table>";
+				
+				for(String valueKey : constraint.getAttributes().keySet()) {
+					
+					String value = ""+constraint.getAttributes().get(valueKey);
+					
+					htmlString += "<tr><td>" + valueKey + "</td><td>" + value + "</td></tr>";
+					
+				}
+				
+				htmlString += "</table>";
+				
+			}
+			
+			personPropertyPanel.add(new HTML(htmlString));
 		}
 
 		//add person property panel to root
