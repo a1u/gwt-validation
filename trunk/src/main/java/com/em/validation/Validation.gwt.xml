@@ -18,8 +18,8 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 -->
-<module>
-	<!-- inherit javax.validation -->
+<module rename-to="gwtvalidation">
+	<!-- inherit javax.validation api for jsr303 -->
 	<inherits name='javax.validation.Validation'/>
 	
 	<!-- inherit regex provider form gwt libs -->
@@ -35,6 +35,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 	      <when-type-assignable class="javax.validation.ConstraintValidatorFactory" />
 	</generate-with>
 
-	<!-- Super Source Emulation -->
- 	<super-source path="emul" />
+	<!-- explicitly set the client path -->
+	<source path='client'/>
+
+	<!-- this, at gwtc compile time, replaces reflective classes with the deferred binding points -->
+ 	<super-source path='emul' />
 </module>

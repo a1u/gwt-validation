@@ -22,7 +22,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 import com.em.validation.client.reflector.IReflectorFactory;
-import com.em.validation.rebind.reflector.factory.RuntimeReflectorFactory;
 import com.google.gwt.core.client.GWT;
 
 public enum ReflectorFactory implements IReflectorFactory {
