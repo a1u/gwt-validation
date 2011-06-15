@@ -1,6 +1,8 @@
 package java.util.regex;
 
 /*
+GWT Validation Framework - A JSR-303 validation framework for GWT
+
 (c) 2011 Eminent Minds, LLC
 	- Chris Ruffalo
 

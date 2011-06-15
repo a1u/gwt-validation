@@ -3,6 +3,8 @@ package com.em.validation.client.model.override;
 import com.em.validation.client.model.constraint.TestZipCode;
 
 /* 
+GWT Validation Framework - A JSR-303 validation framework for GWT
+
 (c) 2011 Eminent Minds, LLC
 	- Chris Ruffalo
 

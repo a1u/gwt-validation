@@ -3,6 +3,8 @@ package com.em.validation.client.model.example.jsr303.section5_6.model;
 /*
 Based on work in the JSR-303 for provable conformity to the standard 
  
+GWT Validation Framework - A JSR-303 validation framework for GWT
+
 (c) 2011 Eminent Minds, LLC
 	- Chris Ruffalo
 
