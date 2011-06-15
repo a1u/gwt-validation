@@ -37,8 +37,10 @@ public class MessageInterpolatorImpl implements MessageInterpolator {
 		return messageTemplate;
 	}
 
+	/*
 	public String interpolate(String messageTemplate, Context context, Locale locale) {
 		
 		return messageTemplate;
 	}
+	*/
 }
