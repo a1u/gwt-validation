@@ -47,20 +47,22 @@ public class Gwt_validation_sample implements EntryPoint {
 		
 		//create vertical panels
 		VerticalPanel personPropertyPanel = new VerticalPanel();
+		personPropertyPanel.setWidth("100%");
 				
 		VerticalPanel personUpdatePanel = new VerticalPanel();
+		personUpdatePanel.setWidth("100%");
 		
 		//display properties
 		for(PropertyDescriptor personPropertyDescriptor : personDescriptor.getConstrainedProperties()) {
 			String property = personPropertyDescriptor.getPropertyName();
 			
-			String htmlString = "<b>" + property + "</b><br/>";
+			String htmlString = "<b>" + property + "</b> has the following constraints: <br/><table style=\"margin: 15px;\">";
 			
 			for(ConstraintDescriptor<?> constraint : personPropertyDescriptor.getConstraintDescriptors()) {
 				
 				String constraintName = constraint.getAnnotation().annotationType().getName();
 				
-				htmlString += "<i>" + constraintName + "</i><br/><table>";
+				htmlString += "<tr><td ><i>" + constraintName + "</i> with the following attributes: <br/><table style=\"margin: 15px;\">";
 				
 				for(String valueKey : constraint.getAttributes().keySet()) {
 					
@@ -70,9 +72,11 @@ public class Gwt_validation_sample implements EntryPoint {
 					
 				}
 				
-				htmlString += "</table>";
+				htmlString += "</td></tr></table>";
 				
 			}
+			
+			htmlString += "</table>";
 			
 			personPropertyPanel.add(new HTML(htmlString));
 		}
@@ -80,6 +84,9 @@ public class Gwt_validation_sample implements EntryPoint {
 		//add side by side panels
 		displayPanel.add(personUpdatePanel);
 		displayPanel.add(personPropertyPanel);
+		
+		displayPanel.setCellWidth(personUpdatePanel, "50%");
+		displayPanel.setCellWidth(personPropertyPanel, "50%");
 		
 		//add person property panel to root
 		RootPanel.get().add(displayPanel);
