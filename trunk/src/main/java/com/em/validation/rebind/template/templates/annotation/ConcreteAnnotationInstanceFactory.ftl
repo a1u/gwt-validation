@@ -90,7 +90,7 @@ public enum ${generatedName} implements IConcreteAnnotationInstanceFactory<${tar
 					<#elseif metadata.returnType == "float">
 					return (float)(Float)valueMap.get("${metadata.methodName}");
 					<#elseif metadata.returnType == "boolean">
-					return (boolean)(Boolean)vaueMap.get("${metadata.methodName}");
+					return (boolean)(Boolean)valueMap.get("${metadata.methodName}");
 					<#elseif metadata.returnType == "char">
 					return (char)(Char)valueMap.get("${metadata.methodName}");
 					<#elseif metadata.returnType == "short">
