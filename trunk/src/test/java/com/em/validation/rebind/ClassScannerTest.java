@@ -23,6 +23,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import java.util.Set;
 
+import javax.validation.ConstraintValidator;
+
 import org.junit.Test;
 
 import com.em.validation.client.model.generic.ExtendedInterface;
@@ -32,7 +34,7 @@ import com.em.validation.rebind.scan.ClassScanner;
 
 import static org.junit.Assert.*;
 
-public class ConstrainedClassScannerTest {
+public class ClassScannerTest {
 
 	@Test
 	public void testConstrainedClassScanner() {
@@ -42,16 +44,27 @@ public class ConstrainedClassScannerTest {
 		//verify
 		assertTrue(classes.contains(ExtendedInterface.class));
 		assertTrue(classes.contains(TestClass.class));
+		assertTrue(classes.contains(GroupTestClass.class));
 	}
 	
+	@Test
 	public void testPatternMatchingConsrainedClassScanner() {
-		//get the constrained classes not matching the pattern "blah"
-		Set<Class<?>> classes = ClassScanner.INSTANCE.getConstrainedClasses(".*\\.groups\\..*");
+		//get the constrained classes not matching the given pattern
+		Set<Class<?>> classes = ClassScanner.INSTANCE.getConstrainedClasses(".*groups.*");
 	
 		//verify
-		assertFalse(classes.contains(ExtendedInterface.class));
-		assertFalse(classes.contains(TestClass.class));
-		assertTrue(classes.contains(GroupTestClass.class));
+		assertTrue(classes.contains(ExtendedInterface.class));
+		assertTrue(classes.contains(TestClass.class));
+		assertFalse(classes.contains(GroupTestClass.class));
+	}
+	
+	@Test
+	public void testPatternMatchingValidatorClassScanner() {
+		//get the constrained classes not matching the given pattern
+		Set<Class<? extends ConstraintValidator<?, ?>>> classes = ClassScanner.INSTANCE.getConstraintValidatorClasses(".*");
+	
+		//verify
+		assertEquals(0, classes.size());
 	}
 	
 }

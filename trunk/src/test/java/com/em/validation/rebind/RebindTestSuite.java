@@ -26,7 +26,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	ConstrainedClassScannerTest.class,
+	ClassScannerTest.class,
 	OverrideProxyTest.class,
 	ValidatorResolverTest.class
 })

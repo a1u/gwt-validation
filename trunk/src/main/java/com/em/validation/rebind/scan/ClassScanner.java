@@ -37,6 +37,10 @@ import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.em.validation.rebind.config.RebindConfiguration;
 
 /**
  * Uses Reflections library to perform various classpath scanning duties.
@@ -48,6 +52,8 @@ public enum ClassScanner {
 
 	INSTANCE;
 	
+	private Logger log = LoggerFactory.getLogger(this.getClass());
+	
 	private Reflections reflections = null;
 	
 	private ClassScanner() {
@@ -58,9 +64,15 @@ public enum ClassScanner {
 		this.reflections = new Reflections(builder);
 	}
 	
-	public Set<Class<?>> getConstrainedClasses(String pattern) {
+	public Set<Class<?>> getConstrainedClasses(String excludedPattern) {
 		//create empty result set
 		Set<Class<?>> result = new LinkedHashSet<Class<?>>();
+		
+		if(excludedPattern == null) {
+			log.debug("Scanning... allowing all model classes.");
+		} else {
+			log.debug("Scanning... excluding classes with the pattern: \"{}\"",excludedPattern);
+		}
 		
 		//get everything annotated with @javax.validation.Constraint
 		Set<Class<?>> constraints = this.reflections.getTypesAnnotatedWith(Constraint.class);
@@ -73,18 +85,27 @@ public enum ClassScanner {
 				
 				for(Class<?> annotatedWith : this.reflections.getTypesAnnotatedWith(annotation)) {
 					if(!annotatedWith.isAnnotation()) {
+						//taken as part of a fix for issue 34, by Niels, this will NOT ALLOW matched model classes to have code generated for them
+						if(excludedPattern != null && annotatedWith.getName().matches(excludedPattern)) continue;
+						log.debug("Adding scanned class: {}",annotatedWith.getName());
 						result.add(annotatedWith);
 					}
 				}
 				
 				for(Field annotatedWith : this.reflections.getFieldsAnnotatedWith(annotation)) {
 					if(!annotatedWith.getDeclaringClass().isAnnotation()) {
+						//taken as part of a fix for issue 34, by Niels, this will NOT ALLOW matched model classes to have code generated for them
+						if(excludedPattern != null && annotatedWith.getDeclaringClass().getName().matches(excludedPattern)) continue;
+						log.debug("Adding scanned class: {}",annotatedWith.getDeclaringClass().getName());
 						result.add(annotatedWith.getDeclaringClass());
 					}
 				}
 				
 				for(Method annotatedWith : this.reflections.getMethodsAnnotatedWith(annotation)) {
+					//taken as part of a fix for issue 34, by Niels, this will NOT ALLOW matched model classes to have code generated for them
 					if(!annotatedWith.getDeclaringClass().isAnnotation()) {
+						if(excludedPattern != null && annotatedWith.getDeclaringClass().getName().matches(excludedPattern)) continue;
+						log.debug("Adding scanned class: {}",annotatedWith.getDeclaringClass().getName());
 						result.add(annotatedWith.getDeclaringClass());
 					}
 				}
@@ -95,15 +116,17 @@ public enum ClassScanner {
 	}
 	
 	public Set<Class<?>> getConstrainedClasses() {
-		return this.getConstrainedClasses(".*");
+		return this.getConstrainedClasses(RebindConfiguration.INSTANCE.excludedModelClassesRegularExpression());
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Set<Class<? extends ConstraintValidator<?, ?>>> getConstraintValidatorClasses(String pattern) {
+	public Set<Class<? extends ConstraintValidator<?, ?>>> getConstraintValidatorClasses(String excludedPattern) {
 		//create empty result set
 		Set<Class<? extends ConstraintValidator<?, ?>>> result = new LinkedHashSet<Class<? extends ConstraintValidator<?,?>>>();
 		
 		for(@SuppressWarnings("rawtypes") Class<? extends ConstraintValidator> validatorClass : this.reflections.getSubTypesOf(ConstraintValidator.class)) {
+			//submitted as part of a fix for issue 34, by Niels, this will NOT ALLOW matched classes to be used as validators
+			if(excludedPattern != null && validatorClass.getName().matches(excludedPattern)) continue;			
 			result.add((Class<? extends ConstraintValidator<?, ?>>) validatorClass);			
 		}
 		
@@ -111,7 +134,7 @@ public enum ClassScanner {
 	}
 	
 	public Set<Class<? extends ConstraintValidator<?, ?>>> getConstraintValidatorClasses() {
-		return this.getConstraintValidatorClasses(".*");
+		return this.getConstraintValidatorClasses(RebindConfiguration.INSTANCE.excludedValidatorClassesRegularExpression());
 	}
 	
 }
