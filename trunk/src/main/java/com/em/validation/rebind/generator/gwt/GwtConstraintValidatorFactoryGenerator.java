@@ -34,7 +34,9 @@ public class GwtConstraintValidatorFactoryGenerator extends GwtGenerator {
 		
 		ClassDescriptor factoryDescriptor = ConstraintValidatorFactoryGenerator.INSTANCE.generateConstraintValidatorFactory();
 		
-		this.generateClass(factoryDescriptor,logger,context);		
+		this.generateClass(factoryDescriptor,logger,context);	
+		
+		this.reset();
 		
 		return factoryDescriptor.getFullClassName();
 	}

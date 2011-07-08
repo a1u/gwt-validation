@@ -37,8 +37,6 @@ import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.em.validation.rebind.config.RebindConfiguration;
 
@@ -51,8 +49,6 @@ import com.em.validation.rebind.config.RebindConfiguration;
 public enum ClassScanner {
 
 	INSTANCE;
-	
-	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	private Reflections reflections = null;
 	
@@ -68,12 +64,6 @@ public enum ClassScanner {
 		//create empty result set
 		Set<Class<?>> result = new LinkedHashSet<Class<?>>();
 		
-		if(excludedPattern == null) {
-			log.debug("Scanning... allowing all model classes.");
-		} else {
-			log.debug("Scanning... excluding classes with the pattern: \"{}\"",excludedPattern);
-		}
-		
 		//get everything annotated with @javax.validation.Constraint
 		Set<Class<?>> constraints = this.reflections.getTypesAnnotatedWith(Constraint.class);
 		
@@ -87,7 +77,6 @@ public enum ClassScanner {
 					if(!annotatedWith.isAnnotation()) {
 						//taken as part of a fix for issue 34, by Niels, this will NOT ALLOW matched model classes to have code generated for them
 						if(excludedPattern != null && annotatedWith.getName().matches(excludedPattern)) continue;
-						log.debug("Adding scanned class: {}",annotatedWith.getName());
 						result.add(annotatedWith);
 					}
 				}
@@ -96,7 +85,6 @@ public enum ClassScanner {
 					if(!annotatedWith.getDeclaringClass().isAnnotation()) {
 						//taken as part of a fix for issue 34, by Niels, this will NOT ALLOW matched model classes to have code generated for them
 						if(excludedPattern != null && annotatedWith.getDeclaringClass().getName().matches(excludedPattern)) continue;
-						log.debug("Adding scanned class: {}",annotatedWith.getDeclaringClass().getName());
 						result.add(annotatedWith.getDeclaringClass());
 					}
 				}
@@ -105,7 +93,6 @@ public enum ClassScanner {
 					//taken as part of a fix for issue 34, by Niels, this will NOT ALLOW matched model classes to have code generated for them
 					if(!annotatedWith.getDeclaringClass().isAnnotation()) {
 						if(excludedPattern != null && annotatedWith.getDeclaringClass().getName().matches(excludedPattern)) continue;
-						log.debug("Adding scanned class: {}",annotatedWith.getDeclaringClass().getName());
 						result.add(annotatedWith.getDeclaringClass());
 					}
 				}

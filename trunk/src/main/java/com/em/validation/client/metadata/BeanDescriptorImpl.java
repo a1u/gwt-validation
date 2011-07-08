@@ -48,6 +48,14 @@ public class BeanDescriptorImpl extends ProtoDescriptor implements BeanDescripto
 	@Override
 	public Set<PropertyDescriptor> getConstrainedProperties() {
 		Set<PropertyDescriptor> propertyDescriptors = new HashSet<PropertyDescriptor>();
+		
+		//this was added as part of the work-around for the problems found in issue #32.  this just gets us passed
+		//one set of exceptions and not passed the entire problem.  there was a null pointer exception being thrown
+		//by one of the generated classes at this point because it's backing reflector hadn't been generated.
+		if(this.backingReflector == null || this.backingReflector.getPropertyNames() == null) {
+			return propertyDescriptors;
+		}
+		
 		for(String propertyName : this.backingReflector.getPropertyNames()) {
 			PropertyDescriptor descriptor = DescriptorFactory.INSTANCE.getPropertyDescriptor(this.backingReflector, propertyName);
 			if(descriptor.hasConstraints()) {
