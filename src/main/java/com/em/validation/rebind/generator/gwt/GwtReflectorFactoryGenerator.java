@@ -34,7 +34,9 @@ public class GwtReflectorFactoryGenerator extends GwtGenerator {
 		
 		ClassDescriptor factoryDescriptor = ReflectorFactoryGenerator.INSTANCE.getReflectorFactoryDescriptors();
 		
-		this.generateClass(factoryDescriptor,logger,context);		
+		this.generateClass(factoryDescriptor,logger,context);	
+		
+		this.reset();
 		
 		return factoryDescriptor.getFullClassName();
 	}
