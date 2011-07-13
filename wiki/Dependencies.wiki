@@ -10,4 +10,4 @@
     * Simple Log4J, logback
     * DOM4J
     * Javassist
-    * Guava r09 (formerly google collections)
+    * Guava (formerly google collections)
