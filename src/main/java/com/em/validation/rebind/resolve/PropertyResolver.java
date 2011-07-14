@@ -94,8 +94,12 @@ public enum PropertyResolver {
 
 			PropertyMetadata pMeta = new PropertyMetadata();
 			pMeta.setName(propertyName);
-			pMeta.setClassString(property.getPropertyType().getName() + ".class");
-			pMeta.setReturnType(property.getPropertyType());
+			Class<?> propertyType = property.getPropertyType();
+			while(propertyType.getComponentType() != null) {
+				propertyType = propertyType.getComponentType();
+			}			
+			pMeta.setClassString(propertyType.getName() + ".class");
+			pMeta.setReturnType(propertyType);
 			
 			if(this.hasMethod(targetClass, property.getReadMethod().getName(), new Class<?>[]{})) {
 				pMeta.setAccessor(property.getReadMethod().getName() + "()");

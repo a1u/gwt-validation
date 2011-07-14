@@ -18,6 +18,17 @@ public class ConstraintViolationImpl<T> implements ConstraintViolation<T>, Seria
 	
 	private String messageTemplate = "";
 
+	private Object invalidValue = null;
+	
+	private ConstraintDescriptor<?> constraintDescriptor = null;
+	
+	private Path path = new PathImpl();  
+	
+	private Class<T> rootBeanClass = null;
+	
+	private T rootBean = null;
+	
+	private Object leafBean = null;
 	
 	public void setMessage(String message) {
 		this.message = message;
@@ -27,6 +38,29 @@ public class ConstraintViolationImpl<T> implements ConstraintViolation<T>, Seria
 		this.messageTemplate = messageTemplate;
 	}
 	
+	public void setInvalidValue(Object value) {
+		this.invalidValue = value;
+	}
+	
+	public void setConstraintDescriptor(ConstraintDescriptor<?> constraintDescriptor) {
+		this.constraintDescriptor = constraintDescriptor;
+	}
+	
+	public void setRootBean(T rootBean) {
+		this.rootBean = rootBean;
+	}
+	
+	public void setRootBeanClass(Class<T> rootBeanClass) {
+		this.rootBeanClass = rootBeanClass;
+	}
+	
+	public void setLeafBean(Object leafBean) {
+		this.leafBean = leafBean;
+	}
+	
+	public void setPropertyPath(Path path) {
+		this.path = path;
+	}
 
 	@Override
 	public String getMessage() {
@@ -35,44 +69,37 @@ public class ConstraintViolationImpl<T> implements ConstraintViolation<T>, Seria
 
 	@Override
 	public String getMessageTemplate() {
-		// TODO Auto-generated method stub
 		return messageTemplate;
 	}
 
 	@Override
 	public T getRootBean() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.rootBean;
 	}
 
 	@Override
 	public Class<T> getRootBeanClass() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.rootBeanClass;
 	}
 
 	@Override
 	public Object getLeafBean() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.leafBean;
 	}
 
 	@Override
 	public Path getPropertyPath() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.path;
 	}
 
 	@Override
 	public Object getInvalidValue() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.invalidValue;
 	}
 
 	@Override
 	public ConstraintDescriptor<?> getConstraintDescriptor() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.constraintDescriptor;
 	}
 
 }

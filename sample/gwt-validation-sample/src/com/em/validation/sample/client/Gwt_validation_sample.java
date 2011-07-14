@@ -1,5 +1,9 @@
 package com.em.validation.sample.client;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
@@ -10,6 +14,7 @@ import javax.validation.metadata.BeanDescriptor;
 import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.PropertyDescriptor;
 
+import com.em.validation.sample.client.model.Address;
 import com.em.validation.sample.client.model.Person;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -39,6 +44,7 @@ public class Gwt_validation_sample implements EntryPoint {
 		
 		//get bean information
 		BeanDescriptor personDescriptor = validator.getConstraintsForClass(Person.class);
+		BeanDescriptor addressDescriptor = validator.getConstraintsForClass(Address.class);
 		
 		//create horizontal panel
 		HorizontalPanel displayPanel = new HorizontalPanel();
@@ -52,13 +58,19 @@ public class Gwt_validation_sample implements EntryPoint {
 		VerticalPanel personUpdatePanel = new VerticalPanel();
 		personUpdatePanel.setWidth("100%");
 		
+		Set<PropertyDescriptor> descriptors = new HashSet<PropertyDescriptor>();
+		descriptors.addAll(personDescriptor.getConstrainedProperties());
+		if(addressDescriptor != null) {
+			descriptors.addAll(addressDescriptor.getConstrainedProperties());
+		}
+		
 		//display properties
-		for(PropertyDescriptor personPropertyDescriptor : personDescriptor.getConstrainedProperties()) {
-			String property = personPropertyDescriptor.getPropertyName();
+		for(PropertyDescriptor propertyDescriptor : descriptors) {
+			String property = propertyDescriptor.getPropertyName();
 			
 			String htmlString = "<b>" + property + "</b> has the following constraints: <br/><table style=\"margin: 15px;\">";
 			
-			for(ConstraintDescriptor<?> constraint : personPropertyDescriptor.getConstraintDescriptors()) {
+			for(ConstraintDescriptor<?> constraint : propertyDescriptor.getConstraintDescriptors()) {
 				
 				String constraintName = constraint.getAnnotation().annotationType().getName();
 				
@@ -70,6 +82,10 @@ public class Gwt_validation_sample implements EntryPoint {
 					
 					htmlString += "<tr><td>" + valueKey + "</td><td>" + value + "</td></tr>";
 					
+				}
+				
+				if(propertyDescriptor.isCascaded()) {
+					htmlString += "<tr><td>Cascaded</td><td>true</td></tr>";
 				}
 				
 				htmlString += "</td></tr></table>";
@@ -103,8 +119,22 @@ public class Gwt_validation_sample implements EntryPoint {
 		lastPanel.add(lastNameLabel);
 		lastPanel.add(lastNameBox);
 		
+		Label streetLabel = new Label("Street Name: ");
+		final TextBox streetBox = new TextBox();
+		HorizontalPanel streetPanel = new HorizontalPanel();
+		streetPanel.add(streetLabel);
+		streetPanel.add(streetBox);
+		
+		Label cityLabel = new Label("City Name: ");
+		final TextBox cityBox = new TextBox();
+		HorizontalPanel cityPanel = new HorizontalPanel();
+		cityPanel.add(cityLabel);
+		cityPanel.add(cityBox);
+		
 		personUpdatePanel.add(firstPanel);
 		personUpdatePanel.add(lastPanel);
+		personUpdatePanel.add(streetPanel);
+		personUpdatePanel.add(cityPanel);
 		
 		Button changeAndValidate = new Button();
 		changeAndValidate.setText("Validate");
@@ -126,13 +156,39 @@ public class Gwt_validation_sample implements EntryPoint {
 				p.setFirstName(firstName);
 				p.setLastName(lastName);
 				
-				Set<ConstraintViolation<Person>> violations = validator.validate(p);
+				String streetName = streetBox.getValue();
+				String cityName = cityBox.getValue();
+				
+				Address a = new Address();
+				a.setStreet(streetName);
+				a.setCity(cityName);
+				
+				//p.setAddress(a);
+				//a.setOwner(p);
+				
+				Person[] people = new Person[]{
+						p,
+						new Person(),
+						new Person()
+				};
+				
+				a.setOwners(people);
+				a.setOwnerList(Arrays.asList(people));
+				
+				Map<String,Person> personMap = new HashMap<String, Person>();
+				
+				personMap.put("primary",p);
+				personMap.put("secondary", new Person());
+				
+				a.setPersonMap(personMap);
+				
+				Set<ConstraintViolation<Address>> violations = validator.validate(a);
 				
 				errorBox.clear();
 				
 				if(violations != null) {
-					for(ConstraintViolation<Person> violation : violations) {
-						HTML html = new HTML(violation.getMessage());
+					for(ConstraintViolation<Address> violation : violations) {
+						HTML html = new HTML(violation.getPropertyPath().toString() + " -> " + violation.getMessage() + " ( invalid value: " + violation.getInvalidValue() + ")");
 						errorBox.add(html);
 					}
 				}

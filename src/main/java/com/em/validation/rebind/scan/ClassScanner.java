@@ -24,6 +24,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -53,9 +55,18 @@ public enum ClassScanner {
 	private Reflections reflections = null;
 	
 	private ClassScanner() {
+		Set<URL> classPathUrls = ClasspathHelper.forJavaClassPath();
+		classPathUrls.addAll(ClasspathHelper.forClassLoader(this.getClass().getClassLoader()));
+		classPathUrls.addAll(ClasspathHelper.forPackage("com.em.validation.client.validators", this.getClass().getClassLoader()));
+		
 		ConfigurationBuilder builder = new ConfigurationBuilder()
-										.setUrls(ClasspathHelper.getUrlsForCurrentClasspath())
-										.setScanners(new TypeAnnotationsScanner(), new FieldAnnotationsScanner(), new MethodAnnotationsScanner(), new SubTypesScanner());
+										.setUrls(classPathUrls)
+										.setScanners(	new TypeAnnotationsScanner(), 
+														new FieldAnnotationsScanner(), 
+														new MethodAnnotationsScanner(), 
+														new SubTypesScanner()
+										)
+										;
 		
 		this.reflections = new Reflections(builder);
 	}
@@ -106,12 +117,15 @@ public enum ClassScanner {
 		return this.getConstrainedClasses(RebindConfiguration.INSTANCE.excludedModelClassesRegularExpression());
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Set<Class<? extends ConstraintValidator<?, ?>>> getConstraintValidatorClasses(String excludedPattern) {
 		//create empty result set
 		Set<Class<? extends ConstraintValidator<?, ?>>> result = new LinkedHashSet<Class<? extends ConstraintValidator<?,?>>>();
 		
-		for(@SuppressWarnings("rawtypes") Class<? extends ConstraintValidator> validatorClass : this.reflections.getSubTypesOf(ConstraintValidator.class)) {
+		Set<Class<? extends ConstraintValidator>> subTypes = new HashSet<Class<? extends ConstraintValidator>>();
+		subTypes.addAll(this.reflections.getSubTypesOf(ConstraintValidator.class));
+		
+		for(Class<? extends ConstraintValidator> validatorClass : subTypes) {
 			//submitted as part of a fix for issue 34, by Niels, this will NOT ALLOW matched classes to be used as validators
 			if(excludedPattern != null && validatorClass.getName().matches(excludedPattern)) continue;			
 			result.add((Class<? extends ConstraintValidator<?, ?>>) validatorClass);			
