@@ -31,6 +31,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorFactory;
 import javax.validation.ConstraintViolation;
 import javax.validation.MessageInterpolator;
+import javax.validation.Path.Node;
 import javax.validation.ValidationException;
 import javax.validation.Validator;
 import javax.validation.metadata.BeanDescriptor;
@@ -58,6 +59,7 @@ public class ValidatorImpl implements Validator{
 		this.interpolator = ValidatorFactoryImpl.INSTANCE.getMessageInterpolator();
 	}	
 
+	@SuppressWarnings("unchecked")
 	private <T> Set<ConstraintViolation<T>> validate(Map<Class<?>,Map<String,Map<Object,Set<ConstraintViolation<?>>>>> validationCache, T object, Class<?>... groups) {
 		//get the bean descriptor
 		BeanDescriptor bean = this.getConstraintsForClass(object.getClass());
@@ -70,11 +72,19 @@ public class ValidatorImpl implements Validator{
 			violations.addAll(this.validateProperty(validationCache, object, property.getPropertyName(), groups));
 		}
 		
+		//update root objects for all violations
+		for(ConstraintViolation<T> violation : violations) {
+			if(violation instanceof ConstraintViolationImpl) {
+				((ConstraintViolationImpl<T>)violation).setRootBean(object);
+				((ConstraintViolationImpl<T>)violation).setRootBeanClass((Class<T>)object.getClass());
+			}
+		}
+		
 		return violations;
 	}
 	
 	@Override
-	public <T> Set<ConstraintViolation<T>> validate(T object, Class<?>... groups) {
+	public <T> Set<ConstraintViolation<T>> validate(T object, Class<?>... groups) {		
 		//create empty map
 		Map<Class<?>,Map<String,Map<Object,Set<ConstraintViolation<?>>>>> validationCache = new HashMap<Class<?>,Map<String,Map<Object,Set<ConstraintViolation<?>>>>>();
 		//validate
@@ -101,6 +111,12 @@ public class ValidatorImpl implements Validator{
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private <T> Set<ConstraintViolation<T>> validateValue(Map<Class<?>,Map<String,Map<Object,Set<ConstraintViolation<?>>>>> validationCache, Class<T> beanType, String propertyName, Object value, Class<?>... groups) {
+		
+		//create path for this level
+		PathImpl path = new PathImpl();
+		NodeImpl localNode = new NodeImpl();
+		localNode.setName(propertyName);
+		path.push(localNode);
 		
 		//create empty constraint violation set
 		Set<ConstraintViolation<T>> violations = new LinkedHashSet<ConstraintViolation<T>>();
@@ -138,6 +154,18 @@ public class ValidatorImpl implements Validator{
 			//update maps back into cache
 			Set<ConstraintViolation<?>> insertSet = new LinkedHashSet<ConstraintViolation<?>>();
 			insertSet.addAll(violations);
+			for(ConstraintViolation<?> violation : insertSet) {
+				if(violation instanceof ConstraintViolationImpl) {
+					PathImpl violationPath = new PathImpl();
+					for(Node node : path) {
+						violationPath.push(node);
+					}
+					for(Node node : ((ConstraintViolationImpl<?>)violation).getPropertyPath()) {
+						violationPath.push(node);
+					}
+					((ConstraintViolationImpl<?>)violation).setPropertyPath(violationPath);
+				}
+			}			
 			valueMap.put(value, insertSet);
 			propertyMap.put(propertyName, valueMap);
 			validationCache.put(beanType, propertyMap);
@@ -145,7 +173,53 @@ public class ValidatorImpl implements Validator{
 			//if the property is cascaded, follow the rabbit hole so that it can pick up the earlier cascades
 			if(property.isCascaded()) {
 				//perform validation on each map value
-				if(value instanceof Map) {
+				if(value instanceof Object[]) {
+				
+					int i = 0;
+					
+					for(Object subValue : ((Object[])value)) {
+						Set<ConstraintViolation<Object>> cascadeViolations = new LinkedHashSet<ConstraintViolation<Object>>();
+
+						cascadeViolations.addAll(this.validate(validationCache, subValue, groups));	
+					
+						for(ConstraintViolation<?> violation : cascadeViolations) {
+							ConstraintViolationImpl<T> convertedViolation = new ConstraintViolationImpl<T>();
+							
+							//convert violations
+							convertedViolation.setConstraintDescriptor(violation.getConstraintDescriptor());
+							convertedViolation.setMessage(violation.getMessage());
+							convertedViolation.setPropertyPath(violation.getPropertyPath());
+							convertedViolation.setMessageTemplate(violation.getMessageTemplate());
+							convertedViolation.setInvalidValue(violation.getInvalidValue());
+							convertedViolation.setLeafBean(value);
+							convertedViolation.setRootBeanClass(beanType);
+							
+							//append to path
+							PathImpl cascadePath = new PathImpl();
+							for(Node node : path) {
+								cascadePath.push(node);
+							}
+							
+							//use index as local node
+							NodeImpl cascadeNode = new NodeImpl();
+							cascadeNode.setIndex(i);
+							cascadeNode.setInIterable(true);
+							cascadePath.push(cascadeNode);
+							
+							//push violation paths on after index
+							for(Node node : violation.getPropertyPath()) {
+								cascadePath.push(node);
+							}							
+							
+							//set as converted path
+							convertedViolation.setPropertyPath(cascadePath);
+							
+							violations.add(convertedViolation);
+						}
+						
+						i++;
+					}
+				} else 	if(value instanceof Map) {
 					for(Object key : ((Map)value).keySet()) {
 						Object subValue = ((Map)value).get(key);
 						
@@ -154,27 +228,86 @@ public class ValidatorImpl implements Validator{
 						cascadeViolations.addAll(this.validate(validationCache, subValue, groups));	
 						
 						for(ConstraintViolation<?> violation : cascadeViolations) {
-							ConstraintViolation<T> convertedViolation = new ConstraintViolationImpl<T>();
+							ConstraintViolationImpl<T> convertedViolation = new ConstraintViolationImpl<T>();
 							
-							//todo: get details from violation object and populate converted violation
+							//convert violations
+							convertedViolation.setConstraintDescriptor(violation.getConstraintDescriptor());
+							convertedViolation.setMessage(violation.getMessage());
+							convertedViolation.setPropertyPath(violation.getPropertyPath());
+							convertedViolation.setMessageTemplate(violation.getMessageTemplate());
+							convertedViolation.setInvalidValue(violation.getInvalidValue());
+							convertedViolation.setLeafBean(value);
+							convertedViolation.setRootBeanClass(beanType);
+							
+							//append to path
+							PathImpl cascadePath = new PathImpl();
+							for(Node node : path) {
+								cascadePath.push(node);
+							}
+							
+							//use key as local node
+							NodeImpl cascadeNode = new NodeImpl();
+							cascadeNode.setKey(key);
+							cascadeNode.setInIterable(true);
+							cascadePath.push(cascadeNode);
+							
+							//push violation paths on after property name
+							for(Node node : violation.getPropertyPath()) {
+								cascadePath.push(node);
+							}										
+							
+							//set as converted path
+							convertedViolation.setPropertyPath(cascadePath);
 							
 							violations.add(convertedViolation);
 						}
 					}
 				//perform validation on each iterable object
 				} else if (value instanceof Iterable) {
+					
+					int i = 0;
+					
 					for(Object subValue : ((Iterable)value)) {
 						Set<ConstraintViolation<Object>> cascadeViolations = new LinkedHashSet<ConstraintViolation<Object>>();
 
 						cascadeViolations.addAll(this.validate(validationCache, subValue, groups));	
 						
 						for(ConstraintViolation<?> violation : cascadeViolations) {
-							ConstraintViolation<T> convertedViolation = new ConstraintViolationImpl<T>();
+							ConstraintViolationImpl<T> convertedViolation = new ConstraintViolationImpl<T>();
 							
-							//todo: get details from violation object and populate converted violation
+							//convert violations
+							convertedViolation.setConstraintDescriptor(violation.getConstraintDescriptor());
+							convertedViolation.setMessage(violation.getMessage());
+							convertedViolation.setPropertyPath(violation.getPropertyPath());
+							convertedViolation.setMessageTemplate(violation.getMessageTemplate());
+							convertedViolation.setInvalidValue(violation.getInvalidValue());
+							convertedViolation.setLeafBean(value);
+							convertedViolation.setRootBeanClass(beanType);
+							
+							//append to path
+							PathImpl cascadePath = new PathImpl();
+							for(Node node : path) {
+								cascadePath.push(node);
+							}
+							
+							//use index as local node
+							NodeImpl cascadeNode = new NodeImpl();
+							cascadeNode.setIndex(i);
+							cascadeNode.setInIterable(true);
+							cascadePath.push(cascadeNode);
+							
+							//push violation paths on after index
+							for(Node node : violation.getPropertyPath()) {
+								cascadePath.push(node);
+							}							
+							
+							//set as converted path
+							convertedViolation.setPropertyPath(cascadePath);
 							
 							violations.add(convertedViolation);
 						}
+						
+						i++;
 					}
 				//perform validation on the object itself
 				} else {
@@ -183,9 +316,30 @@ public class ValidatorImpl implements Validator{
 					cascadeViolations.addAll(this.validate(validationCache, value, groups));	
 
 					for(ConstraintViolation<?> violation : cascadeViolations) {
-						ConstraintViolation<T> convertedViolation = new ConstraintViolationImpl<T>();
+						ConstraintViolationImpl<T> convertedViolation = new ConstraintViolationImpl<T>();
 						
-						//todo: get details from violation object and populate converted violation
+						//convert violations
+						convertedViolation.setConstraintDescriptor(violation.getConstraintDescriptor());
+						convertedViolation.setMessage(violation.getMessage());
+						convertedViolation.setPropertyPath(violation.getPropertyPath());
+						convertedViolation.setMessageTemplate(violation.getMessageTemplate());
+						convertedViolation.setInvalidValue(violation.getInvalidValue());
+						convertedViolation.setLeafBean(value);
+						convertedViolation.setRootBeanClass(beanType);
+						
+						//append to path
+						PathImpl cascadePath = new PathImpl();
+						for(Node node : path) {
+							cascadePath.push(node);
+						}
+						
+						//push violation paths on after property name
+						for(Node node : violation.getPropertyPath()) {
+							cascadePath.push(node);
+						}							
+						
+						//set as converted path
+						convertedViolation.setPropertyPath(cascadePath);
 						
 						violations.add(convertedViolation);
 					}
@@ -222,7 +376,7 @@ public class ValidatorImpl implements Validator{
 		}
 		throw new ValidationException("This API only supports unrapping " + ValidatorImpl.class.getName() + " (and not " + type.getName() + ").");
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	private <T> Set<ConstraintViolation<T>> validateConstraint(Class<T> beanType, ConstraintDescriptor<?> descriptor, Object value) {
 		//create empty constraint violation set
@@ -265,6 +419,8 @@ public class ValidatorImpl implements Validator{
 						//set violation
 						localViolation.setMessage(interpolatedMessage);
 						localViolation.setMessageTemplate(messageKey);
+						localViolation.setInvalidValue(value);
+						localViolation.setRootBeanClass(beanType);
 						
 						//add local violation
 						violations.add(localViolation);
