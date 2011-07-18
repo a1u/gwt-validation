@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import javax.validation.ConstraintValidatorContext;
 
-public class MaxByteValidator extends MaxValdiator<Byte> {
+public class MaxByteValidator extends MaxValidator<Byte> {
 
 	@Override
 	public boolean isValid(Byte value, ConstraintValidatorContext context) {

@@ -1,4 +1,4 @@
-package com.em.validation.client.validators.min;
+package com.em.validation.client.validators.decimalmin;
 
 /*
 GWT Validation Framework - A JSR-303 validation framework for GWT
@@ -22,15 +22,24 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 import javax.validation.ConstraintValidator;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.DecimalMin;
 
-public abstract class MinValdiator<T> implements ConstraintValidator<Min, T> {
+public abstract class DecimalMinValidator<T> implements ConstraintValidator<DecimalMin, T> {
 
-	protected long minValue = 0;
+	protected double minValue = 0;
+	protected String minValueString = "0";
 
 	@Override
-	public void initialize(Min constraintAnnotation) {
-		this.minValue = constraintAnnotation.value();
+	public void initialize(DecimalMin constraintAnnotation) {
+		
+		String stringValue = constraintAnnotation.value(); 
+		
+		try {
+			this.minValue = Double.valueOf(stringValue);
+		} catch (Exception ex) {
+			//no valid max value from string
+			this.minValueString = "0";
+		}
 	}
 	
 }

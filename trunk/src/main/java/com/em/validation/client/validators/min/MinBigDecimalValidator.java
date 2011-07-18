@@ -25,7 +25,7 @@ import java.math.BigDecimal;
 
 import javax.validation.ConstraintValidatorContext;
 
-public class MinBigDecimalValidator extends MinValdiator<BigDecimal> {
+public class MinBigDecimalValidator extends MinValidator<BigDecimal> {
 
 	@Override
 	public boolean isValid(BigDecimal value, ConstraintValidatorContext context) {

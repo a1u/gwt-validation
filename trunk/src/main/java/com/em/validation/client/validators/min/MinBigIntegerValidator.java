@@ -25,7 +25,7 @@ import java.math.BigInteger;
 
 import javax.validation.ConstraintValidatorContext;
 
-public class MinBigIntegerValidator extends MinValdiator<BigInteger> {
+public class MinBigIntegerValidator extends MinValidator<BigInteger> {
 
 	@Override
 	public boolean isValid(BigInteger value, ConstraintValidatorContext context) {

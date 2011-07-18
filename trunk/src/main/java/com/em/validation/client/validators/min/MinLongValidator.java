@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import javax.validation.ConstraintValidatorContext;
 
-public class MinLongValidator extends MinValdiator<Long> {
+public class MinLongValidator extends MinValidator<Long> {
 
 	@Override
 	public boolean isValid(Long value, ConstraintValidatorContext context) {

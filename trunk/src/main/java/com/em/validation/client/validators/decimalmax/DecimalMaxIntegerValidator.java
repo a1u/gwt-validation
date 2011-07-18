@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import javax.validation.ConstraintValidatorContext;
 
-public class DecimalMaxIntegerValidator extends DecimalMaxValdiator<Integer> {
+public class DecimalMaxIntegerValidator extends DecimalMaxValidator<Integer> {
 
 	@Override
 	public boolean isValid(Integer value, ConstraintValidatorContext context) {

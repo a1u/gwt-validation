@@ -1,4 +1,4 @@
-package com.em.validation.client.validators.max;
+package com.em.validation.client.validators.decimalmax;
 
 /*
 GWT Validation Framework - A JSR-303 validation framework for GWT
@@ -22,15 +22,24 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 import javax.validation.ConstraintValidator;
-import javax.validation.constraints.Max;
+import javax.validation.constraints.DecimalMax;
 
-public abstract class MaxValdiator<T> implements ConstraintValidator<Max, T> {
+public abstract class DecimalMaxValidator<T> implements ConstraintValidator<DecimalMax,T> {
 
-	protected long maxValue = 0;
+	protected double maxValue = 0;
+	protected String maxValueString = "0";
 
 	@Override
-	public void initialize(Max constraintAnnotation) {
-		this.maxValue = constraintAnnotation.value();
+	public void initialize(DecimalMax constraintAnnotation) {
+		
+		String stringValue = constraintAnnotation.value(); 
+		
+		try {
+			this.maxValue = Double.valueOf(stringValue);
+		} catch (Exception ex) {
+			//no valid max value from string
+			this.maxValueString = "0";
+		}
 	}
 	
 }
