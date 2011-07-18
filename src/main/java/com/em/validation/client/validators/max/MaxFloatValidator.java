@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import javax.validation.ConstraintValidatorContext;
 
-public class MaxFloatValidator extends MaxValdiator<Float> {
+public class MaxFloatValidator extends MaxValidator<Float> {
 
 	@Override
 	public boolean isValid(Float value, ConstraintValidatorContext context) {

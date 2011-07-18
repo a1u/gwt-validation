@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import javax.validation.ConstraintValidatorContext;
 
-public class MaxDoubleValidator extends MaxValdiator<Double> {
+public class MaxDoubleValidator extends MaxValidator<Double> {
 
 	@Override
 	public boolean isValid(Double value, ConstraintValidatorContext context) {

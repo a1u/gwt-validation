@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import javax.validation.ConstraintValidatorContext;
 
-public class DecimalMaxDoubleValidator extends DecimalMaxValdiator<Double> {
+public class DecimalMaxDoubleValidator extends DecimalMaxValidator<Double> {
 
 	@Override
 	public boolean isValid(Double value, ConstraintValidatorContext context) {

@@ -25,7 +25,7 @@ import java.math.BigDecimal;
 
 import javax.validation.ConstraintValidatorContext;
 
-public class DecimalMaxBigDecimalValidator extends DecimalMaxValdiator<BigDecimal> {
+public class DecimalMaxBigDecimalValidator extends DecimalMaxValidator<BigDecimal> {
 
 	@Override
 	public boolean isValid(BigDecimal value, ConstraintValidatorContext context) {

@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import javax.validation.ConstraintValidatorContext;
 
-public class DecimalMinLongValidator extends DecimalMinValdiator<Long> {
+public class DecimalMinLongValidator extends DecimalMinValidator<Long> {
 
 	@Override
 	public boolean isValid(Long value, ConstraintValidatorContext context) {

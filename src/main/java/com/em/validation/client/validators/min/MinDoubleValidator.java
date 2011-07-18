@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import javax.validation.ConstraintValidatorContext;
 
-public class MinDoubleValidator extends MinValdiator<Double> {
+public class MinDoubleValidator extends MinValidator<Double> {
 
 	@Override
 	public boolean isValid(Double value, ConstraintValidatorContext context) {

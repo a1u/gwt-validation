@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import javax.validation.ConstraintValidatorContext;
 
-public class DecimalMinIntegerValidator extends DecimalMinValdiator<Integer> {
+public class DecimalMinIntegerValidator extends DecimalMinValidator<Integer> {
 
 	@Override
 	public boolean isValid(Integer value, ConstraintValidatorContext context) {

@@ -25,7 +25,7 @@ import java.math.BigInteger;
 
 import javax.validation.ConstraintValidatorContext;
 
-public class DecimalMinBigIntegerValidator extends DecimalMinValdiator<BigInteger> {
+public class DecimalMinBigIntegerValidator extends DecimalMinValidator<BigInteger> {
 
 	@Override
 	public boolean isValid(BigInteger value, ConstraintValidatorContext context) {
