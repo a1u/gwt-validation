@@ -20,13 +20,13 @@ It is entirely possible to create a fully, or almost fully, complete JSR-303 val
 
 ----
 
-= JSR-303 Support Progress (60%) =
+= JSR-303 Support Progress (80%) =
 
-*Chapter 2: Constraint Definition (70%)*
+*Chapter 2: Constraint Definition (100%)*
     2.1: Constraint Annotation (100%) <br/>
     2.2: Applying multiple constraints of the same type (100%) <br/>
     2.3: Constraint composition (100%) <br/>
-    2.4: Constraint Validation Implementation (5%) <br/>
+    2.4: Constraint Validation Implementation (100%) <br/>
     2.5: ConstraintValidatorFactory (100%) <br/>
 
 *Chapter 3: Constraint declaration and validation process (75%)*
@@ -37,11 +37,11 @@ It is entirely possible to create a fully, or almost fully, complete JSR-303 val
     3.5:  Validation Routine (75% - needs testing with complex object graphs) <br/>
     3.6:  Examples [implemented in JUnit] (0%) <br/>
 
-*Chapter 4: Validation APIs (50%)* 
+*Chapter 4: Validation APIs (75%)* 
     4.1  Validator API (100%) <br/>
-    4.2  ConstraintViolation (25%) <br/>
+    4.2  ConstraintViolation (100%) <br/>
     4.3  Message Interpolation (0%) <br/>
-    4.4  Bootstrapping (10%) <br/>
+    4.4  Bootstrapping (100%) <br/>
 
 *Chapter 5: Constraint metadata request APIs (95%)*
     5.1: Validator (100%) <br/>
