@@ -16,7 +16,7 @@ It is entirely possible to create a fully, or almost fully, complete JSR-303 val
  * All levels of validation (field, class, cascading). (*COMPLETE*)
  * Full group, message, and payload support. (*COMPLETE*)
  * Composed constraint support. (*COMPLETE*)
- * Full i8n support and message interpolation/parameterization support. (*ALMOST COMPLETE*)
+ * Full i18n support and message interpolation/parameterization support. (*ALMOST COMPLETE*)
 
 ----
 
