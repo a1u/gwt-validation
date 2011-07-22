@@ -67,7 +67,9 @@ Dependencies:
    * slf4j-api-1.5.6
 
 You'll also need to add to your module xml file:
-    <inherits name='com.em.validation.client.validation.Validation' />
+{{{
+    <inherits name='com.em.validation.Validation' />
+}}}
 
 _Please note, the path to the validation module file has changed_
 
