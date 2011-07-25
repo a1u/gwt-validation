@@ -88,21 +88,21 @@ The important lines are:
 
 You will also need to place one properties file per locale in your path, as show below.  If a property file is missing, the defaults will be used for that locale.
 
-`/ValidationMessages.propreties (default)
+/ValidationMessages.propreties (default)
 
 {{{
 javax.validation.constraints.Size.message=The property must be between {min} and {max}
 javax.validation.constraints.NotNull.message=The property must not be null
 }}}
 
-`/ValidationMessages_fr.properties (french)
+/ValidationMessages_fr.properties (french)
 
 {{{
 javax.validation.constraints.Size.message=La propriété doit être comprise entre {min} et {max}
 javax.validation.constraints.NotNull.message=La propriété ne doit pas être nulle
 }}}
 
-`/ValidationMessages_es.properties (spanish)
+/ValidationMessages_es.properties (spanish)
 
 {{{
 javax.validation.constraints.Size.message=La propiedad debe estar entre {min} y {max}
