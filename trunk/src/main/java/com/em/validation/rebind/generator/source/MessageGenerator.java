@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import com.em.validation.rebind.metadata.ClassDescriptor;
+import com.em.validation.rebind.scan.ClassScanner;
 import com.em.validation.rebind.template.TemplateController;
-import com.google.gwt.i18n.client.LocaleInfo;
-import com.google.gwt.i18n.rebind.LocaleInfoGenerator;
 
 public enum MessageGenerator {
 
