@@ -1,5 +1,4 @@
-<!-- 
-GWT Validation Framework - A JSR-303 validation framework for GWT
+<!-- GWT Validation Framework - A JSR-303 validation framework for GWT
 
 (c) 2011 Eminent Minds, LLC
 	- Chris Ruffalo
@@ -115,14 +114,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 			<plugin>
 			    <artifactId>maven-surefire-plugin</artifactId>
 			    <configuration>
-			  	 <test>**/RuntimeTestSuite.java</test>
-			     <excludes>
-			     	<exclude>**/core/**</exclude>
-			     	<exclude>**/client/**</exclude>
-			     </excludes>
+			  	 <test>**/FullTestSuite.java</test>
 			      <additionalClasspathElements>
+					<additionalClasspathElement>${basedir}/lib/</additionalClasspathElement>
+					<additionalClasspathElement>${basedir}/lib/validation-api-1.0.0.GA-sources.jar</additionalClasspathElement>
 					<additionalClasspathElement>${basedir}/src/main/java/</additionalClasspathElement>
-					<additionalClasspathElement>${basedir}/src/test/java/</additionalClasspathElement>
+			      	<additionalClasspathElement>${basedir}/src/test/java/</additionalClasspathElement>
 			        <additionalClasspathElement>${project.build.sourceDirectory}</additionalClasspathElement>
 			        <additionalClasspathElement>${project.build.testSourceDirectory}</additionalClasspathElement>
 			      </additionalClasspathElements>
@@ -131,22 +128,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 			      <forkMode>always</forkMode>
 			    </configuration>
 			</plugin>	
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<configuration>
-				</configuration>
-			</plugin>
-      		<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>gwt-maven-plugin</artifactId>
-				<configuration>
-					<mode>htmlunit</mode>
-					<includes>**/ClientTestSuite.java</includes>
-					<compileReport>true</compileReport>
-					<gen>gen</gen>
-				</configuration>
-			</plugin>
 		</plugins>
   	</pluginManagement>
   </build>

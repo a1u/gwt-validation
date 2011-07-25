@@ -26,21 +26,20 @@ import java.util.Map;
 
 import com.em.validation.client.messages.IMessageResolver;
 import com.em.validation.client.messages.MessageResolver;
-import com.em.validation.client.model.tests.GwtValidationBaseTestCase;
 import com.em.validation.client.model.tests.ITestCase;
 
-public class CoreMessageTest extends GwtValidationBaseTestCase{
+public class CoreMessageTest {
 	
 	public static void testDefaultLocale(ITestCase testCase) {
 		IMessageResolver resolver = MessageResolver.INSTANCE;
 		
 		String message = resolver.getLocalizedMessageTemplate("{javax.validation.constraints.AssertFalse.message}");
 		
-		assertEquals("I AM FALSE",message);
+		testCase.localAssertEquals("I AM FALSE",message);
 		
 		message = resolver.getLocalizedMessageTemplate("NOT A MESSAGE");
 		
-		assertEquals("NOT A MESSAGE",message);
+		testCase.localAssertEquals("NOT A MESSAGE",message);
 	}
 	
 	public static void testMessageTemplate(ITestCase testCase) {
@@ -56,6 +55,6 @@ public class CoreMessageTest extends GwtValidationBaseTestCase{
 		
 		String output = resolver.getMessage(input, props);
 		
-		assertEquals("size is 1 or 2 ({property}:size)",output);
+		testCase.localAssertEquals("size is 1 or 2 ({property}:size)",output);
 	}
 }

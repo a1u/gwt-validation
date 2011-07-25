@@ -35,14 +35,13 @@ import com.em.validation.client.model.groups.BasicGroup;
 import com.em.validation.client.model.groups.ExtendedGroup;
 import com.em.validation.client.model.groups.GroupTestClass;
 import com.em.validation.client.model.groups.MaxGroup;
-import com.em.validation.client.model.tests.GwtValidationBaseTestCase;
+import com.em.validation.client.model.tests.ITestCase;
 import com.em.validation.client.reflector.IReflector;
-import com.em.validation.client.reflector.IReflectorFactory;
 import com.em.validation.client.reflector.ReflectorFactory;
 
-public class CoreMetadataTest extends GwtValidationBaseTestCase {
+public class CoreMetadataTest {
 
-	public static void testGroupFinderOnClass(IReflectorFactory factory) {
+	public static void testGroupFinderOnClass(ITestCase testCase) {
 
 		//get bean descriptor and initial finder
 		IReflector<GroupTestClass> groupTestReflector = ReflectorFactory.INSTANCE.getReflector(GroupTestClass.class);
@@ -50,81 +49,81 @@ public class CoreMetadataTest extends GwtValidationBaseTestCase {
 		ConstraintFinder finder = descriptor.findConstraints();
 		
 		//test group parent
-		assertEquals("parentSizeConstrainedString",groupTestReflector.getValue("parentSizeConstrainedString", new GroupTestClass()));
+		testCase.localAssertEquals("parentSizeConstrainedString",groupTestReflector.getValue("parentSizeConstrainedString", new GroupTestClass()));
 		
 		//test with no groups
-		assertEquals(8, finder.getConstraintDescriptors().size());
-		assertTrue(finder.hasConstraints());
+		testCase.localAssertEquals(8, finder.getConstraintDescriptors().size());
+		testCase.localAssertTrue(finder.hasConstraints());
 
 		//test with the MaxGroup class alone
 		finder = descriptor.findConstraints();
 		finder.unorderedAndMatchingGroups(MaxGroup.class);
 		finder.lookingAt(Scope.HIERARCHY);
-		assertEquals(5, finder.getConstraintDescriptors().size());
+		testCase.localAssertEquals(5, finder.getConstraintDescriptors().size());
 		finder.lookingAt(Scope.LOCAL_ELEMENT);
-		assertEquals(4, finder.getConstraintDescriptors().size());
+		testCase.localAssertEquals(4, finder.getConstraintDescriptors().size());
 		
 		//add Default.class (INCLUDING EXTENSIONS)
 		finder = descriptor.findConstraints();
 		finder.unorderedAndMatchingGroups(Default.class);
-		assertEquals(5, finder.getConstraintDescriptors().size());
+		testCase.localAssertEquals(5, finder.getConstraintDescriptors().size());
 		
 		//add MaxGroup.class
 		finder.unorderedAndMatchingGroups(Default.class,MaxGroup.class);
 		finder.lookingAt(Scope.LOCAL_ELEMENT);
-		assertEquals(3, finder.getConstraintDescriptors().size());
+		testCase.localAssertEquals(3, finder.getConstraintDescriptors().size());
 
 		//add ExtendedGroup.class
 		finder.unorderedAndMatchingGroups(Default.class,MaxGroup.class,ExtendedGroup.class);
-		assertEquals(2, finder.getConstraintDescriptors().size());
+		testCase.localAssertEquals(2, finder.getConstraintDescriptors().size());
 		
 		//add BasicGroup.class
 		finder.unorderedAndMatchingGroups(Default.class,MaxGroup.class,ExtendedGroup.class,BasicGroup.class);
-		assertEquals(1, finder.getConstraintDescriptors().size());
+		testCase.localAssertEquals(1, finder.getConstraintDescriptors().size());
 		
 		//new finder, only max group
-		assertEquals(5, descriptor.findConstraints().unorderedAndMatchingGroups(MaxGroup.class).getConstraintDescriptors().size());
+		testCase.localAssertEquals(5, descriptor.findConstraints().unorderedAndMatchingGroups(MaxGroup.class).getConstraintDescriptors().size());
 		
 		//new finder, only extended
-		assertEquals(3, descriptor.findConstraints().unorderedAndMatchingGroups(ExtendedGroup.class).getConstraintDescriptors().size());
+		testCase.localAssertEquals(3, descriptor.findConstraints().unorderedAndMatchingGroups(ExtendedGroup.class).getConstraintDescriptors().size());
 		
 		//new finder, looking at local (element) scope
 		finder = descriptor.findConstraints()
 				.lookingAt(Scope.LOCAL_ELEMENT);
-		assertEquals(6, finder.getConstraintDescriptors().size());
+		testCase.localAssertEquals(6, finder.getConstraintDescriptors().size());
 	}
 	
-	public static void testGroupFinderOnProperty(IReflectorFactory factory) {
+	public static void testGroupFinderOnProperty(ITestCase testCase) {
 		//get property descriptor and initial finder
 		PropertyDescriptor propertyDescriptor = DescriptorFactory.INSTANCE.getBeanDescriptor(GroupTestClass.class).getConstraintsForProperty("testString");
 		ConstraintFinder finder = propertyDescriptor.findConstraints();
 		
 		//all constraints
-		assertEquals(3, finder.getConstraintDescriptors().size());
+		testCase.localAssertEquals(3, finder.getConstraintDescriptors().size());
 		
 		//only the extended group
-		assertEquals(2, finder.unorderedAndMatchingGroups(ExtendedGroup.class).getConstraintDescriptors().size());
+		testCase.localAssertEquals(2, finder.unorderedAndMatchingGroups(ExtendedGroup.class).getConstraintDescriptors().size());
 		
 	}
 	
-	public static void testDeclaredOnFinder(IReflectorFactory factory) {
+	public static void testDeclaredOnFinder(ITestCase testCase) {
 		
 		//get bean descriptor for generic test class
-		BeanDescriptor descriptor = DescriptorFactory.INSTANCE.getBeanDescriptor(factory.getReflector(TestClass.class));
+		BeanDescriptor descriptor = DescriptorFactory.INSTANCE.getBeanDescriptor(testCase.getReflectorFactory().getReflector(TestClass.class));
 		
 		//get finder
 		ConstraintFinder finder = descriptor.findConstraints().declaredOn(ElementType.METHOD);
 				
 		//assert that the finder object is not null
-		assertNotNull(finder);
+		testCase.localAssertNotNull(finder);
 		
 		//check local and hierarchy scope for the proper number of constraints
-		assertEquals(10, finder.lookingAt(Scope.HIERARCHY).getConstraintDescriptors().size());
-		assertEquals(5, finder.lookingAt(Scope.LOCAL_ELEMENT).getConstraintDescriptors().size());
+		testCase.localAssertEquals(10, finder.lookingAt(Scope.HIERARCHY).getConstraintDescriptors().size());
+		testCase.localAssertEquals(5, finder.lookingAt(Scope.LOCAL_ELEMENT).getConstraintDescriptors().size());
 		
 		//change to FIELDs in the LOCAL_ELEMENT scope
 		finder.lookingAt(Scope.LOCAL_ELEMENT).declaredOn(ElementType.FIELD);
-		assertEquals(6, finder.getConstraintDescriptors().size());
+		testCase.localAssertEquals(6, finder.getConstraintDescriptors().size());
 	}
 	
 }

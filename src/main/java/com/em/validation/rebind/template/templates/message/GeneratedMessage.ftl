@@ -23,11 +23,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import com.em.validation.client.messages.MessageImpl;
 
-public class GeneratedMessage extends MessageImpl {
+public class ${className} extends MessageImpl {
 
-	public GeneratedMessage() {
+	public ${className}() {
 		<#list locales as locale>
-		this.addString("${locale.code}","${locale.key}","${locale.value}");
+		this.addString("${locale.key}","${locale.value}");
 		</#list>	
 	}
 
