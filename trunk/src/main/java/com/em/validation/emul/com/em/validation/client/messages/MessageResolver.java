@@ -55,7 +55,7 @@ public enum MessageResolver implements IMessageResolver {
 		}	
 		
 		try {
-			output = this.gwtLocalizedMessage.getString(LocaleInfo.getCurrentLocale().getLocaleName(), template);
+			output = this.gwtLocalizedMessage.getString(template);
 		} catch(MissingResourceException mex) {
 			mex.printStackTrace();
 			output = message;

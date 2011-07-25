@@ -29,10 +29,9 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import com.em.validation.client.model.cyclic.Cycle;
-import com.em.validation.client.model.tests.GwtValidationBaseTestCase;
 import com.em.validation.client.model.tests.ITestCase;
 
-public class CoreValidatorTest extends GwtValidationBaseTestCase{
+public class CoreValidatorTest {
 
 	
 	public static void testCyclicValidator(ITestCase testCase) {
@@ -49,7 +48,7 @@ public class CoreValidatorTest extends GwtValidationBaseTestCase{
 		//validated cyclic object
 		Set<ConstraintViolation<Cycle>> violations = validator.validate(a);
 		
-		assertEquals(3, violations.size());
+		testCase.localAssertEquals(3, violations.size());
 	}
 	
 	public static void testRecurisveValidator(ITestCase testCase) {
@@ -63,7 +62,7 @@ public class CoreValidatorTest extends GwtValidationBaseTestCase{
 		//validated cyclic object
 		Set<ConstraintViolation<Cycle>> violations = validator.validate(recursive);
 		
-		assertEquals(2, violations.size());
+		testCase.localAssertEquals(2, violations.size());
 	}
 	
 }

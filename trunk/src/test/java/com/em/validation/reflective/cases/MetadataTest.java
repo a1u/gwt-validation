@@ -30,16 +30,16 @@ public class MetadataTest extends ReflectiveValidationBaseTestClass {
 	
 	@Test
 	public void testGroupFinderOnClass() {
-		CoreMetadataTest.testGroupFinderOnClass(this.getReflectorFactory());
+		CoreMetadataTest.testGroupFinderOnClass(this);
 	}
 	
 	@Test
 	public void testGroupFinderOnProperty() {
-		CoreMetadataTest.testGroupFinderOnProperty(this.getReflectorFactory());
+		CoreMetadataTest.testGroupFinderOnProperty(this);
 	}
 	
 	@Test
 	public void testDeclaredOnFinder() {
-		CoreMetadataTest.testDeclaredOnFinder(this.getReflectorFactory());
+		CoreMetadataTest.testDeclaredOnFinder(this);
 	}
 }

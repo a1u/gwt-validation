@@ -59,8 +59,22 @@ public enum ClassScanner {
 	//private Reflections resources = null;
 	
 	private String[] doNotScanJarsInThisList = new String[]{
-		"gwt-dev.jar",
-		"gwt-user.jar"
+		"gwt-dev",
+		"gwt-user",
+		"guava",
+		"surefire",
+		"junit",
+		"javassist",
+		"servlet",
+		"slf4j",
+		"logback",
+		"gson",
+		"freemarker",
+		"google-collections",
+		"dom4j",
+		"localedata",
+		"xml-apis",
+		"reflections"
 	};
 	
 	private ClassScanner() {

@@ -25,12 +25,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 import com.em.validation.client.ClientTestSuite;
-import com.em.validation.compiled.CompiledTestSuite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	RuntimeTestSuite.class,
-	CompiledTestSuite.class,
 	ClientTestSuite.class
 })
 public class FullTestSuite {

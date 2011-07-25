@@ -30,4 +30,15 @@ public interface ITestCase {
 	public IReflectorFactory getReflectorFactory();
 	public ConstraintValidatorFactory getConstraintValidationFactory();
 	
+	public void localAssertEquals(Object expected, Object actual);
+	public void localAssertEquals(String message, Object expected, Object actual);
+	
+	public void localAssertTrue(boolean actual);
+	public void localAssertTrue(String message, boolean actual);
+	
+	public void localAssertFalse(boolean actual);
+	public void localAssertFalse(String message, boolean actual);
+	
+	public void localAssertNotNull(Object value);
+	public void localAssertNotNull(String message, Object value);
 }

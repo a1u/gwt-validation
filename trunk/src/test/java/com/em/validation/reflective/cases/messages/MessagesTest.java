@@ -1,7 +1,5 @@
 package com.em.validation.reflective.cases.messages;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.Locale;
 
 import org.junit.Test;
@@ -33,13 +31,13 @@ public class MessagesTest extends ReflectiveValidationBaseTestClass {
 		Locale locale = Locale.FRANCE;
 		String message = resolver.getLocalizedMessageTemplate("javax.validation.constraints.AssertFalse.message",locale);
 		
-		assertEquals("NON MERDE!",message);		
+		this.localAssertEquals("NON MERDE!",message);		
 		
 		locale = new Locale("ES");
 
 		message = resolver.getLocalizedMessageTemplate("javax.validation.constraints.AssertTrue.message",locale);
 		
-		assertEquals("YO SOY EL NINO!",message);		
+		this.localAssertEquals("YO SOY EL NINO!",message);		
 	}
 	
 }
