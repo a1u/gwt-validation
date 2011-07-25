@@ -1,0 +1,30 @@
+#summary description of the i18n features of gwt validation.
+#labels Featured
+
+= Description =
+
+The GWTVF implements i18n as described in the JSR-303 specification (v1.0 final).  The full details can be found in section 4.3.
+
+= Files =
+
+The JSR-303 specification specifies that the resource bundle pattern {{{/ValidationMessages.properties}}} should be used to specify the resources.  The following files would specify a default locale, an English locale, a French locale, and a Spanish locale.
+
+{{{
+/ValidationMessages.properties
+/ValidationMessages_en.properties
+/ValidationMessages_fr.properties
+}}}
+
+The {{{/}}} location refers to the root of the classpath.
+
+These files behave as a [http://download.oracle.com/javase/6/docs/api/java/util/ResourceBundle.html ResourceBundle] would behave.
+
+= Usage =
+
+In order to use the i18n features you must do the following:
+
+ # Create the {{{/ValidationMessages}}} property files
+ # Add the appropriate locales to your `<module`>.gwt.xml 
+ # Use the validation framework as normal
+
+= Details =
