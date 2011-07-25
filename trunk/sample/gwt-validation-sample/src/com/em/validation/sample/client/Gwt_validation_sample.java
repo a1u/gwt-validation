@@ -35,7 +35,7 @@ public class Gwt_validation_sample implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-
+	
 		//spi provides validator factory
 		ValidatorFactory factory = Validation.byDefaultProvider().configure().buildValidatorFactory();
 		
@@ -100,13 +100,13 @@ public class Gwt_validation_sample implements EntryPoint {
 		//add side by side panels
 		displayPanel.add(personUpdatePanel);
 		displayPanel.add(personPropertyPanel);
-		
+
 		displayPanel.setCellWidth(personUpdatePanel, "50%");
 		displayPanel.setCellWidth(personPropertyPanel, "50%");
 		
 		//add person property panel to root
 		RootPanel.get().add(displayPanel);
-		
+
 		Label firstNameLabel = new Label("First Name: ");
 		final TextBox firstNameBox = new TextBox();
 		HorizontalPanel firstPanel = new HorizontalPanel();

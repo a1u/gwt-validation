@@ -25,18 +25,33 @@ import java.util.Locale;
 
 import javax.validation.MessageInterpolator;
 
+import com.em.validation.client.messages.MessageResolver;
+
 public class MessageInterpolatorImpl implements MessageInterpolator {
 
 	@Override
 	public String interpolate(String messageTemplate, Context context) {
 		
-		return this.interpolate(messageTemplate, context, null);
+		return this.interpolate(messageTemplate, context, Locale.getDefault());
 	}
 
 	@Override
 	public String interpolate(String messageTemplate, Context context, Locale locale) {
+		MessageResolver resolver = MessageResolver.INSTANCE;
 		
-		return messageTemplate;
+		String template = messageTemplate;
+		String output = template;
+		
+		//only need to get the localized version if and when the string starts and ends with { and } with no { or } in between.
+		//"{java...thing.Class.message}" is localized
+		//"{attribute} of {property} with {property}" is not localized
+		if(template.startsWith("{") && template.endsWith("}") && !template.substring(1,template.length() - 1).contains("{") && !template.substring(1,template.length() - 1).contains("}")) {
+			 output = resolver.getLocalizedMessageTemplate(template);
+		}
+
+		output = resolver.getMessage(output, context.getConstraintDescriptor().getAttributes());			
+		
+		return output;
 	}
 
 }

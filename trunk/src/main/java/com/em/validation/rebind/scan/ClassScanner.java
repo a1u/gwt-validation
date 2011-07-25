@@ -28,6 +28,7 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;
@@ -35,6 +36,7 @@ import javax.validation.ConstraintValidator;
 import org.reflections.Reflections;
 import org.reflections.scanners.FieldAnnotationsScanner;
 import org.reflections.scanners.MethodAnnotationsScanner;
+import org.reflections.scanners.ResourcesScanner;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
@@ -54,11 +56,39 @@ public enum ClassScanner {
 	
 	private Reflections reflections = null;
 	
+	//private Reflections resources = null;
+	
+	private String[] doNotScanJarsInThisList = new String[]{
+		"gwt-dev.jar",
+		"gwt-user.jar"
+	};
+	
 	private ClassScanner() {
-		Set<URL> classPathUrls = ClasspathHelper.forJavaClassPath();
-		classPathUrls.addAll(ClasspathHelper.forClassLoader(this.getClass().getClassLoader()));
-		classPathUrls.addAll(ClasspathHelper.forPackage("com.em.validation.client.validators", this.getClass().getClassLoader()));
 		
+		//this little snippet goes through the classpath urls and ommits jars that are on the forbidden list.
+		//this is intended to remove jars from the classpath that we know are not ones that will contain patterns
+		Set<URL> classPathUrls = ClasspathHelper.getUrlsForCurrentClasspath();
+		Set<URL> useableUrls = new HashSet<URL>();
+		for(URL url : classPathUrls) {
+			boolean use = true;
+			for(String jar : this.doNotScanJarsInThisList) {
+				if(url.toString().contains(jar)) {
+					use = false;
+					break;
+				}
+			}
+			if(use) {
+				useableUrls.add(url);
+			}
+			use = false;
+		}		
+		
+        ConfigurationBuilder builder = new ConfigurationBuilder()
+        								//.setUrls(ClasspathHelper.getUrlsForCurrentClasspath())
+        								.setUrls(useableUrls)
+        								.setScanners(new TypeAnnotationsScanner(), new FieldAnnotationsScanner(), new MethodAnnotationsScanner(), new SubTypesScanner(), new ResourcesScanner());
+
+		/*
 		ConfigurationBuilder builder = new ConfigurationBuilder()
 										.setUrls(classPathUrls)
 										.setScanners(	new TypeAnnotationsScanner(), 
@@ -67,8 +97,17 @@ public enum ClassScanner {
 														new SubTypesScanner()
 										)
 										;
-		
+		*/
+			
 		this.reflections = new Reflections(builder);
+		
+		/*
+		ConfigurationBuilder resourcesBuilder = new ConfigurationBuilder()
+												.setUrls(ClasspathHelper.getUrlsForPackagePrefix(""))
+												.setScanners(new ResourcesScanner());
+										
+		this.resources = new Reflections(resourcesBuilder);
+		*/
 	}
 	
 	public Set<Class<?>> getConstrainedClasses(String excludedPattern) {
@@ -136,6 +175,11 @@ public enum ClassScanner {
 	
 	public Set<Class<? extends ConstraintValidator<?, ?>>> getConstraintValidatorClasses() {
 		return this.getConstraintValidatorClasses(RebindConfiguration.INSTANCE.excludedValidatorClassesRegularExpression());
+	}
+
+	public Set<String> getLocaleResources() {
+		Pattern messagePattern = Pattern.compile("ValidationMessages.*");
+		return this.reflections.getResources(messagePattern);
 	}
 	
 }
