@@ -19,11 +19,18 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 -->
 <module rename-to="gwtvalidation">
+	<!-- inherit gwt core -->
+	<inherits name='com.google.gwt.core.Core'/>
+
 	<!-- inherit javax.validation api for jsr303 -->
 	<inherits name='javax.validation.Validation'/>
 	
 	<!-- inherit regex provider form gwt libs -->
 	<inherits name='com.google.gwt.regexp.RegExp'/>
+	
+	<!-- inherit i18n classes for internationalization -->
+	<inherits name="com.google.gwt.i18n.I18N"/>
+	<inherits name="com.google.gwt.i18n.CldrLocales"/>
 	
 	<!-- Scan the classpath and build the reflector factory, which builds a lot of the other source -->
 	<generate-with class="com.em.validation.rebind.generator.gwt.GwtReflectorFactoryGenerator">
@@ -33,6 +40,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 	<!-- Scan the classpath and build the constraint validation factory, which builds this one factory class -->
 	<generate-with class="com.em.validation.rebind.generator.gwt.GwtConstraintValidatorFactoryGenerator">
 	      <when-type-assignable class="javax.validation.ConstraintValidatorFactory" />
+	</generate-with>
+
+	<!-- the built in i18n mechanism is not flexible enough to support dealing with end-user generated properties files that have no
+		 known binding at the time this was written.  the interfaces Constants and ConstantsWithLookup don't help -->
+	<generate-with class="com.em.validation.rebind.generator.gwt.GwtMessageGenerator" >
+		<when-type-assignable class="com.em.validation.client.messages.IMessage" />
 	</generate-with>
 
 	<!-- explicitly set the client path -->

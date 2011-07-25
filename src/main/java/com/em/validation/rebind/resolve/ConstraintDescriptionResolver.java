@@ -95,7 +95,7 @@ public enum ConstraintDescriptionResolver {
 		return metadataResult;
 	}
 	
-	public Set<ConstraintDescriptor<?>> getConstraintsForProperty(Class<?> targetClass, String propertyName) {
+	public Set<ConstraintDescriptor<? extends Annotation>> getConstraintsForProperty(Class<?> targetClass, String propertyName) {
 		Set<ConstraintDescriptor<?>> descriptors = new LinkedHashSet<ConstraintDescriptor<?>>();
 		PropertyMetadata property = PropertyResolver.INSTANCE.getPropertyMetadata(targetClass, propertyName);
 		for(Annotation annotation : property.getAnnotationInstances()) {
