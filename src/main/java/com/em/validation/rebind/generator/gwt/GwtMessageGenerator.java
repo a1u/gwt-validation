@@ -60,6 +60,7 @@ public class GwtMessageGenerator extends GwtGenerator {
 		
 		this.generateClass(messageDescriptor,logger,context);	
 		
+		//reset this
 		this.reset();
 		
 		return messageDescriptor.getFullClassName();

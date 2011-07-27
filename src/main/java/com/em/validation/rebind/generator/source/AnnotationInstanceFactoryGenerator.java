@@ -170,7 +170,14 @@ public enum AnnotationInstanceFactoryGenerator {
 				this.recursiveResolveAllMetadata(metadata.getComposedOf(), annotationClassToMetadataMap, annotationMethodMetadata);
 			}
 		}
-		
+	}
+	
+	/**
+	 * Method for clearing all metadata for a clean run
+	 * 
+	 */
+	public void clear() {
+		this.recursiveBlocSet.clear();
 	}
 	
 }

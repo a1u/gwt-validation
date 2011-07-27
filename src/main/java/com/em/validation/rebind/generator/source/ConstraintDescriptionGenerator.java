@@ -137,4 +137,5 @@ public enum ConstraintDescriptionGenerator {
 	public String getTargetPackage() {
 		return this.TARGET_PACKAGE;
 	}
+
 }

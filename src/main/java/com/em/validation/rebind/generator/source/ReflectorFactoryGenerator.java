@@ -140,5 +140,13 @@ public enum ReflectorFactoryGenerator {
 		
 		return metadata;
 	}
+	
+	/**
+	 * Method for clearing all metadata for a clean run
+	 * 
+	 */
+	public void clear() {
+		this.lockingSet.clear();
+	}
 
 }
