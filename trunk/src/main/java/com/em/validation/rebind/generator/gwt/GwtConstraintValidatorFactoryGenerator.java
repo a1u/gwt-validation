@@ -21,6 +21,7 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+import com.em.validation.rebind.generator.source.AnnotationInstanceFactoryGenerator;
 import com.em.validation.rebind.generator.source.ConstraintValidatorFactoryGenerator;
 import com.em.validation.rebind.metadata.ClassDescriptor;
 import com.google.gwt.core.ext.GeneratorContext;
@@ -36,10 +37,13 @@ public class GwtConstraintValidatorFactoryGenerator extends GwtGenerator {
 		
 		this.generateClass(factoryDescriptor,logger,context);	
 		
+		//reset this
 		this.reset();
+		
+		//reset the related factories
+		AnnotationInstanceFactoryGenerator.INSTANCE.clear();
 		
 		return factoryDescriptor.getFullClassName();
 	}
-
 	
 }
