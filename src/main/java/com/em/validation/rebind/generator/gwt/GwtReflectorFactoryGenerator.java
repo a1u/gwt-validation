@@ -44,6 +44,5 @@ public class GwtReflectorFactoryGenerator extends GwtGenerator {
 		
 		return factoryDescriptor.getFullClassName();
 	}
-
 	
 }

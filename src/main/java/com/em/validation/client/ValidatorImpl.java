@@ -170,8 +170,8 @@ public class ValidatorImpl implements Validator{
 			propertyMap.put(propertyName, valueMap);
 			validationCache.put(beanType, propertyMap);
 			
-			//if the property is cascaded, follow the rabbit hole so that it can pick up the earlier cascades
-			if(property.isCascaded()) {
+			//if the property is cascaded (and the value is not null), follow the rabbit hole so that it can pick up the earlier cascades
+			if(property.isCascaded() && value != null) {
 				//perform validation on each map value
 				if(value instanceof Object[]) {
 				
