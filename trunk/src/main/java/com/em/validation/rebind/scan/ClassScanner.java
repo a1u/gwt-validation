@@ -28,7 +28,6 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;
@@ -36,7 +35,6 @@ import javax.validation.ConstraintValidator;
 import org.reflections.Reflections;
 import org.reflections.scanners.FieldAnnotationsScanner;
 import org.reflections.scanners.MethodAnnotationsScanner;
-import org.reflections.scanners.ResourcesScanner;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
@@ -100,7 +98,7 @@ public enum ClassScanner {
         ConfigurationBuilder builder = new ConfigurationBuilder()
         								//.setUrls(ClasspathHelper.getUrlsForCurrentClasspath())
         								.setUrls(useableUrls)
-        								.setScanners(new TypeAnnotationsScanner(), new FieldAnnotationsScanner(), new MethodAnnotationsScanner(), new SubTypesScanner(), new ResourcesScanner());
+        								.setScanners(new TypeAnnotationsScanner(), new FieldAnnotationsScanner(), new MethodAnnotationsScanner(), new SubTypesScanner());
 
 		/*
 		ConfigurationBuilder builder = new ConfigurationBuilder()
@@ -114,14 +112,6 @@ public enum ClassScanner {
 		*/
 			
 		this.reflections = new Reflections(builder);
-		
-		/*
-		ConfigurationBuilder resourcesBuilder = new ConfigurationBuilder()
-												.setUrls(ClasspathHelper.getUrlsForPackagePrefix(""))
-												.setScanners(new ResourcesScanner());
-										
-		this.resources = new Reflections(resourcesBuilder);
-		*/
 	}
 	
 	public Set<Class<?>> getConstrainedClasses(String excludedPattern) {
@@ -189,11 +179,6 @@ public enum ClassScanner {
 	
 	public Set<Class<? extends ConstraintValidator<?, ?>>> getConstraintValidatorClasses() {
 		return this.getConstraintValidatorClasses(RebindConfiguration.INSTANCE.excludedValidatorClassesRegularExpression());
-	}
-
-	public Set<String> getLocaleResources() {
-		Pattern messagePattern = Pattern.compile("ValidationMessages.*");
-		return this.reflections.getResources(messagePattern);
 	}
 	
 }

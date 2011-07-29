@@ -71,12 +71,13 @@ public class ValidatorImpl implements Validator{
 		for(PropertyDescriptor property : bean.getConstrainedProperties()) {
 			violations.addAll(this.validateProperty(validationCache, object, property.getPropertyName(), groups));
 		}
-		
+
 		//update root objects for all violations
 		for(ConstraintViolation<T> violation : violations) {
 			if(violation instanceof ConstraintViolationImpl) {
-				((ConstraintViolationImpl<T>)violation).setRootBean(object);
-				((ConstraintViolationImpl<T>)violation).setRootBeanClass((Class<T>)object.getClass());
+				ConstraintViolationImpl<T> impl = (ConstraintViolationImpl<T>)violation;
+				impl.setRootBean(object);
+				impl.setRootBeanClass((Class<T>)object.getClass());
 			}
 		}
 		
@@ -97,8 +98,21 @@ public class ValidatorImpl implements Validator{
 		IReflector<T> reflector = ReflectorFactory.INSTANCE.getReflector((Class<T>)object.getClass());
 		Object value = reflector.getValue(propertyName, object);
 
+		Set<ConstraintViolation<T>> violations = this.validateValue(validationCache,(Class<T>)object.getClass(), propertyName, value, groups);
+		
+		for(ConstraintViolation<T> violation : violations) {
+			if(violation instanceof ConstraintViolationImpl) {
+				//if no leaf bean has been set then set it at this level, this works because of the recursive nature of the algorithm.
+				//the deepest properties get set first, therefore if the leaf is null then it has not been owned by a deeper property.
+				if(violation.getLeafBean() == null) {
+					ConstraintViolationImpl<T> impl = (ConstraintViolationImpl<T>)violation;
+					impl.setLeafBean(object);
+				}
+			}
+		}
+		
 		//validate property
-		return this.validateValue(validationCache,(Class<T>)object.getClass(), propertyName, value, groups);
+		return violations;
 	}
 	
 	@Override
