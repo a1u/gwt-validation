@@ -53,8 +53,6 @@ public abstract class GwtGenerator extends Generator {
 		
 		//do not generate a class twice.  this hash set is used to manage that.
 		if(this.generatedSet.contains(descriptor.getFullClassName())) {
-			//log non-generation
-			logger.log(Type.WARN, "Not generating (found in generated set): " + descriptor.getPackageName() + "." + descriptor.getClassName());
 			return;
 		}
 
@@ -63,8 +61,6 @@ public abstract class GwtGenerator extends Generator {
         //this is null when a class already exists. this usually happens when the print writer would be attempting
 		//to output the same class twice.  with the generationSet and various other blocks this should not happen.
 		if(printWriter == null) {
-			//log generation
-			logger.log(Type.WARN, "Not generating (found by print writer): " + descriptor.getPackageName() + "." + descriptor.getClassName());
 			return;
 		}
 		
