@@ -30,12 +30,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 				<td width="33%" valign="top"><e:AddressEditor ui:field="addressEditor"/></td>
 				<td width="33%" valign="top">
 					<br/>
-					<b>Properties for the class "com.em.validation.sample.model.Address</b><br/><br/>
+					<b>Properties for the class "com.em.validation.sample.model.Address"</b><br/><br/>
 					<g:Tree ui:field="addressProperties"/>
 				</td>
 				<td valign="top">
 					<br/>
-					<b>Properties for the class "com.em.validation.sample.model.Person</b><br/><br/>
+					<b>Properties for the class "com.em.validation.sample.model.Person"</b><br/><br/>
 					<g:Tree ui:field="personProperties"/>
 				</td>
 			</tr>		
