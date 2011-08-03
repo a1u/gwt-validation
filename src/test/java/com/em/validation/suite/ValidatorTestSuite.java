@@ -1,4 +1,4 @@
-package com.em.validation.client.cases.defects;
+package com.em.validation.suite;
 
 /*
 GWT Validation Framework - A JSR-303 validation framework for GWT
@@ -24,16 +24,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import com.em.validation.client.cases.validators.NotNullObjectValidatorTest;
 import com.google.gwt.junit.tools.GWTTestSuite;
 
-public class DefectTestSuite extends GWTTestSuite {
+public class ValidatorTestSuite extends GWTTestSuite {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("GWT Defect Test Suite");
+		TestSuite suite = new TestSuite("GWT Validators Test Suite");
 		
-		suite.addTestSuite(Defect_005.class);
-		suite.addTestSuite(Defect_024.class);
-		suite.addTestSuite(Defect_037.class);
+		suite.addTestSuite(NotNullObjectValidatorTest.class);
 		
 		return suite;
 	}
