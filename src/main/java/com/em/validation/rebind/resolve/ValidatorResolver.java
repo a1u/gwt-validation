@@ -81,14 +81,14 @@ public enum ValidatorResolver {
 						Class<?> parameterType = method.getParameterTypes()[0];						
 						
 						//exact equality makes a candidate a result
-						if(elementType.equals(parameterType)) {
+						if(parameterType.equals(elementType)) {
 							results.add(validator);
 						} else 											
 						//if parameterType is higher on the type hierarchy tree then the elementType it means that 
 						//the elementType could be used to call the method and that this candidate is a result
 						if(parameterType.isAssignableFrom(elementType)) {
 							results.add(validator);
-						} 
+						} 			
 
 						//the first match to isValid is the one we should use
 						break;

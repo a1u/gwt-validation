@@ -21,21 +21,36 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import org.junit.Test;
-
 import com.em.validation.client.core.CoreValidatorTest;
 import com.em.validation.client.model.tests.GwtValidationBaseTestCase;
 
 public class ValidatorTest extends GwtValidationBaseTestCase {
 
-	@Test
 	public void testCyclicValidator() {
 		CoreValidatorTest.testCyclicValidator(this);
 	}
 	
-	@Test
 	public void testRecurisveValidator() {
 		CoreValidatorTest.testRecurisveValidator(this);	
 	}
 	
+	public void testMapValidator() {
+		CoreValidatorTest.testMapValidator(this);
+	}
+	
+	public void testArrayValidator() {
+		CoreValidatorTest.testArrayValidator(this);
+	}
+	
+	public void testIterableValidator() {
+		CoreValidatorTest.testIterableValidator(this);
+	}
+	
+	public void testPropertyValidationCyclic() {
+		CoreValidatorTest.testPropertyValidationCyclic(this);
+	}
+	
+	public void testUnwrap() {
+		CoreValidatorTest.testUnwrap(this);
+	}
 }

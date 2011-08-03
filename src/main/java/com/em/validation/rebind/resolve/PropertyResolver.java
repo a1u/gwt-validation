@@ -95,12 +95,25 @@ public enum PropertyResolver {
 
 			PropertyMetadata pMeta = new PropertyMetadata();
 			pMeta.setName(propertyName);
+			
+			//this bit of code does two things, first it resolves the base property type, and then it resolves the contained property type.
+			//the while loop recursively does the work of getting the next deepest component type, and thus works like while(iterator.next()) 
+			//and will quit when there are no more
+			//the depth tracker allows us to tack the right number of containers back onto the object
 			Class<?> propertyType = property.getPropertyType();
+			int level = 0;
 			while(propertyType.getComponentType() != null) {
 				propertyType = propertyType.getComponentType();
-			}			
-			pMeta.setClassString(propertyType.getName() + ".class");
-			pMeta.setReturnType(propertyType);
+				level++;
+			}
+			String className = propertyType.getName();
+			//here we tack on the right number of containers
+			for(int depth = 0; depth < level; depth++) {
+				className += "[]";
+			}
+			//and then set the class name, plus array containment, back onto the classname so that it can be used by the templates
+			pMeta.setClassString(className + ".class");
+			pMeta.setReturnType(property.getPropertyType());
 			
 			if(this.hasMethod(targetClass, property.getReadMethod().getName(), new Class<?>[]{})) {
 				pMeta.setAccessor(property.getReadMethod().getName() + "()");
