@@ -36,8 +36,7 @@ public enum RegexProvider {
 	
 	public boolean matches(String regex, String check, Flag[] flags) {
 		RegExp exp = RegExp.compile(regex);
-		MatchResult result = exp.exec(check);
-		return result.getIndex() >= 0;
+		return exp.test(check);
 	}
 	
 }

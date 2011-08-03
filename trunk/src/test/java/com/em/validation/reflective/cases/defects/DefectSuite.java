@@ -27,7 +27,8 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	Defect_005.class,
-	Defect_024.class
+	Defect_024.class,
+	Defect_037.class
 })
 public class DefectSuite {
 

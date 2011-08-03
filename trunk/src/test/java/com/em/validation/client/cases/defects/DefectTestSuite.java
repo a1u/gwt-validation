@@ -33,6 +33,7 @@ public class DefectTestSuite extends GWTTestSuite {
 		
 		suite.addTestSuite(Defect_005.class);
 		suite.addTestSuite(Defect_024.class);
+		suite.addTestSuite(Defect_037.class);
 		
 		return suite;
 	}
