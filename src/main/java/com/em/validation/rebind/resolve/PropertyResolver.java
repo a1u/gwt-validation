@@ -29,6 +29,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -111,6 +112,28 @@ public enum PropertyResolver {
 				continue;
 			}
 			
+			int modifiers = 0;
+			if(pMeta.isField()) {
+				try {
+					Field field = targetClass.getField(propertyName);
+					modifiers = field.getModifiers();
+				} catch (SecurityException e) {
+					continue;
+				} catch (NoSuchFieldException e) {
+					continue;
+				}			
+			} else {
+				Method method = property.getReadMethod();
+				modifiers = method.getModifiers();
+			}
+			
+			//we cannot access a private or protected field/method on a target class, so we need to skip it.  this is part of the 
+			//fix for issue #037 (http://code.google.com/p/gwt-validation/issues/detail?id=37) where the private static serialid
+			//was causing problems.
+			if(Modifier.isPrivate(modifiers) || Modifier.isProtected(modifiers)) {
+				continue;
+			}
+			
 			//add the property to the metadata list
 			metadataMap.put(propertyName,pMeta);
 			
@@ -162,7 +185,11 @@ public enum PropertyResolver {
 			
 			//add reflective bits
 			PropertyMetadata pMeta = metadataMap.get(fieldName);
-			if(pMeta == null) {
+			
+			//we cannot access a private or protected method on a target class, so we need to skip it.  this is part of the 
+			//fix for issue #037 (http://code.google.com/p/gwt-validation/issues/detail?id=37) where the private static serialid
+			//was causing problems.
+			if(pMeta == null && !(Modifier.isPrivate(field.getModifiers()) || Modifier.isProtected(field.getModifiers()))) {
 				//instantiate
 				pMeta = new PropertyMetadata();
 				//set properties
@@ -173,9 +200,11 @@ public enum PropertyResolver {
 				metadataMap.put(fieldName,pMeta);			
 			}
 
-			//process annotations
-			List<Annotation> annotations = this.getContstraintAnnotations(Arrays.asList(field.getAnnotations()));
-			pMeta.getAnnotationInstances().addAll(annotations);
+			if(pMeta != null) {
+				//process annotations
+				List<Annotation> annotations = this.getContstraintAnnotations(Arrays.asList(field.getAnnotations()));
+				pMeta.getAnnotationInstances().addAll(annotations);
+			}
 		}
 		
 		return metadataMap;
