@@ -24,7 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import com.em.validation.client.ClientTestSuite;
+import com.em.validation.suite.ClientTestSuite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({

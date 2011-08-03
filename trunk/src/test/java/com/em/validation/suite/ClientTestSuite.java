@@ -1,4 +1,4 @@
-package com.em.validation.client;
+package com.em.validation.suite;
 
 /*
 GWT Validation Framework - A JSR-303 validation framework for GWT
@@ -28,10 +28,7 @@ import com.em.validation.client.cases.ConstraintValidatorFactoryTest;
 import com.em.validation.client.cases.ConstraintsTest;
 import com.em.validation.client.cases.MetadataTest;
 import com.em.validation.client.cases.ValidatorTest;
-import com.em.validation.client.cases.defects.DefectTestSuite;
-import com.em.validation.client.cases.example.ExampleTestSuite;
 import com.em.validation.client.cases.messages.MessageTest;
-import com.em.validation.client.cases.validators.ValidatorTestSuite;
 import com.google.gwt.junit.tools.GWTTestSuite;
 
 public class ClientTestSuite extends GWTTestSuite {

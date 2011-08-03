@@ -1,4 +1,4 @@
-package com.em.validation.client.cases.example;
+package com.em.validation.suite;
 
 /*
 GWT Validation Framework - A JSR-303 validation framework for GWT
