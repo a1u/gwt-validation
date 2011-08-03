@@ -37,5 +37,29 @@ public class ValidatorTest extends ReflectiveValidationBaseTestClass {
 	public void testRecurisveValidator() {
 		CoreValidatorTest.testRecurisveValidator(this);	
 	}
+
+	@Test
+	public void testMapValidator() {
+		CoreValidatorTest.testMapValidator(this);
+	}
+
+	@Test
+	public void testArrayValidator() {
+		CoreValidatorTest.testArrayValidator(this);
+	}
 	
+	@Test
+	public void testIterableValidator() {
+		CoreValidatorTest.testIterableValidator(this);
+	}
+	
+	@Test
+	public void testPropertyValidationCyclic() {
+		CoreValidatorTest.testPropertyValidationCyclic(this);
+	}
+	
+	@Test
+	public void testUnwrap() {
+		CoreValidatorTest.testUnwrap(this);
+	}
 }
