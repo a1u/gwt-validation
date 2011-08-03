@@ -53,9 +53,12 @@ public enum ClassScanner {
 	INSTANCE;
 	
 	private Reflections reflections = null;
-	
-	//private Reflections resources = null;
-	
+
+	/**
+	 * List of jar files that we do not want to include on the classpath because they cannot/will not contain any bits of the 
+	 * path that we want scanned.  this speeds up about x14 on a modern i7 laptop, 8gb of ram.
+	 * 
+	 */
 	private String[] doNotScanJarsInThisList = new String[]{
 		"gwt-dev",
 		"gwt-user",
@@ -79,7 +82,7 @@ public enum ClassScanner {
 		
 		//this little snippet goes through the classpath urls and ommits jars that are on the forbidden list.
 		//this is intended to remove jars from the classpath that we know are not ones that will contain patterns
-		Set<URL> classPathUrls = ClasspathHelper.getUrlsForCurrentClasspath();
+		Set<URL> classPathUrls = ClasspathHelper.forJavaClassPath();
 		Set<URL> useableUrls = new HashSet<URL>();
 		for(URL url : classPathUrls) {
 			boolean use = true;
@@ -95,21 +98,13 @@ public enum ClassScanner {
 			use = false;
 		}		
 		
-        ConfigurationBuilder builder = new ConfigurationBuilder()
-        								//.setUrls(ClasspathHelper.getUrlsForCurrentClasspath())
-        								.setUrls(useableUrls)
-        								.setScanners(new TypeAnnotationsScanner(), new FieldAnnotationsScanner(), new MethodAnnotationsScanner(), new SubTypesScanner());
-
-		/*
 		ConfigurationBuilder builder = new ConfigurationBuilder()
-										.setUrls(classPathUrls)
+										.setUrls(useableUrls)
 										.setScanners(	new TypeAnnotationsScanner(), 
 														new FieldAnnotationsScanner(), 
 														new MethodAnnotationsScanner(), 
 														new SubTypesScanner()
-										)
-										;
-		*/
+										);
 			
 		this.reflections = new Reflections(builder);
 	}

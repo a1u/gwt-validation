@@ -15,6 +15,6 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/validation-api-1.0.0.GA.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/guava-r09.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/gwt-validation-2.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/reflections-0.9.5-RC2.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/reflections-0.9.5.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
