@@ -42,4 +42,10 @@ public class MetadataTest extends ReflectiveValidationBaseTestClass {
 	public void testDeclaredOnFinder() {
 		CoreMetadataTest.testDeclaredOnFinder(this);
 	}
+
+	@Test
+	public void testBeanDescriptor() {
+		CoreMetadataTest.testBeanDescriptor(this);
+	}
+
 }
