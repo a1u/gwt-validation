@@ -21,25 +21,24 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import org.junit.Test;
-
 import com.em.validation.client.core.CoreMetadataTest;
 import com.em.validation.client.model.tests.GwtValidationBaseTestCase;
 
 public class MetadataTest extends GwtValidationBaseTestCase {
 	
-	@Test
 	public void testGroupFinderOnClass() {
 		CoreMetadataTest.testGroupFinderOnClass(this);
 	}
 	
-	@Test
 	public void testGroupFinderOnProperty() {
 		CoreMetadataTest.testGroupFinderOnProperty(this);
 	}
 	
-	@Test
 	public void testDeclaredOnFinder() {
 		CoreMetadataTest.testDeclaredOnFinder(this);
+	}
+	
+	public void testBeanDescriptor() {
+		CoreMetadataTest.testBeanDescriptor(this);
 	}
 }

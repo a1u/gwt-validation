@@ -102,7 +102,7 @@ public class CoreConstraintsTest extends GwtValidationBaseTestCase {
 		
 		Set<ConstraintDescriptor<?>> descriptors = beanDescriptor.getConstraintsForProperty("zipCode").getConstraintDescriptors();
 		
-		assertTrue(descriptors.size() > 0);
+		assertFalse(descriptors.isEmpty());
 		
 		//get the parent constraint
 		ConstraintDescriptor<?> parent = descriptors.iterator().next();

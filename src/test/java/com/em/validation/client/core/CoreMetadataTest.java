@@ -126,4 +126,11 @@ public class CoreMetadataTest {
 		testCase.localAssertEquals(6, finder.getConstraintDescriptors().size());
 	}
 	
+	public static void testBeanDescriptor(ITestCase testCase) {
+
+		BeanDescriptor descriptor = DescriptorFactory.INSTANCE.getBeanDescriptor(testCase.getReflectorFactory().getReflector(TestClass.class));
+				
+		testCase.localAssertEquals(TestClass.class, descriptor.getElementClass());
+	}
+	
 }
