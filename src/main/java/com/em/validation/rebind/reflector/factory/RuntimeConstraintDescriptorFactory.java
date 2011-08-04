@@ -42,14 +42,30 @@ public enum RuntimeConstraintDescriptorFactory {
 	}
 	
 	public ConstraintDescriptor<?> getConstraintDescriptor(ConstraintMetadata metadata) {
-		ConstraintDescriptor<?> descriptor = this.descriptorCache.get(metadata.getInstance().toString());
+		String key = metadata.toString();
+		
+		ConstraintDescriptor<?> descriptor = this.descriptorCache.get(key);
+
+		boolean noSpecificType = false;
+		
+		if(descriptor == null) {
+			noSpecificType = true;
+		}
+		
 		if(descriptor == null) {
 			descriptor = new RuntimeConstraintDescriptor<Annotation>(metadata);
-			this.descriptorCache.put(metadata.getInstance().toString(), descriptor);
+			
+			if(noSpecificType && !this.descriptorCache.containsKey(metadata.getInstance().toString())) {
+				this.descriptorCache.put(metadata.getInstance().toString(), descriptor);
+			} 
+			
+			this.descriptorCache.put(key, descriptor);
+			
 			for(ConstraintMetadata sub : metadata.getComposedOf()) {
 				descriptor.getComposingConstraints().add(this.getConstraintDescriptor(sub));
 			}
 		}
+		
 		//decorate the result so that each instance will appear unique.  this means that the constraints will be counted 
 		//correctly and an instance will be returned for each constraint annotation.  this is a workaround introduced 
 		//because of the caching and reuse of the instances based on the signature.
@@ -57,5 +73,5 @@ public enum RuntimeConstraintDescriptorFactory {
 		ConstraintDescriptorDecorator<Annotation> decorator = new ConstraintDescriptorDecorator<Annotation>((ConstraintDescriptor<Annotation>)descriptor);
 		return decorator;
 	}
-
+	
 }

@@ -30,7 +30,7 @@ public class Section5_6Test extends GwtValidationBaseTestCase {
 
 	@Test
 	public void testConstraintGeneration() {
-		CoreSection5_6Test.testConstraintMetadataSectionTest(this.getReflectorFactory());
+		CoreSection5_6Test.testConstraintMetadataSectionTest(this);
 	}
 	
 }

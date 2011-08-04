@@ -1,4 +1,4 @@
-package com.em.validation;
+package com.em.validation.suite.runtime;
 
 /*
 GWT Validation Framework - A JSR-303 validation framework for GWT
@@ -24,13 +24,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import com.em.validation.suite.ClientTestSuite;
+import com.em.validation.reflective.cases.example.jsr303.section5_6.Section5_6Test;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	RuntimeTestSuite.class,
-	ClientTestSuite.class
+	Section5_6Test.class
 })
-public class FullTestSuite {
+public class ExampleTestSuite {
 
 }

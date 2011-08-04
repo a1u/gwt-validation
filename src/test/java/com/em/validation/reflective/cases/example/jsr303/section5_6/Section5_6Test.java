@@ -30,6 +30,6 @@ public class Section5_6Test extends ReflectiveValidationBaseTestClass {
 
 	@Test
 	public void testConstraintGeneration() throws InstantiationException, IllegalAccessException {
-		CoreSection5_6Test.testConstraintMetadataSectionTest(this.getReflectorFactory());
+		CoreSection5_6Test.testConstraintMetadataSectionTest(this);
 	}
 }

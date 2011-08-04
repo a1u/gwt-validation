@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import javax.validation.constraints.Size;
 
-import com.em.validation.client.model.example.jsr303.section5_6.constraint.NotEmpty;
+import com.em.validation.client.constraints.NotEmpty;
 
 public class Author {
 	private String firstName;

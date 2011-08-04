@@ -1,4 +1,4 @@
-package com.em.validation.suite;
+package com.em.validation.suite.client;
 
 /*
 GWT Validation Framework - A JSR-303 validation framework for GWT
@@ -24,26 +24,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import com.em.validation.client.cases.ConstraintValidatorFactoryTest;
-import com.em.validation.client.cases.ConstraintsTest;
-import com.em.validation.client.cases.MetadataTest;
-import com.em.validation.client.cases.ValidatorTest;
-import com.em.validation.client.cases.messages.MessageTest;
+import com.em.validation.client.cases.validators.NotEmptyValidatorTest;
+import com.em.validation.client.cases.validators.NotNullObjectValidatorTest;
 import com.google.gwt.junit.tools.GWTTestSuite;
 
-public class ClientTestSuite extends GWTTestSuite {
+public class ValidatorImplementationTestSuite extends GWTTestSuite {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("GWT Client Test Suite");
+		TestSuite suite = new TestSuite("GWT Validator Imlementation Test Suite");
 		
-		suite.addTest(DefectTestSuite.suite());
-		suite.addTestSuite(ConstraintsTest.class);
-		suite.addTestSuite(MetadataTest.class);
-		suite.addTest(ExampleTestSuite.suite());
-		suite.addTest(ValidatorTestSuite.suite());
-		suite.addTestSuite(ConstraintValidatorFactoryTest.class);
-		suite.addTestSuite(ValidatorTest.class);
-		suite.addTestSuite(MessageTest.class);
+		suite.addTestSuite(NotNullObjectValidatorTest.class);
+		suite.addTestSuite(NotEmptyValidatorTest.class);
 		
 		return suite;
 	}

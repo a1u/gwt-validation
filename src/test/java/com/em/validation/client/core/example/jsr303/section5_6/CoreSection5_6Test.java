@@ -29,15 +29,15 @@ import javax.validation.metadata.BeanDescriptor;
 import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.PropertyDescriptor;
 
+import com.em.validation.client.constraints.NotEmpty;
 import com.em.validation.client.metadata.factory.DescriptorFactory;
-import com.em.validation.client.model.example.jsr303.section5_6.constraint.NotEmpty;
 import com.em.validation.client.model.example.jsr303.section5_6.model.Book;
 import com.em.validation.client.model.tests.GwtValidationBaseTestCase;
-import com.em.validation.client.reflector.IReflectorFactory;
+import com.em.validation.client.model.tests.ITestCase;
 
 public class CoreSection5_6Test extends GwtValidationBaseTestCase {
 
-	public static void testConstraintMetadataSectionTest(IReflectorFactory factory) {
+	public static void testConstraintMetadataSectionTest(ITestCase testCase) {
 	
 		//get descriptor
 		BeanDescriptor bookDescriptor = DescriptorFactory.INSTANCE.getBeanDescriptor(Book.class);

@@ -100,7 +100,7 @@ public enum ValidatorResolver {
 			}
 			
 		}		
-		
+
 		//return
 		return results;
 	}

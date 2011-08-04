@@ -26,7 +26,7 @@ import javax.validation.ConstraintValidatorContext;
 import javax.validation.ConstraintValidatorFactory;
 import javax.validation.ValidationException;
 
-import com.em.validation.client.model.example.jsr303.section5_6.constraint.NotEmpty;
+import com.em.validation.client.constraints.NotEmpty;
 import com.em.validation.client.model.tests.GwtValidationBaseTestCase;
 import com.em.validation.client.model.tests.ITestCase;
 import com.em.validation.client.validators.NotNullObjectValidator;
@@ -43,7 +43,6 @@ public class CoreConstraintValidatorFactoryTest extends GwtValidationBaseTestCas
 		
 		//the factory returns an instance (for member and declared classes)
 		assertNotNull(factory.getInstance(NotNullObjectValidator.class));
-		assertNotNull(factory.getInstance(NotEmpty.NotEmptyValidator.class));
 	
 		try {
 			//get an instance of a factory than COULD NOT be created at runtime or generation time (anonymous)
