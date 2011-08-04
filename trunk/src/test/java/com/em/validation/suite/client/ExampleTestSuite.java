@@ -1,4 +1,4 @@
-package com.em.validation.reflective.cases.validators;
+package com.em.validation.suite.client;
 
 /*
 GWT Validation Framework - A JSR-303 validation framework for GWT
@@ -21,13 +21,20 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
-	NotNullObjectValidatorTest.class
-})
-public class ValidatorTestSuite {
+import com.em.validation.client.cases.example.jsr303.section5_6.Section5_6Test;
+import com.google.gwt.junit.tools.GWTTestSuite;
 
+public class ExampleTestSuite extends GWTTestSuite {
+
+	public static Test suite() {
+		TestSuite suite = new TestSuite("GWT JSR-303 Example Test Suite");
+		
+		suite.addTestSuite(Section5_6Test.class);
+		
+		return suite;
+	}
+	
 }

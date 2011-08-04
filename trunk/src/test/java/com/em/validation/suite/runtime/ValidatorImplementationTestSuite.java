@@ -1,4 +1,4 @@
-package com.em.validation.suite;
+package com.em.validation.suite.runtime;
 
 /*
 GWT Validation Framework - A JSR-303 validation framework for GWT
@@ -21,24 +21,17 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
-import com.em.validation.client.cases.defects.Defect_005;
-import com.em.validation.client.cases.defects.Defect_024;
-import com.em.validation.client.cases.defects.Defect_037;
-import com.google.gwt.junit.tools.GWTTestSuite;
+import com.em.validation.reflective.cases.validators.NotEmptyValidatorTest;
+import com.em.validation.reflective.cases.validators.NotNullObjectValidatorTest;
 
-public class DefectTestSuite extends GWTTestSuite {
+@RunWith(Suite.class)
+@Suite.SuiteClasses({
+	NotNullObjectValidatorTest.class,
+	NotEmptyValidatorTest.class
+})
+public class ValidatorImplementationTestSuite {
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite("GWT Defect Test Suite");
-		
-		suite.addTestSuite(Defect_005.class);
-		suite.addTestSuite(Defect_024.class);
-		suite.addTestSuite(Defect_037.class);
-		
-		return suite;
-	}
-	
 }

@@ -67,6 +67,12 @@ public class ConstraintMetadata {
 	
 	
 	/**
+	 * Target class of the constraint
+	 * 
+	 */
+	private Class<?> targetClass = null;
+	
+	/**
 	 * The types that the constraint can reside on
 	 * 
 	 */
@@ -192,7 +198,23 @@ public class ConstraintMetadata {
 	public void setOverridesMap(Map<String,OverridesMetadata> overridesMap) {
 		this.overridesMap = overridesMap;
 	}	
-		
+	
+	public Class<?> getTargetClass() {
+		return targetClass;
+	}
+
+	public void setTargetClass(Class<?> targetClass) {
+		this.targetClass = targetClass;
+	}
+
+	@Override
+	public String toString() {
+		String key = this.getInstance().toString();
+		if(this.targetClass != null) {
+			key += "@" + this.targetClass.getName();
+		}
+		return key;
+	}
 	
 }
 

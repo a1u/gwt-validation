@@ -33,8 +33,6 @@ import javax.validation.Payload;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import com.em.validation.client.model.composed.ComposedConstraint;
-
 /* 
 GWT Validation Framework - A JSR-303 validation framework for GWT
 
@@ -92,6 +90,6 @@ public @interface TestZipCode {
 	@Retention(RetentionPolicy.RUNTIME)
 	@Documented
 	@interface List {
-		ComposedConstraint[] value();
+		TestZipCode[] value();
 	}
 }

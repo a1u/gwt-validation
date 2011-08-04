@@ -109,8 +109,14 @@ public enum ConstraintDescriptionResolver {
 	@SuppressWarnings("unchecked")
 	public ConstraintMetadata getConstraintMetadata(Annotation annotation, Class<?> elementType) {
 		
+		//key
+		String key = annotation.toString();
+		if(elementType != null) {
+			key = elementType.toString() + "@" + key;
+		}
+		
 		//create annotation metadata
-		ConstraintMetadata metadata = this.metadataCache.get(annotation.toString()); 
+		ConstraintMetadata metadata = this.metadataCache.get(key); 
 				
 		//if the cache misses, generate
 		if(metadata == null) {
@@ -121,6 +127,7 @@ public enum ConstraintDescriptionResolver {
 			metadata.setName(annotation.annotationType().getName());
 			metadata.setSimpleName(annotation.annotationType().getSimpleName());
 			metadata.setInstance(annotation);
+			metadata.setTargetClass(elementType);
 			
 			//create annotation method metadata
 			for(Method method : annotation.annotationType().getDeclaredMethods()) {
@@ -150,10 +157,8 @@ public enum ConstraintDescriptionResolver {
 			//report as single or not
 			metadata.setReportAsSingleViolation(annotation.annotationType().getAnnotation(ReportAsSingleViolation.class) != null);  
 			
-			//target element types
-			
 			//put in cache
-			this.metadataCache.put(annotation.toString(), metadata);
+			this.metadataCache.put(key, metadata);
 			
 			//get composing constraints
 			for(Annotation subAnnotation : annotation.annotationType().getAnnotations()) {

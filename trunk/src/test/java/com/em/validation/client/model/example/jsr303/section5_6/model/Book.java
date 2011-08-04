@@ -28,7 +28,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.validation.groups.Default;
 
-import com.em.validation.client.model.example.jsr303.section5_6.constraint.NotEmpty;
+import com.em.validation.client.constraints.NotEmpty;
 
 public class Book {
 	private String title;

@@ -1,4 +1,4 @@
-package com.em.validation.reflective.cases.example;
+package com.em.validation.suite.client;
 
 /*
 GWT Validation Framework - A JSR-303 validation framework for GWT
@@ -21,15 +21,24 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
-import com.em.validation.reflective.cases.example.jsr303.section5_6.Section5_6Test;
+import com.em.validation.client.cases.defects.Defect_005;
+import com.em.validation.client.cases.defects.Defect_024;
+import com.em.validation.client.cases.defects.Defect_037;
+import com.google.gwt.junit.tools.GWTTestSuite;
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
-	Section5_6Test.class
-})
-public class ExampleTestSuite {
+public class DefectTestSuite extends GWTTestSuite {
 
+	public static Test suite() {
+		TestSuite suite = new TestSuite("GWT Defect Test Suite");
+		
+		suite.addTestSuite(Defect_005.class);
+		suite.addTestSuite(Defect_024.class);
+		suite.addTestSuite(Defect_037.class);
+		
+		return suite;
+	}
+	
 }

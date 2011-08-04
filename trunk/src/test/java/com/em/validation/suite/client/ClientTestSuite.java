@@ -1,4 +1,4 @@
-package com.em.validation.suite;
+package com.em.validation.suite.client;
 
 /*
 GWT Validation Framework - A JSR-303 validation framework for GWT
@@ -24,15 +24,26 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import com.em.validation.client.cases.example.jsr303.section5_6.Section5_6Test;
+import com.em.validation.client.cases.ConstraintValidatorFactoryTest;
+import com.em.validation.client.cases.ConstraintsTest;
+import com.em.validation.client.cases.MetadataTest;
+import com.em.validation.client.cases.ValidatorTest;
+import com.em.validation.client.cases.messages.MessageTest;
 import com.google.gwt.junit.tools.GWTTestSuite;
 
-public class ExampleTestSuite extends GWTTestSuite {
+public class ClientTestSuite extends GWTTestSuite {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("GWT JSR-303 Example Test Suite");
+		TestSuite suite = new TestSuite("GWT Client Test Suite");
 		
-		suite.addTestSuite(Section5_6Test.class);
+		suite.addTest(DefectTestSuite.suite());
+		suite.addTestSuite(ConstraintsTest.class);
+		suite.addTestSuite(MetadataTest.class);
+		suite.addTest(ExampleTestSuite.suite());
+		suite.addTest(ValidatorImplementationTestSuite.suite());
+		suite.addTestSuite(ConstraintValidatorFactoryTest.class);
+		suite.addTestSuite(ValidatorTest.class);
+		suite.addTestSuite(MessageTest.class);
 		
 		return suite;
 	}

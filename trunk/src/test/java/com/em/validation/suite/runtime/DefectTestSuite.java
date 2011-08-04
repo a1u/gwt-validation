@@ -1,4 +1,4 @@
-package com.em.validation;
+package com.em.validation.suite.runtime;
 
 /*
 GWT Validation Framework - A JSR-303 validation framework for GWT
@@ -24,14 +24,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import com.em.validation.rebind.RebindTestSuite;
-import com.em.validation.reflective.ReflectiveTestSuite;
+import com.em.validation.reflective.cases.defects.Defect_005;
+import com.em.validation.reflective.cases.defects.Defect_024;
+import com.em.validation.reflective.cases.defects.Defect_037;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	RebindTestSuite.class,
-	ReflectiveTestSuite.class
+	Defect_005.class,
+	Defect_024.class,
+	Defect_037.class
 })
-public class RuntimeTestSuite {
+public class DefectTestSuite {
 
 }

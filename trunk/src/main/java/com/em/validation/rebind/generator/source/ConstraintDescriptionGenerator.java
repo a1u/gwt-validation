@@ -65,7 +65,17 @@ public enum ConstraintDescriptionGenerator {
 	}
 	
 	private ClassDescriptor getDescriptorFromMetadata(ConstraintMetadata metadata) {
-		ClassDescriptor descriptor = this.descriptorCache.get(metadata.getInstance().toString());
+		
+		String key = metadata.toString();
+		
+		ClassDescriptor descriptor = this.descriptorCache.get(key);
+
+		boolean noSpecificType = false;
+		
+		if(descriptor == null) {
+			noSpecificType = true;
+		}
+		
 		if(descriptor == null) {
 			//class descriptor
 			descriptor = new ClassDescriptor();
@@ -97,15 +107,19 @@ public enum ConstraintDescriptionGenerator {
 				constraintValidatorClassNames.add(className);
 			}			
 			
+			if(noSpecificType && !this.descriptorCache.containsKey(metadata.getInstance().toString())) {
+				this.descriptorCache.put(metadata.getInstance().toString(), descriptor);
+			} 
+			
 			//push into cache
-			this.descriptorCache.put(metadata.getInstance().toString(), descriptor);
+			this.descriptorCache.put(metadata.toString(), descriptor);
 
 			//generate constraint descriptor
 			descriptor.setFullClassName(fullGeneratedConstraintName);
 			descriptor.setClassName(generatedConstraintName);
 			descriptor.setPackageName(this.TARGET_PACKAGE);
 			
-			//get the generated code for the constrageneratedAnnotationNameints of the composing metadata, if it exists
+			//get the generated code for the constraints of the composing metadata, if it exists
 			for(ConstraintMetadata subMetadata : metadata.getComposedOf()) {
 				descriptor.getDependencies().add(this.getDescriptorFromMetadata(subMetadata));
 			}
