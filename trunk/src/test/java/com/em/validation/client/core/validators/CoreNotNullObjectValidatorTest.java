@@ -63,7 +63,7 @@ public class CoreNotNullObjectValidatorTest extends GwtValidationBaseTestCase {
 		
 		//validate a few objects
 		assertFalse(notNullValidator.isValid(null, context));
-		assertTrue(notNullValidator.isValid(new String(), context));
+		assertTrue(notNullValidator.isValid("", context));
 		assertTrue(notNullValidator.isValid(12, context));
 		assertTrue(notNullValidator.isValid(0.0, context));
 		assertTrue(notNullValidator.isValid(true, context));

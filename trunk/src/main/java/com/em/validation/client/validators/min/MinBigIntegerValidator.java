@@ -32,7 +32,7 @@ public class MinBigIntegerValidator extends MinValidator<BigInteger> {
 		
 		if(value == null) return true;
 		
-		Long minValueLong = new Long(this.minValue);
+		Long minValueLong = Long.valueOf(this.minValue);
 		
 		BigInteger minValue = new BigInteger(minValueLong.toString());
 		

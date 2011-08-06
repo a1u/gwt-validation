@@ -39,7 +39,7 @@ import com.em.validation.client.reflector.IReflector;
  * @author chris
  *
  */
-public class BeanDescriptorImpl extends ProtoDescriptor implements BeanDescriptor,ElementDescriptor {
+public class BeanDescriptorImpl extends ProtoDescriptor implements BeanDescriptor {
 
 	public BeanDescriptorImpl(IReflector<?> reflector) {
 		super(reflector);

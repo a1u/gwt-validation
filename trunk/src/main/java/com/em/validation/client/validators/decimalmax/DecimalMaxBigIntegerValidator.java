@@ -32,7 +32,7 @@ public class DecimalMaxBigIntegerValidator extends DecimalMaxValidator<BigIntege
 		
 		if(value == null) return true;
 		
-		BigInteger minValue = new BigInteger(this.maxValueString.toString());
+		BigInteger minValue = new BigInteger(this.maxValueString);
 		
 		return minValue.compareTo(value) >= 0;
 	}

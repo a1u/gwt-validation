@@ -30,7 +30,7 @@ import java.util.Set;
 
 public class OverridesMetadata {
 	
-	public class OverrideValues {
+	public static class OverrideValues {
 		private String valueAsString = "null";
 		private Object value = null;
 		private int index = -1;
