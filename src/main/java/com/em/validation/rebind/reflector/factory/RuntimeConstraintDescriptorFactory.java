@@ -22,12 +22,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 import java.lang.annotation.Annotation;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.validation.metadata.ConstraintDescriptor;
 
 import com.em.validation.client.metadata.ConstraintDescriptorDecorator;
+import com.em.validation.rebind.AbstractConstraintDescriptorGenerator;
 import com.em.validation.rebind.metadata.ConstraintMetadata;
 import com.em.validation.rebind.metadata.RuntimeConstraintDescriptor;
 
@@ -35,43 +34,34 @@ public enum RuntimeConstraintDescriptorFactory {
 	
 	INSTANCE;
 
-	private Map<String, ConstraintDescriptor<?>> descriptorCache = new HashMap<String, ConstraintDescriptor<?>>();
-	
-	private RuntimeConstraintDescriptorFactory() {
+	private static class RuntimeConstraintGenerator extends AbstractConstraintDescriptorGenerator<ConstraintDescriptor<?>> {
+
+		@Override
+		protected ConstraintDescriptor<?> create(ConstraintMetadata metadata) {
+			return new RuntimeConstraintDescriptor<Annotation>(metadata);
+		}
+
+		@Override
+		protected void recurse(ConstraintDescriptor<?> withDescriptor, ConstraintMetadata metadata) {
+			withDescriptor.getComposingConstraints().add(this.getConstraintDescriptor(metadata));
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		protected ConstraintDescriptor<?> finish(ConstraintDescriptor<?> withDescriptor, ConstraintMetadata metadata) {
+			return new ConstraintDescriptorDecorator<Annotation>((ConstraintDescriptor<Annotation>)withDescriptor);
+		}
 		
 	}
 	
+	private RuntimeConstraintGenerator generator = null;
+	
+	private RuntimeConstraintDescriptorFactory() {
+		this.generator = new RuntimeConstraintGenerator();
+	}
+	
 	public ConstraintDescriptor<?> getConstraintDescriptor(ConstraintMetadata metadata) {
-		String key = metadata.toString();
-		
-		ConstraintDescriptor<?> descriptor = this.descriptorCache.get(key);
-
-		boolean noSpecificType = false;
-		
-		if(descriptor == null) {
-			noSpecificType = true;
-		}
-		
-		if(descriptor == null) {
-			descriptor = new RuntimeConstraintDescriptor<Annotation>(metadata);
-			
-			if(noSpecificType && !this.descriptorCache.containsKey(metadata.getInstance().toString())) {
-				this.descriptorCache.put(metadata.getInstance().toString(), descriptor);
-			} 
-			
-			this.descriptorCache.put(key, descriptor);
-			
-			for(ConstraintMetadata sub : metadata.getComposedOf()) {
-				descriptor.getComposingConstraints().add(this.getConstraintDescriptor(sub));
-			}
-		}
-		
-		//decorate the result so that each instance will appear unique.  this means that the constraints will be counted 
-		//correctly and an instance will be returned for each constraint annotation.  this is a workaround introduced 
-		//because of the caching and reuse of the instances based on the signature.
-		@SuppressWarnings("unchecked")
-		ConstraintDescriptorDecorator<Annotation> decorator = new ConstraintDescriptorDecorator<Annotation>((ConstraintDescriptor<Annotation>)descriptor);
-		return decorator;
+		return generator.getConstraintDescriptor(metadata);
 	}
 	
 }

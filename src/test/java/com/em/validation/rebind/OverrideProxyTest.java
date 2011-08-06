@@ -75,9 +75,10 @@ public class OverrideProxyTest {
 				return 0;
 			}
 
+			@SuppressWarnings("unchecked")
 			@Override
 			public Class<? extends Payload>[] payload() {
-				return null;
+				return (Class<? extends Payload>[]) new Class<?>[]{};
 			}
 			
 		};

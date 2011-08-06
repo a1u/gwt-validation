@@ -46,10 +46,6 @@ public enum ConstraintValidatorFactoryImpl implements ConstraintValidatorFactory
 			throw new ValidationException(ex);
 		}
 		
-		if(cvInstance == null) {
-			throw new ValidationException("The ConstraintValidator of type " + key.getName() + " could not be created.");
-		}
-		
 		return (T)cvInstance;
 	}
 }

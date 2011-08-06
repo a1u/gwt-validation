@@ -20,7 +20,7 @@ public enum MessageGenerator {
 	private final String TARGET_PACKAGE = this.BASE_PACKAGE + ".generated.message";
 	private final String CLASS_NAME = "GeneratedMessage";
 	
-	public class LocaleItem {
+	public static class LocaleItem {
 		
 		public String key = "";
 		public String value = "";
@@ -44,7 +44,7 @@ public enum MessageGenerator {
 		
 		ClassDescriptor descriptor = new ClassDescriptor();
 		String localClassName = this.CLASS_NAME;
-		if("" != current.getAsString()) {
+		if(!current.getAsString().isEmpty()) {
 			localClassName = this.CLASS_NAME + "_" + current.getAsString();
 		}
 		descriptor.setClassName(localClassName);
@@ -79,7 +79,7 @@ public enum MessageGenerator {
 				if(key != null) {
 					String value = bundle.getString(key);
 					LocaleItem item = new LocaleItem();
-					item.setKey(key.toString());
+					item.setKey(key);
 					item.setValue(value);
 					
 					locales.add(item);

@@ -106,13 +106,14 @@ public enum PropertyResolver {
 				propertyType = propertyType.getComponentType();
 				level++;
 			}
-			String className = propertyType.getName();
+			StringBuilder className = new StringBuilder(propertyType.getName());
 			//here we tack on the right number of containers
 			for(int depth = 0; depth < level; depth++) {
-				className += "[]";
+				className.append("[]");
 			}
+			className.append(".class");
 			//and then set the class name, plus array containment, back onto the classname so that it can be used by the templates
-			pMeta.setClassString(className + ".class");
+			pMeta.setClassString(className.toString());
 			pMeta.setReturnType(property.getPropertyType());
 			
 			if(this.hasMethod(targetClass, property.getReadMethod().getName(), new Class<?>[]{})) {

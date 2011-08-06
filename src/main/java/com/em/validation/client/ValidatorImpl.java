@@ -158,15 +158,9 @@ public class ValidatorImpl implements Validator{
 			BeanDescriptor bean = this.getConstraintsForClass(beanType);
 			PropertyDescriptor property = bean.getConstraintsForProperty(propertyName);
 			
-			System.out.println("property: " + property.getPropertyName());
-			
 			//get constraints for beanType.propertyName
 			Set<ConstraintDescriptor<?>> constraints  = property.findConstraints().unorderedAndMatchingGroups(groups).getConstraintDescriptors();
-			
-			for(ConstraintDescriptor<?> descriptor : constraints) {
-				System.out.println("\t" + descriptor.getAnnotation().toString());
-			}
-			
+
 			//loop and validate
 			for(ConstraintDescriptor<?> descriptor : constraints) {
 				violations.addAll(this.validateConstraint(beanType, descriptor, value));
@@ -277,16 +271,12 @@ public class ValidatorImpl implements Validator{
 		//create empty constraint violation set
 		Set<ConstraintViolation<T>> violations = new LinkedHashSet<ConstraintViolation<T>>();
 		
-		System.out.println("descriptor: " + descriptor.getAnnotation().toString() + " size: " + descriptor.getConstraintValidatorClasses().size());
-		
 		//only do this part of the validation if there is at least one constraint validator
 		if(!descriptor.getConstraintValidatorClasses().isEmpty()) {
 
 			//get the validator
 			Class<? extends ConstraintValidator<? extends Annotation, T>> validatorClass = (Class<? extends ConstraintValidator<? extends Annotation, T>>) descriptor.getConstraintValidatorClasses().get(0);
 
-			System.out.println("" + value + " : " + validatorClass.getName());
-			
 			//if a validator class was found, create the validator and begin validation
 			if(validatorClass != null) {
 				try {
@@ -298,7 +288,6 @@ public class ValidatorImpl implements Validator{
 					if(cValidator != null) {
 						cValidator.initialize(descriptor.getAnnotation());
 						result = cValidator.isValid(value, (javax.validation.ConstraintValidatorContext)null);
-						System.out.println(""+value + "" +result);
 					}		
 					
 					//when the result is false, create a constraint violation for the local element

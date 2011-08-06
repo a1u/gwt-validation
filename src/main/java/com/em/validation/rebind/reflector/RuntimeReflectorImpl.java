@@ -206,10 +206,12 @@ public class RuntimeReflectorImpl<T> extends Reflector<T> {
 		
 		//find the property descriptor by name
 		PropertyDescriptor prop = null;
-		for(PropertyDescriptor check : targetInfo.getPropertyDescriptors()) {
-			if(property.equals(check.getName())) {
-				prop = check;
-				break;
+		if(targetInfo != null) {
+			for(PropertyDescriptor check : targetInfo.getPropertyDescriptors()) {
+				if(property.equals(check.getName())) {
+					prop = check;
+					break;
+				}
 			}
 		}
 		

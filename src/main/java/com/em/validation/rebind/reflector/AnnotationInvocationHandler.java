@@ -42,23 +42,27 @@ public class AnnotationInvocationHandler implements InvocationHandler {
 		//create id, this will be part of the "toString" signature
 		this.id = UUID.randomUUID().toString().toUpperCase().replaceAll("-", ""); 
 		
-		String signature = "@" + annotation.annotationType().getName() + "(proxyid=" + this.id;
+		StringBuilder signature = new StringBuilder();
+		signature.append("@");
+		signature.append(annotation.annotationType().getName()); 
+		signature.append("(proxyid=");
+		signature.append(this.id);
 		
 		if(this.override.size() > 0) {
-			signature += ", overrides=[";
+			signature.append(", overrides=[");
 			int index = 0;
 			for(String key : this.override.keySet()) {
 				if(index++ > 0) {
-					signature +=", ";
+					signature.append(", ");
 				}
-				signature += key;
+				signature.append(key);
 			}			
-			signature +="]";
+			signature.append("]");
 		} 
-		signature += ")";	
+		signature.append(")");	
 		
 		//add id to map
-		this.override.put("toString", signature);
+		this.override.put("toString", signature.toString());
 	}
 
 	@Override

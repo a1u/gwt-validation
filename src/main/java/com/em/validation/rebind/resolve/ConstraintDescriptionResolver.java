@@ -112,7 +112,7 @@ public enum ConstraintDescriptionResolver {
 		//key
 		String key = annotation.toString();
 		if(elementType != null) {
-			key = elementType.toString() + "@" + key;
+			key = key + elementType.getName();
 		}
 		
 		//create annotation metadata
@@ -228,7 +228,7 @@ public enum ConstraintDescriptionResolver {
 					//get index for the annotation type
 					Integer oIndex = oIndexMap.get(instance.annotationType());
 					if(oIndex == null) {
-						oIndex = new Integer(0);
+						oIndex = 0;
 					}
 					int index = oIndex.intValue();
 					
