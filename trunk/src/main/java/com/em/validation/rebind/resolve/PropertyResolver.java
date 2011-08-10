@@ -132,8 +132,10 @@ public enum PropertyResolver {
 					Field field = targetClass.getField(propertyName);
 					modifiers = field.getModifiers();
 				} catch (SecurityException e) {
+					System.out.println("Error: " + e.getMessage());
 					continue;
 				} catch (NoSuchFieldException e) {
+					System.out.println("Error: " + e.getMessage());
 					continue;
 				}			
 			} else {
@@ -209,7 +211,17 @@ public enum PropertyResolver {
 				//set properties
 				pMeta.setName(fieldName);
 				pMeta.setAccessor(fieldName);
-				pMeta.setClassString(field.getType().getName() + ".class");
+				pMeta.setReturnType(field.getType());
+				
+				int level = 0;
+				StringBuilder className = new StringBuilder(field.getType().getName());
+				//here we tack on the right number of containers
+				for(int depth = 0; depth < level; depth++) {
+					className.append("[]");
+				}
+				className.append(".class");
+			
+				pMeta.setClassString(className.toString());
 				//add to the metadata list
 				metadataMap.put(fieldName,pMeta);			
 			}

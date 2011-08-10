@@ -84,7 +84,6 @@ public enum ConstraintDescriptionResolver {
 	
 	public Set<ConstraintMetadata> getAllMetadata(Class<?> targetClass) {
 		Set<ConstraintMetadata> metadataResult = new LinkedHashSet<ConstraintMetadata>();
-		
 		Map<String,PropertyMetadata> propertyMetadata = PropertyResolver.INSTANCE.getPropertyMetadata(targetClass);
 		for(String propertyName : propertyMetadata.keySet()) {
 			PropertyMetadata property = propertyMetadata.get(propertyName);

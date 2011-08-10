@@ -101,7 +101,7 @@ public enum ReflectorFactoryGenerator {
 
 		Set<ReflectorMetadata> metadata = new LinkedHashSet<ReflectorMetadata>();
 
-		//if Object or an Annotation or null, return empty set
+		//if Object, Annotation, or null, return empty set
 		if(Object.class.equals(targetClass) || Annotation.class.equals(targetClass) || targetClass == null || targetClass.isAnnotation()) {
 			return metadata;
 		}

@@ -53,4 +53,12 @@ public class ValidatorTest extends GwtValidationBaseTestCase {
 	public void testUnwrap() {
 		CoreValidatorTest.testUnwrap(this);
 	}
+	
+	public void testGroupSequenceValidation() {
+		CoreValidatorTest.testGroupSequenceValidation(this);
+	}
+	
+	public void testImplicitGroupValidation() {
+		CoreValidatorTest.testImplicitGroupValidation(this);
+	}
 }

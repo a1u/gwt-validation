@@ -47,5 +47,10 @@ public class ConstraintsTest extends ReflectiveValidationBaseTestClass {
 	public void testCascadedConstraints() throws InstantiationException, IllegalAccessException {
 		CoreConstraintsTest.testCascadedConstraints(this.getReflectorFactory());
 	}
+	
+	@Test
+	public void testReflectorGroupSequence() {
+		CoreConstraintsTest.testReflectorGroupSequence(this);
+	}
 
 }

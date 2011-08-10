@@ -77,6 +77,15 @@ public class ${concreteClassName} extends AbstractCompiledReflector<${reflection
 		this.cascadedProperties.add("${cascade}");
 		</#list>
 		
+		//group sequence list
+		this.groupSequence = new Class<?>[${groupSequence?size}];
+		<#if groupSequence?size &gt; 0>
+		int groupIndex = 0;
+		<#list groupSequence as group>
+		this.groupSequence[groupIndex++] = ${group};
+		</#list>
+		</#if>
+		
 		//set the target class
 		this.targetClass = ${reflectionTargetName}.class;
 	}

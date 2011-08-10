@@ -40,8 +40,8 @@ public abstract class ParentClass implements ParentInterface {
 		return parentInt;
 	}
 
-	public void setParentInt(int counter) {
-		this.parentInt = counter;
+	public void setParentInt(int parentInt) {
+		this.parentInt = parentInt;
 	}
 
 	@Override

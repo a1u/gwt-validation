@@ -62,4 +62,14 @@ public class ValidatorTest extends ReflectiveValidationBaseTestClass {
 	public void testUnwrap() {
 		CoreValidatorTest.testUnwrap(this);
 	}
+	
+	@Test
+	public void testGroupSequenceValidation() {
+		CoreValidatorTest.testGroupSequenceValidation(this);
+	}
+	
+	@Test
+	public void testImplicitGroupValidation() {
+		CoreValidatorTest.testImplicitGroupValidation(this);
+	}
 }
