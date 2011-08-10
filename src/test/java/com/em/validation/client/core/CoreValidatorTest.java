@@ -30,14 +30,25 @@ import javax.validation.Validation;
 import javax.validation.ValidationException;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.metadata.BeanDescriptor;
+import javax.validation.metadata.ConstraintDescriptor;
+import javax.validation.metadata.PropertyDescriptor;
 
 import com.em.validation.client.ValidatorImpl;
 import com.em.validation.client.model.cyclic.Cycle;
+import com.em.validation.client.model.generic.ParentClass;
+import com.em.validation.client.model.generic.ParentInterface;
+import com.em.validation.client.model.generic.TestClass;
+import com.em.validation.client.model.sequence.ClassWithSequence;
 import com.em.validation.client.model.tests.ITestCase;
 import com.em.validation.client.model.validator.ChildNode;
 import com.em.validation.client.model.validator.ClassWithArray;
 import com.em.validation.client.model.validator.ClassWithIterable;
 import com.em.validation.client.model.validator.ClassWithMap;
+import com.em.validation.client.reflector.IReflector;
+import com.em.validation.client.validators.size.SizeStringValidator;
 
 public class CoreValidatorTest {
 
@@ -210,6 +221,97 @@ public class CoreValidatorTest {
 		} catch (ValidationException ex) {
 			testCase.localAssertTrue("threw an exception", true);
 		}
+	}
+	
+	public static void testGroupSequenceValidation(ITestCase testCase) {
+		
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		
+		Validator validator = factory.getValidator();
+		
+		ClassWithSequence cws = new ClassWithSequence();
+		
+		Set<ConstraintViolation<ClassWithSequence>> violations = validator.validate(cws);
+		
+		testCase.localAssertEquals(0, violations.size());
+		
+		//set all properties to break
+		cws.setNotEmpty("");
+		cws.setShouldBeTrue(false);
+		cws.setShouldBeFalse(true);
+		
+		violations = validator.validate(cws);
+		testCase.localAssertEquals(1, violations.size());
+		
+		cws.setNotEmpty("notempty");
+		
+		violations = validator.validate(cws);
+		testCase.localAssertEquals(1, violations.size());
+		
+		cws.setShouldBeTrue(true);
+		
+		violations = validator.validate(cws);
+		testCase.localAssertEquals(1, violations.size());		
+	}
+	
+	public static void testImplicitGroupValidation(ITestCase testCase) {
+		//get reflectors
+		IReflector<ParentClass> parentClassReflector = testCase.getReflectorFactory().getReflector(ParentClass.class);
+		
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		Validator validator = factory.getValidator();
+
+		//check descriptors first
+		BeanDescriptor parentClassDescriptor = validator.getConstraintsForClass(ParentClass.class);
+		BeanDescriptor parentInterfaceDescriptor = validator.getConstraintsForClass(ParentInterface.class);
+		
+		for(PropertyDescriptor pDesc : parentClassDescriptor.getConstrainedProperties()) {
+			String name = pDesc.getPropertyName();
+			testCase.localAssertTrue("Property descriptor for " + name, "parentInt".equals(name) || "publicParentString".equals(name) || "parentAbstractString".equals(name) || "parentInterfaceInt".equals(name));
+		}
+		
+		for(PropertyDescriptor pDesc : parentInterfaceDescriptor.getConstrainedProperties()) {
+			String name = pDesc.getPropertyName();
+			testCase.localAssertTrue("Property descriptor for " + name, "parentInterfaceInt".equals(name));
+		}
+		
+		//create class
+		TestClass testClass = new TestClass();
+		
+		//set breaking values
+		testClass.setParentInt(-22);
+		testClass.publicParentString = "do";
+		
+		//check reflection at the parent class level
+		testCase.localAssertEquals("do", parentClassReflector.getValue("publicParentString", testClass));
+		PropertyDescriptor pPSDesc = parentClassDescriptor.getConstraintsForProperty("publicParentString");
+		
+		//test constraint descriptors to ensure that the right ones are being found
+		testCase.localAssertEquals(2,pPSDesc.getConstraintDescriptors().size());
+		for(ConstraintDescriptor<?> cDesc : pPSDesc.getConstraintDescriptors()) {
+			testCase.localAssertTrue(Size.class.equals(cDesc.getAnnotation().annotationType()) || NotNull.class.equals(cDesc.getAnnotation().annotationType()));
+			if(Size.class.equals(cDesc.getAnnotation().annotationType())) {
+				testCase.localAssertEquals("The value \"4\" is set on the constraint", 4,cDesc.getAttributes().get("min"));
+				testCase.localAssertFalse("Must contain at least one validator", cDesc.getConstraintValidatorClasses().isEmpty());
+				testCase.localAssertTrue("The validator list must contain SizeStringValidator", cDesc.getConstraintValidatorClasses().contains(SizeStringValidator.class));
+			}
+		}
+		
+		//validate class
+		Set<ConstraintViolation<TestClass>> violations = validator.validate(testClass, ParentClass.class, ParentInterface.class);
+		
+		//should be 3! parentInterfaceInt, parentIn, and publicParentString
+		testCase.localAssertEquals("Expecting violations for both ParentClass and ParentInterface", 3, violations.size());
+		
+		for(ConstraintViolation<TestClass> violation : violations) {
+			String path = violation.getPropertyPath().toString();
+			testCase.localAssertTrue("Property path is: " + path, "parentInt".equals(path) || "publicParentString".equals(path) || "parentInterfaceInt".equals(path));
+		}
+		
+		//re-validate without ParentClass
+		violations = validator.validate(testClass, ParentInterface.class);
+		
+		testCase.localAssertEquals("Expecting only one violation directly on the parent interface class (implicit group)", 1, violations.size());
 	}
 }
 

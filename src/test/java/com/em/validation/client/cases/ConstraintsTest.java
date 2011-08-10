@@ -23,8 +23,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import javax.validation.metadata.BeanDescriptor;
 
-import org.junit.Test;
-
 import com.em.validation.client.core.CoreConstraintsTest;
 import com.em.validation.client.metadata.factory.DescriptorFactory;
 import com.em.validation.client.model.overlay.OverlayClass;
@@ -33,17 +31,14 @@ import com.em.validation.client.reflector.IReflector;
 
 public class ConstraintsTest extends GwtValidationBaseTestCase {
 	
-	@Test
 	public void testConstraintGeneration() {
 		CoreConstraintsTest.testConstraintGeneration(this.getReflectorFactory());
 	}
 	
-	@Test
 	public void testComposedConstraints() {
 		CoreConstraintsTest.testComposedConstraints(this.getReflectorFactory());
 	}
 	
-	@Test
 	public void testOverridesConstraints() {
 		CoreConstraintsTest.testOverridesConstraints(this.getReflectorFactory());
 	}
@@ -52,7 +47,6 @@ public class ConstraintsTest extends GwtValidationBaseTestCase {
 	 * Only tested in gwt/generated/deferred binding mode.  overlay types cannot be handled by reflective java.
 	 * 
 	 */
-	@Test
 	public void testOverlayType() {
 		
 		//create instance
@@ -72,8 +66,11 @@ public class ConstraintsTest extends GwtValidationBaseTestCase {
 		assertEquals(2,descriptor.getConstraintsForProperty("testString").getConstraintDescriptors().size());
 	}
 	
-	@Test
 	public void testCascadedConstraints() {
 		CoreConstraintsTest.testCascadedConstraints(this.getReflectorFactory());
+	}
+	
+	public void testReflectorGroupSequence() {
+		CoreConstraintsTest.testReflectorGroupSequence(this);
 	}
 }

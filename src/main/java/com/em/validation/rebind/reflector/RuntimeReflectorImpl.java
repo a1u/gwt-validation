@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.validation.GroupSequence;
 import javax.validation.Valid;
 import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.Scope;
@@ -62,6 +63,15 @@ public class RuntimeReflectorImpl<T> extends Reflector<T> {
 			if(targetClass.getName().equals(prop)) continue;
 			//add properties
 			this.properties.add(prop);
+		}
+		
+		//set group sequence from metadata
+		GroupSequence sequence = targetClass.getAnnotation(GroupSequence.class);
+		if(sequence != null) {
+			this.groupSequence = sequence.value();
+			if(this.groupSequence == null) {
+				this.groupSequence = new Class<?>[0];
+			}
 		}
 	}
 	

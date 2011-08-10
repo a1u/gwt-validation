@@ -120,7 +120,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 			    <artifactId>maven-surefire-plugin</artifactId>
 			    <configuration>
 			  	<test>**/FullTestSuite.java</test>
-				<argLine>-Dgwt.args="-prod"</argLine>
+				<argLine>-Dgwt.args="-prod -gen target/testgen"</argLine>
 			    <additionalClasspathElements>
 					<additionalClasspathElement>${basedir}/lib/</additionalClasspathElement>
 					<additionalClasspathElement>${basedir}/lib/validation-api-1.0.0.GA-sources.jar</additionalClasspathElement>

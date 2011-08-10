@@ -40,8 +40,13 @@ import com.em.validation.client.model.composed.CyclicalComposedConstraintPart1;
 import com.em.validation.client.model.composed.CyclicalComposedConstraintPart2;
 import com.em.validation.client.model.constraint.TestZipCode;
 import com.em.validation.client.model.generic.TestClass;
+import com.em.validation.client.model.groups.BasicGroup;
+import com.em.validation.client.model.groups.ExtendedGroup;
+import com.em.validation.client.model.groups.MaxGroup;
 import com.em.validation.client.model.override.ZipCodeContainer;
+import com.em.validation.client.model.sequence.ClassWithSequence;
 import com.em.validation.client.model.tests.GwtValidationBaseTestCase;
+import com.em.validation.client.model.tests.ITestCase;
 import com.em.validation.client.reflector.IReflector;
 import com.em.validation.client.reflector.IReflectorFactory;
 
@@ -162,4 +167,15 @@ public class CoreConstraintsTest extends GwtValidationBaseTestCase {
 				
 	}
 
+	public static void testReflectorGroupSequence(ITestCase testCase) {
+		IReflector<ClassWithSequence> cwsReflector = testCase.getReflectorFactory().getReflector(ClassWithSequence.class);
+		
+		testCase.localAssertTrue(cwsReflector.hasGroupSequence());
+		
+		Class<?>[] sequence = cwsReflector.getGroupSequence();
+		
+		testCase.localAssertEquals(BasicGroup.class, sequence[0]);
+		testCase.localAssertEquals(ExtendedGroup.class, sequence[1]);
+		testCase.localAssertEquals(MaxGroup.class, sequence[2]);
+	}
 }

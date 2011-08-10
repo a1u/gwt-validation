@@ -216,5 +216,14 @@ public class ConstraintMetadata {
 		return key;
 	}
 	
+	//simple equals method based on key signature
+	public boolean equals(Object object) {
+		if(object == null) return false;
+		if(object instanceof ConstraintMetadata) {
+			return this.toString().equals(object.toString());
+		}		
+		return false;
+	}
+	
 }
 

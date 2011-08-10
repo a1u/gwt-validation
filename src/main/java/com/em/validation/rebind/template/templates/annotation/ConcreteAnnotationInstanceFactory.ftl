@@ -55,13 +55,13 @@ public enum ${generatedName} implements IConcreteAnnotationInstanceFactory<${tar
 	private ${generatedName}() {
 		//save properties for each signature
 		<#list constraints as constraint>
-		//metadata map for ${constraint.instance.toString()}
-		this.signatureToValueMap.put("${hash(constraint.instance.toString())}",new HashMap<String,Object>());
+		//metadata map for ${constraint.toString()}
+		this.signatureToValueMap.put("${hash(constraint.toString())}",new HashMap<String,Object>());
 		<#list constraint.methodMap?values as property>
 		<#if property.returnType == "String">
-		this.signatureToValueMap.get("${hash(constraint.instance.toString())}").put("${property.methodName}","${prep(property.returnValue)?j_string}");
+		this.signatureToValueMap.get("${hash(constraint.toString())}").put("${property.methodName}","${prep(property.returnValue)?j_string}");
 		<#else>
-		this.signatureToValueMap.get("${hash(constraint.instance.toString())}").put("${property.methodName}",${property.returnValue});
+		this.signatureToValueMap.get("${hash(constraint.toString())}").put("${property.methodName}",${property.returnValue});
 		</#if>
 		</#list>
 		
@@ -82,19 +82,19 @@ public enum ${generatedName} implements IConcreteAnnotationInstanceFactory<${tar
 				@Override
 				public ${metadata.returnType} ${metadata.methodName}() {
 					<#if metadata.returnType == "int">
-					return (int)(Integer)valueMap.get("${metadata.methodName}");
+					return ((Number)valueMap.get("${metadata.methodName}")).intValue();
 					<#elseif metadata.returnType == "long">
-					return (long)(Long)valueMap.get("${metadata.methodName}");
+					return ((Number)valueMap.get("${metadata.methodName}")).longValue();
 					<#elseif metadata.returnType == "double">
-					return (double)(Double)valueMap.get("${metadata.methodName}");
+					return ((Number)valueMap.get("${metadata.methodName}")).doubleValue();
 					<#elseif metadata.returnType == "float">
-					return (float)(Float)valueMap.get("${metadata.methodName}");
+					return ((Number)valueMap.get("${metadata.methodName}")).floatValue();
 					<#elseif metadata.returnType == "boolean">
-					return (boolean)(Boolean)valueMap.get("${metadata.methodName}");
+					return ((Boolean)valueMap.get("${metadata.methodName}")).booleanValue();
 					<#elseif metadata.returnType == "char">
-					return (char)(Char)valueMap.get("${metadata.methodName}");
+					return ((Character)valueMap.get("${metadata.methodName}")).charValue();
 					<#elseif metadata.returnType == "short">
-					return (short)(Short)valueMap.get("${metadata.methodName}");
+					return ((Number)valueMap.get("${metadata.methodName}")).shortValue();		
 					<#else>
 					return (${metadata.returnType})valueMap.get("${metadata.methodName}");
 					</#if>

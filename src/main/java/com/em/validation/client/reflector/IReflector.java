@@ -25,6 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import java.lang.annotation.ElementType;
 import java.util.Set;
 
+import javax.validation.GroupSequence;
 import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.Scope;
 
@@ -133,6 +134,21 @@ public interface IReflector<T> {
 	 * @return
 	 */
 	public Set<IReflector<?>> getInterfaceReflectors();
+	
+	/**
+	 * Return the group sequence to use in place of default, if not available return an empty class array.
+	 * 
+	 * @see GroupSequence
+	 * @return
+	 */
+	public Class<?>[] getGroupSequence();
+	
+	/**
+	 * Returns true if the size of the group sequence array is greater than 0.  This indicates that the validator should process the group sequence
+	 * 
+	 * @return
+	 */
+	public boolean hasGroupSequence();
 	
 	/**
 	 * Returns the set of element types that the given constraint descriptor is declared on

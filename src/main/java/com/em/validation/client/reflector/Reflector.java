@@ -46,6 +46,12 @@ public abstract class Reflector<T> implements IReflector<T> {
 	protected Set<IReflector<?>> reflectorInterfaces = new HashSet<IReflector<?>>();
 	
 	/**
+	 * Sequence of groups to use for default validation
+	 * 
+	 */
+	protected Class<?>[] groupSequence = new Class<?>[]{};
+	
+	/**
 	 * The target class of the reflector
 	 * 
 	 */
@@ -201,7 +207,20 @@ public abstract class Reflector<T> implements IReflector<T> {
 	@Override
 	public Set<IReflector<?>> getInterfaceReflectors() {
 		return this.reflectorInterfaces;
+	}	
+	
+	@Override
+	public Class<?>[] getGroupSequence() {
+		Class<?>[] copy = new Class<?>[this.groupSequence.length];
+		int i = 0;
+		for(Class<?> c : this.groupSequence) {
+			copy[i++] = c;
+		}
+		return copy;
 	}
 	
-	
+	@Override
+	public boolean hasGroupSequence() {
+		return this.groupSequence.length > 0;
+	}
 }

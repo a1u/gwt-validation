@@ -133,13 +133,13 @@ public enum AnnotationInstanceFactoryGenerator {
 		return outerFactoryDescriptor;
 	}
 
-	private Set<ConstraintMetadata> recursiveBlocSet = new HashSet<ConstraintMetadata>();
+	private Set<ConstraintMetadata> recursiveBlockSet = new HashSet<ConstraintMetadata>();
 	
 	private void recursiveResolveAllMetadata(Set<ConstraintMetadata> sourceSet, Map<Class<?>,Set<ConstraintMetadata>> annotationClassToMetadataMap, Map<Class<?>,Set<ConstraintPropertyMetadata>> annotationMethodMetadata) {
 		//break down the metadata into signatures and constraints
 		for(ConstraintMetadata metadata : sourceSet) {
 			//continue if the metadata has already been processed
-			if(this.recursiveBlocSet.contains(metadata)) {
+			if(this.recursiveBlockSet.contains(metadata)) {
 				continue;
 			}
 			
@@ -163,7 +163,7 @@ public enum AnnotationInstanceFactoryGenerator {
 			methodNames.addAll(metadata.getMethodMap().values());
 			
 			//add metadata as already processed to the recursive block
-			this.recursiveBlocSet.add(metadata);
+			this.recursiveBlockSet.add(metadata);
 			
 			//do the same for children
 			if(metadata.getComposedOf() != null && metadata.getComposedOf().size() > 0) {
@@ -177,7 +177,7 @@ public enum AnnotationInstanceFactoryGenerator {
 	 * 
 	 */
 	public void clear() {
-		this.recursiveBlocSet.clear();
+		this.recursiveBlockSet.clear();
 	}
 	
 }

@@ -24,7 +24,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.validation.Constraint;
@@ -36,21 +38,36 @@ public enum ValidatorResolver {
 
 	INSTANCE;
 	
+	private Map<Class<?>, Class<?>> primitiveClasses = new HashMap<Class<?>, Class<?>>();
+	
 	private ValidatorResolver() {
-		
+		//handle boxing/unboxing
+		this.primitiveClasses.put(boolean.class, Boolean.class);
+		this.primitiveClasses.put(int.class, Integer.class);
+		this.primitiveClasses.put(float.class, Float.class);
+		this.primitiveClasses.put(double.class, Double.class);
+		this.primitiveClasses.put(long.class, Long.class);
+		this.primitiveClasses.put(short.class, Short.class);
+		this.primitiveClasses.put(byte.class, Byte.class);
+		this.primitiveClasses.put(char.class, Character.class);
 	}
 	
 	public Set<Class<?>> getValidatorClassesForAnnotation(Class<?> annotationType, Class<?> elementType) {
 		//create empty set
 		Set<Class<?>> results = new LinkedHashSet<Class<?>>();
 		Set<Class<?>> candidates = new LinkedHashSet<Class<?>>();
-		
+
 		//get set from the @Constraint annotation
 		Constraint constraint = annotationType.getAnnotation(Constraint.class);
 		if(constraint != null) {
 			candidates.addAll(Arrays.asList(constraint.validatedBy()));
 		}
-		
+
+		//grab class wrapper for primitive type
+		if(elementType != null && elementType.isPrimitive() && this.primitiveClasses.containsKey(elementType)) {
+			elementType = this.primitiveClasses.get(elementType);
+		}
+				
 		//get all constraint validators
 		Set<Class<? extends ConstraintValidator<?, ?>>> validators = ClassScanner.INSTANCE.getConstraintValidatorClasses();
 		

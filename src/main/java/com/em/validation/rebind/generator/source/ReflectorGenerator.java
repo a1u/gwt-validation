@@ -69,11 +69,20 @@ public enum ReflectorGenerator {
 		List<String> imports = new ArrayList<String>();
 		imports.add(targetClass.getName());
 
+		//group sequence
+		Class<?>[] groupSequenceArray = runtimeReflector.getGroupSequence();
+		List<String> groupSequences = new ArrayList<String>();
+		for(Class<?> group : groupSequenceArray) {
+			groupSequences.add(group.getName() + ".class");
+		}
+		
 		//the list of properties
 		Map<String,PropertyMetadata> metadataMap = PropertyResolver.INSTANCE.getPropertyMetadata(targetClass);
 		
 		//list of cascaded properties
 		Set<String> cascadedProperties = new LinkedHashSet<String>();
+		
+		//where properties are declared (for finder)
 		Set<String> declaredOnMethod = new LinkedHashSet<String>();
 		Set<String> declaredOnField = new LinkedHashSet<String>(); 
 
@@ -119,6 +128,7 @@ public enum ReflectorGenerator {
 		templateDataModel.put("cascades",cascadedProperties);
 		templateDataModel.put("declaredOnMethod", declaredOnMethod);
 		templateDataModel.put("declaredOnField", declaredOnField);
+		templateDataModel.put("groupSequence",groupSequences);
 
 		//create class descriptor from generated code
 		reflectorDescriptor.setClassContents(TemplateController.INSTANCE.processTemplate("templates/reflector/ReflectorImpl.ftl", templateDataModel));

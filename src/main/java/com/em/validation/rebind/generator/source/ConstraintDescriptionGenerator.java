@@ -107,7 +107,7 @@ public enum ConstraintDescriptionGenerator {
 			generatedAnnotationModel.put("annotationMetadata",metadata.getMethodMap().values());
 			generatedAnnotationModel.put("composedOf", withDescriptor.getDependencies());
 			generatedAnnotationModel.put("reportAsSingleViolation", String.valueOf(metadata.isReportAsSingleViolation()));
-			generatedAnnotationModel.put("signature",metadata.getInstance().toString());
+			generatedAnnotationModel.put("signature",metadata.toString());
 			generatedAnnotationModel.put("annotationType", annotationType);
 			generatedAnnotationModel.put("annotationImportName", annotationImportName);
 			generatedAnnotationModel.put("targetAnnotation",annotationSimpleName);
