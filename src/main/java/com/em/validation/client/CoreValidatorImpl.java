@@ -33,6 +33,7 @@ import javax.validation.ConstraintValidatorFactory;
 import javax.validation.ConstraintViolation;
 import javax.validation.MessageInterpolator;
 import javax.validation.Path.Node;
+import javax.validation.UnexpectedTypeException;
 import javax.validation.ValidationException;
 import javax.validation.Validator;
 import javax.validation.metadata.BeanDescriptor;
@@ -291,6 +292,13 @@ public class CoreValidatorImpl implements Validator{
 		//only do this part of the validation if there is at least one constraint validator
 		if(!descriptor.getConstraintValidatorClasses().isEmpty()) {
 
+			//ambiguous validator resolution results in a failure as well (jsr303-tck)
+			//java.lang.AssertionError: The test should have failed due to ambiguous validator resolution.
+			// org.hibernate.jsr303.tck.tests.constraints.validatorresolution.ValidatorResolutionTest.testAmbiguousValidatorResolution(ValidatorResolutionTest.java:247)
+			if(descriptor.getConstraintValidatorClasses().size() > 1) {
+				//throw new UnexpectedTypeException("More than one validator was resolved for " + descriptor.getAnnotation().annotationType().getName() + " on " + beanType.getName());
+			}
+			
 			//get the validator
 			Class<? extends ConstraintValidator<? extends Annotation, T>> validatorClass = (Class<? extends ConstraintValidator<? extends Annotation, T>>) descriptor.getConstraintValidatorClasses().get(0);
 
@@ -334,6 +342,9 @@ public class CoreValidatorImpl implements Validator{
 					//todo: log that the validator cValidator was skipped b/c of a validation error
 				}			
 			}
+		} else if(descriptor.getComposingConstraints().isEmpty()) {
+			//empty constraint validation, fail
+			throw new UnexpectedTypeException("No validator was found for " + descriptor.getAnnotation().annotationType().getName() + " with type " + beanType.getName());
 		}
 		
 		//composed violation

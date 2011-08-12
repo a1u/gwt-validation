@@ -41,4 +41,6 @@ public interface ITestCase {
 	
 	public void localAssertNotNull(Object value);
 	public void localAssertNotNull(String message, Object value);
+	
+	public void localFail(String message);
 }
