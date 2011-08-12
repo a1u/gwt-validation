@@ -27,6 +27,7 @@ import junit.framework.TestSuite;
 import com.em.validation.client.cases.defects.Defect_005;
 import com.em.validation.client.cases.defects.Defect_024;
 import com.em.validation.client.cases.defects.Defect_037;
+import com.em.validation.client.cases.defects.Defect_040;
 import com.google.gwt.junit.tools.GWTTestSuite;
 
 public class DefectTestSuite extends GWTTestSuite {
@@ -37,6 +38,7 @@ public class DefectTestSuite extends GWTTestSuite {
 		suite.addTestSuite(Defect_005.class);
 		suite.addTestSuite(Defect_024.class);
 		suite.addTestSuite(Defect_037.class);
+		suite.addTestSuite(Defect_040.class);
 		
 		return suite;
 	}

@@ -116,7 +116,7 @@ public enum PropertyResolver {
 			pMeta.setClassString(className.toString());
 			pMeta.setReturnType(property.getPropertyType());
 			
-			if(this.hasMethod(targetClass, property.getReadMethod().getName(), new Class<?>[]{})) {
+			if(property.getReadMethod() != null && this.hasMethod(targetClass, property.getReadMethod().getName(), new Class<?>[]{})) {
 				pMeta.setAccessor(property.getReadMethod().getName() + "()");
 				pMeta.setField(false);
 			} else if(this.hasField(targetClass, propertyName)) {

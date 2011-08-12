@@ -84,4 +84,9 @@ public class GwtValidationBaseTestCase extends GWTTestCase implements ITestCase{
 	public void localAssertNotNull(String message, Object value) {
 		GWTTestCase.assertNotNull(message, value);		
 	}
+	
+	@Override
+	public void localFail(String message) {
+		GWTTestCase.fail(message);
+	}
 }

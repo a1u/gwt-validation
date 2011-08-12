@@ -27,12 +27,14 @@ import org.junit.runners.Suite;
 import com.em.validation.reflective.cases.defects.Defect_005;
 import com.em.validation.reflective.cases.defects.Defect_024;
 import com.em.validation.reflective.cases.defects.Defect_037;
+import com.em.validation.reflective.cases.defects.Defect_040;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	Defect_005.class,
 	Defect_024.class,
-	Defect_037.class
+	Defect_037.class,
+	Defect_040.class
 })
 public class DefectTestSuite {
 

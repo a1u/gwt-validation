@@ -82,4 +82,9 @@ public class ReflectiveValidationBaseTestClass implements ITestCase {
 		Assert.assertNotNull(message, value);		
 	}
 	
+	@Override
+	public void localFail(String message) {
+		Assert.fail(message);
+	}
+	
 }
