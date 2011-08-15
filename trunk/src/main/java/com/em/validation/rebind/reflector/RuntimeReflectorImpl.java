@@ -28,6 +28,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -38,6 +39,7 @@ import java.util.Set;
 
 import javax.validation.GroupSequence;
 import javax.validation.Valid;
+import javax.validation.ValidationException;
 import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.Scope;
 
@@ -83,21 +85,32 @@ public class RuntimeReflectorImpl<T> extends Reflector<T> {
 		Object value = null;
 		
 		if(metadata != null && metadata.getAccessor() != null) {
-			String accssesor = metadata.getAccessor();
+			String accessor = metadata.getAccessor();
 			if(metadata.isField()) {
 				try {
-					Field field = this.targetClass.getDeclaredField(accssesor);
+					Field field = this.targetClass.getDeclaredField(accessor);
 					value = field.get(target);
 				} catch (Exception ex) {
 					//field not available
 				}
 			} else {
 				try {
-					accssesor = accssesor.replaceAll("\\(\\)","");
-					Method method = this.targetClass.getDeclaredMethod(accssesor, new Class<?>[]{});
+					accessor = accessor.substring(0, accessor.lastIndexOf("("));
+					Method method = this.targetClass.getDeclaredMethod(accessor, new Class<?>[]{});
+					method.setAccessible(true);
 					value = method.invoke(target, new Object[]{});
-				} catch (Exception ex) {
-					//method not available
+				} catch (IllegalArgumentException e) {
+					throw new ValidationException("Illegal arguments were provided to a method during validation.  Only no-argument properties are accepted.",e);
+				} catch (IllegalAccessException e) {
+					throw new ValidationException("Illegal access exception caught during validation.  Only accessible properties can be validated.",e);
+				} catch (InvocationTargetException e) {
+					throw new ValidationException("Invocation target exception caught during validation.  Only accessible classes can be validated.",e);
+				} catch (SecurityException e) {
+					throw new ValidationException("A security exception occurred during validation.  Please inspect your class definition and security configuration.",e);
+				} catch (NoSuchMethodException e) {
+					throw new ValidationException("The method \"" + accessor + "\" does not exist.  Please inspect your class definition.",e);
+				} catch (Exception e) {
+					throw new ValidationException("An exception was thrown during validation: " + e.getMessage(),e);
 				}
 			}
 		}

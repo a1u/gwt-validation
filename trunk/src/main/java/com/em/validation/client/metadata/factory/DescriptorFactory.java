@@ -21,6 +21,7 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+import javax.validation.ValidationException;
 import javax.validation.metadata.BeanDescriptor;
 import javax.validation.metadata.PropertyDescriptor;
 
@@ -88,6 +89,9 @@ public enum DescriptorFactory {
 	 * @return
 	 */
 	public <T> BeanDescriptor getBeanDescriptor(final Class<T> targetClass) {
+		if(targetClass == null) {
+			throw new ValidationException("Cannot get bean descriptor metatada for a null class.");
+		}
 		return this.getBeanDescriptor(this.factory.getReflector(targetClass));
 	}
 	

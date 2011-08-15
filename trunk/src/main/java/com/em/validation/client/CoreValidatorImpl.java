@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 import java.lang.annotation.Annotation;
+import java.lang.annotation.ElementType;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -32,7 +33,9 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorFactory;
 import javax.validation.ConstraintViolation;
 import javax.validation.MessageInterpolator;
+import javax.validation.Path;
 import javax.validation.Path.Node;
+import javax.validation.TraversableResolver;
 import javax.validation.UnexpectedTypeException;
 import javax.validation.ValidationException;
 import javax.validation.Validator;
@@ -50,14 +53,14 @@ public class CoreValidatorImpl implements Validator{
 	
 	//private ValidatorContext context = new ValidatorContextImpl();
 	
-	//private TraversableResolver resolver = null;
+	private TraversableResolver resolver = null;
 	
 	private MessageInterpolator interpolator = null;
 	
 	public CoreValidatorImpl() {		
 		this.cvFactory = ValidatorFactoryImpl.INSTANCE.getConstraintValidatorFactory();
 		//this.context = ValidatorFactoryImpl.INSTANCE.usingContext();
-		//this.resolver = ValidatorFactoryImpl.INSTANCE.getTraversableResolver();
+		this.resolver = ValidatorFactoryImpl.INSTANCE.getTraversableResolver();
 		this.interpolator = ValidatorFactoryImpl.INSTANCE.getMessageInterpolator();
 	}	
 
@@ -100,17 +103,34 @@ public class CoreValidatorImpl implements Validator{
 		IReflector<T> reflector = ReflectorFactory.INSTANCE.getReflector((Class<T>)object.getClass());
 		Object value = reflector.getValue(propertyName, object);
 
-		Set<ConstraintViolation<T>> violations = this.validateValue(validationCache,(Class<T>)object.getClass(), propertyName, value, groups);
+		//create path for this level
+		PathImpl path = new PathImpl();
+		NodeImpl localNode = new NodeImpl();
+		localNode.setName(propertyName);
+		path.push(localNode);
 		
-		for(ConstraintViolation<T> violation : violations) {
-			if(violation instanceof ConstraintViolationImpl) {
-				//if no leaf bean has been set then set it at this level, this works because of the recursive nature of the algorithm.
-				//the deepest properties get set first, therefore if the leaf is null then it has not been owned by a deeper property.
-				if(violation.getLeafBean() == null) {
-					ConstraintViolationImpl<T> impl = (ConstraintViolationImpl<T>)violation;
-					impl.setLeafBean(object);
+		//reachable
+		boolean reachable = this.resolver.isReachable(object, localNode, object.getClass(), this.getPath(new PathImpl(), propertyName), (ElementType)null);
+		
+		//null violation set
+		Set<ConstraintViolation<T>> violations = null;
+		
+		//only validate if reachable
+		if(reachable) {
+			violations = this.validateValue(validationCache,(Class<T>)object.getClass(), propertyName, value, groups);
+			
+			for(ConstraintViolation<T> violation : violations) {
+				if(violation instanceof ConstraintViolationImpl) {
+					//if no leaf bean has been set then set it at this level, this works because of the recursive nature of the algorithm.
+					//the deepest properties get set first, therefore if the leaf is null then it has not been owned by a deeper property.
+					if(violation.getLeafBean() == null) {
+						ConstraintViolationImpl<T> impl = (ConstraintViolationImpl<T>)violation;
+						impl.setLeafBean(object);
+					}
 				}
 			}
+		} else {
+			violations = new HashSet<ConstraintViolation<T>>();
 		}
 		
 		//validate property
@@ -202,56 +222,62 @@ public class CoreValidatorImpl implements Validator{
 			propertyMap.put(propertyName, valueMap);
 			validationCache.put(beanType, propertyMap);
 			
-			//if the property is cascaded (and the value is not null), follow the rabbit hole so that it can pick up the earlier cascades
-			if(property.isCascaded() && value != null) {
-				
-				//perform validation on each map value
-				if(value instanceof Object[]) {
-				
-					int index = 0;
-					
-					for(Object subValue : ((Object[])value)) {
-						Set<ConstraintViolation<Object>> cascadeViolations = new LinkedHashSet<ConstraintViolation<Object>>();
+			if(value != null) {
 
-						cascadeViolations.addAll(this.validate(validationCache, subValue, groups));	
+				//if the property is cascaded (and the value is not null), follow the rabbit hole so that it can pick up the earlier cascades
+				if(property.isCascaded()) {
 					
-						violations.addAll(this.convertViolations(cascadeViolations, valueMap, beanType, path, index, null));
+					//perform validation on each map value
+					if(value instanceof Object[]) {
+					
+						int index = 0;
 						
-						index++;
+						for(Object subValue : ((Object[])value)) {
+							boolean cascadable = this.resolver.isCascadable(value, localNode, beanType, this.getPath(path, index), (ElementType)null);
+							if(cascadable) {
+								Set<ConstraintViolation<Object>> cascadeViolations = new LinkedHashSet<ConstraintViolation<Object>>();
+								cascadeViolations.addAll(this.validate(validationCache, subValue, groups));	
+								violations.addAll(this.convertViolations(cascadeViolations, valueMap, beanType, path, index, null));
+							}						
+							index++;
+						}
+					//perform validation on each iterable object
+					} else if (value instanceof Iterable) {
+						
+						int index = 0;
+						
+						for(Object subValue : ((Iterable)value)) {
+							boolean cascadable = this.resolver.isCascadable(value, localNode, beanType, this.getPath(path, index), (ElementType)null);
+							if(cascadable) {
+								Set<ConstraintViolation<Object>> cascadeViolations = new LinkedHashSet<ConstraintViolation<Object>>();
+								cascadeViolations.addAll(this.validate(validationCache, subValue, groups));	
+								violations.addAll(this.convertViolations(cascadeViolations, valueMap, beanType, path, index, null));
+							}
+							
+							index++;
+						}
+					//perform validation on a map type object
+					} else 	if(value instanceof Map) {
+						for(Object key : ((Map)value).keySet()) {
+							boolean cascadable = this.resolver.isCascadable(value, localNode, beanType, this.getPath(path, key), (ElementType)null);
+							if(cascadable) {
+								Object subValue = ((Map)value).get(key);
+								Set<ConstraintViolation<Object>> cascadeViolations = new LinkedHashSet<ConstraintViolation<Object>>();	
+								cascadeViolations.addAll(this.validate(validationCache, subValue, groups));	
+								violations.addAll(this.convertViolations(cascadeViolations, valueMap, beanType, path, null, key));
+							}
+						}						
+					//perform validation on the object itself
+					} else {
+						boolean cascadable = this.resolver.isCascadable(value, localNode, beanType, this.getPath(path, propertyName), (ElementType)null);
+						if(cascadable) {
+							Set<ConstraintViolation<Object>> cascadeViolations = new LinkedHashSet<ConstraintViolation<Object>>();
+							cascadeViolations.addAll(this.validate(validationCache, value, groups));	
+							violations.addAll(this.convertViolations(cascadeViolations, valueMap, beanType, path, null, null));
+						}
 					}
-				} else 	if(value instanceof Map) {
-					for(Object key : ((Map)value).keySet()) {
-						Object subValue = ((Map)value).get(key);
-						
-						Set<ConstraintViolation<Object>> cascadeViolations = new LinkedHashSet<ConstraintViolation<Object>>();
-
-						cascadeViolations.addAll(this.validate(validationCache, subValue, groups));	
-						
-						violations.addAll(this.convertViolations(cascadeViolations, valueMap, beanType, path, null, key));
-					}
-				//perform validation on each iterable object
-				} else if (value instanceof Iterable) {
 					
-					int index = 0;
-					
-					for(Object subValue : ((Iterable)value)) {
-						Set<ConstraintViolation<Object>> cascadeViolations = new LinkedHashSet<ConstraintViolation<Object>>();
-
-						cascadeViolations.addAll(this.validate(validationCache, subValue, groups));	
-						
-						violations.addAll(this.convertViolations(cascadeViolations, valueMap, beanType, path, index, null));
-						
-						index++;
-					}
-				//perform validation on the object itself
-				} else {
-					Set<ConstraintViolation<Object>> cascadeViolations = new LinkedHashSet<ConstraintViolation<Object>>();
-
-					cascadeViolations.addAll(this.validate(validationCache, value, groups));	
-
-					violations.addAll(this.convertViolations(cascadeViolations, valueMap, beanType, path, null, null));
 				}
-				
 			}
 		} else {
 			for(ConstraintViolation<?> constraintViolation : cachedViolations) {
@@ -415,23 +441,8 @@ public class CoreValidatorImpl implements Validator{
 			convertedViolation.setRootBeanClass(type);
 			
 			//append to path
-			PathImpl cascadePath = new PathImpl();
-			for(Node node : path) {
-				cascadePath.push(node);
-			}
-			
-			//create a node that represents the object map or array index
-			if(index != null || key != null) {
-				NodeImpl cascadeNode = new NodeImpl();
-				if(index != null) {
-					cascadeNode.setIndex(index);
-				} else if(key != null) {
-					cascadeNode.setKey(key);
-				}
-				cascadeNode.setInIterable(true);
-				cascadePath.push(cascadeNode);
-			}
-			
+			PathImpl cascadePath = this.getPath(path, null, index, key);
+		
 			//push violation paths on after property name
 			for(Node node : violation.getPropertyPath()) {
 				cascadePath.push(node);
@@ -444,6 +455,42 @@ public class CoreValidatorImpl implements Validator{
 		}
 		
 		return violations;
+	}
+	
+	private PathImpl getPath(Path rootPath, String propertyPath, Integer index, Object key) {
+		//append to path
+		PathImpl cascadePath = new PathImpl();
+		for(Node node : rootPath) {
+			cascadePath.push(node);
+		}
+		
+		//create a node that represents the object map or array index
+		NodeImpl cascadeNode = new NodeImpl();
+		if(index != null || key != null) {
+			if(index != null) {
+				cascadeNode.setIndex(index);
+			} else if(key != null) {
+				cascadeNode.setKey(key);
+			}
+			cascadeNode.setInIterable(true);
+		} else if(propertyPath != null && !propertyPath.isEmpty()) {
+			cascadeNode.setName(propertyPath);
+		}
+		cascadePath.push(cascadeNode);
+		
+		return cascadePath;
+	}
+	
+	private PathImpl getPath(Path rootPath, String propertyPath) {
+		return this.getPath(rootPath, propertyPath, null, null);
+	}
+	
+	private PathImpl getPath(Path rootPath, Integer index) {
+		return this.getPath(rootPath, null, index, null);
+	}
+	
+	private PathImpl getPath(Path rootPath, Object key) {
+		return this.getPath(rootPath, null, null, key);
 	}
 	
 	/**
