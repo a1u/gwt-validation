@@ -1,5 +1,6 @@
 package com.em.validation.client;
 
+import javax.validation.Configuration;
 import javax.validation.ConstraintValidatorFactory;
 import javax.validation.MessageInterpolator;
 import javax.validation.TraversableResolver;
@@ -12,14 +13,23 @@ public enum ValidatorFactoryImpl implements ValidatorFactory {
 
 	INSTANCE;
 	
-	private TraversableResolver resolver = new TraversableResolverImpl();
+	private Configuration<?> configuration = null;
 	
-	private ValidatorContext context = new ValidatorContextImpl();
+	private TraversableResolver resolver = null;
 	
-	private MessageInterpolator interpolator = new MessageInterpolatorImpl();
+	private ValidatorContext context = null;
+	
+	private MessageInterpolator interpolator = null;
 	
 	private ValidatorFactoryImpl() {
-		
+		this.setConfiguration(new ConfigurationImpl());
+	}
+	
+	public void setConfiguration(Configuration<?> configuration) {
+		if(configuration == null) return;
+		this.configuration = configuration;
+		this.resolver = this.configuration.getDefaultTraversableResolver();
+		this.interpolator = this.configuration.getDefaultMessageInterpolator();
 	}
 
 	@Override

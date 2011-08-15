@@ -6,13 +6,14 @@ import javax.validation.spi.BootstrapState;
 import javax.validation.spi.ConfigurationState;
 import javax.validation.spi.ValidationProvider;
 
+import com.em.validation.client.AbstractConfiguration;
 import com.em.validation.client.ConfigurationImpl;
 import com.em.validation.client.ValidatorFactoryImpl;
 
-public class ValidationProviderImpl implements ValidationProvider<ConfigurationImpl>{
+public class ValidationProviderImpl implements ValidationProvider<AbstractConfiguration>{
 
 	@Override
-	public ConfigurationImpl createSpecializedConfiguration(BootstrapState state) {
+	public AbstractConfiguration createSpecializedConfiguration(BootstrapState state) {
 		return new ConfigurationImpl();
 	}
 

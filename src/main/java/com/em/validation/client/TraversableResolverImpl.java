@@ -19,20 +19,26 @@ public class TraversableResolverImpl implements TraversableResolver {
 		//don't even bother if the object is null
 		if(traversableObject == null) return false;
 		
+		//get topmost node
+		Node topNode = null;
+		for(Node node : pathToTraversableObject) {
+			if(node != null) {
+				topNode = node;
+			}
+		}
+		
 		//begin to find out what type of property it is and to what point the caller is trying to traverse
 		if(traversableObject instanceof Map) {
-			Object key = traversableProperty.getKey();
+			Object key = topNode.getKey();
 			return ((Map<?,?>) traversableObject).containsKey(key);			
 		} else if(traversableObject instanceof List) {
-			int index = traversableProperty.getIndex();
-			try {
-				((List<?>)traversableObject).get(index);
-				return true;
-			} catch (Exception ex) {
-				//if the index doesn't exist, throws an exception and goes on to return false
-			}
+			int index = topNode.getIndex();
+			return ((List<?>)traversableObject).size() > index;
+		} else if(traversableObject instanceof Object[]) {
+			int index = topNode.getIndex();
+			return ((Object[])traversableObject).length > index;
 		} else {
-			String propertyName = traversableProperty.getName();
+			String propertyName = topNode.getName();
 			BeanDescriptor descriptor = DescriptorFactory.INSTANCE.getBeanDescriptor(traversableObject);
 			for(PropertyDescriptor prop : descriptor.getConstrainedProperties()) {
 				if(prop.getPropertyName().equals(propertyName)) {

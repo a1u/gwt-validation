@@ -67,6 +67,10 @@ public class BeanDescriptorImpl extends ProtoDescriptor implements BeanDescripto
 
 	@Override
 	public PropertyDescriptor getConstraintsForProperty(String name) {
+		if(name == null) {
+			throw new IllegalArgumentException("Property name cannot be null.");
+		}
+		
 		if(!this.backingReflector.getPropertyNames().contains(name)) {
 			return null;
 		}
