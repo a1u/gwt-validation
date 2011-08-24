@@ -55,16 +55,7 @@ It is entirely possible to create a fully, or almost fully, complete JSR-303 val
 
 = Instructions =
 
-Dependencies:
- * gwt (gwt-user and gwt-dev)
- * javax.validation (jar and sources jar)
- * freemarker
- * reflections-0.9.5
-   * dom4j-1.6
-   * google-collections 
-   * logback-classic-0.9.9
-   * logback-core-0.9.9
-   * slf4j-api-1.5.6
+Please refer to the [Dependencies dependencies] wiki page first for all the other dependencies you will need to run the validation framework.
 
 You'll also need to add to your module xml file:
 {{{
