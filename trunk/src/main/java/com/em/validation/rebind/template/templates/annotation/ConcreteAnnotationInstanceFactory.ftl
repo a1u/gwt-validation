@@ -39,6 +39,11 @@ import com.em.validation.client.metadata.factory.IConcreteAnnotationInstanceFact
 import javax.validation.constraints.Pattern.Flag;
 </#if>
 
+//passed in imports
+<#list imports as import>
+import ${import};
+</#list>
+
 //the target constraint annotation
 import ${annotationImportName};
 

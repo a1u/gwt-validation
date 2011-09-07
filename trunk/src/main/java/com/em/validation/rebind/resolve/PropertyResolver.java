@@ -113,7 +113,11 @@ public enum PropertyResolver {
 			}
 			className.append(".class");
 			//and then set the class name, plus array containment, back onto the classname so that it can be used by the templates
-			pMeta.setClassString(className.toString());
+			String classNameString = className.toString();
+			if(classNameString != null) {
+				classNameString = classNameString.replaceAll("\\$", ".");
+			}
+			pMeta.setClassString(classNameString);
 			pMeta.setReturnType(property.getPropertyType());
 			
 			if(property.getReadMethod() != null && this.hasMethod(targetClass, property.getReadMethod().getName(), new Class<?>[]{})) {

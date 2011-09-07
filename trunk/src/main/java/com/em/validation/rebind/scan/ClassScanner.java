@@ -104,7 +104,9 @@ public enum ClassScanner {
 														new FieldAnnotationsScanner(), 
 														new MethodAnnotationsScanner(), 
 														new SubTypesScanner()
-										);
+										)
+										.useParallelExecutor()
+										;
 			
 		this.reflections = new Reflections(builder);
 	}

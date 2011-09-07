@@ -67,7 +67,11 @@ public enum ReflectorGenerator {
 	
 		//set up imports
 		List<String> imports = new ArrayList<String>();
-		imports.add(targetClass.getName());
+		String targetClassString = targetClass.getName();
+		if(targetClassString != null && !targetClassString.isEmpty()) {
+			targetClassString = targetClassString.replaceAll("\\$", ".");
+		}		
+		imports.add(targetClassString);
 
 		//group sequence
 		Class<?>[] groupSequenceArray = runtimeReflector.getGroupSequence();

@@ -124,7 +124,13 @@ public enum ReflectorFactoryGenerator {
 		//get reflector metadata object for the generated group reflector
 		ReflectorMetadata rMeta = new ReflectorMetadata();
 		rMeta.setReflectorClass(descriptor.getFullClassName());
-		rMeta.setTargetClass(targetClass.getName());
+		
+		//the target class must be manipulated to not have a $ (must not be binary name)
+		String targetClassString = targetClass.getName();
+		if(targetClassString != null && !targetClassString.isEmpty()) {
+			targetClassString = targetClassString.replaceAll("\\$", ".");
+		}		
+		rMeta.setTargetClass(targetClassString);
 
 		if(targetClass.getSuperclass() != null && !Object.class.equals(targetClass.getSuperclass())) {
 			rMeta.setSuperClass(targetClass.getSuperclass().getName());

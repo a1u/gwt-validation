@@ -79,6 +79,15 @@ public enum AnnotationInstanceFactoryGenerator {
 			Set<ConstraintMetadata> constraints = annotationClassToMetadataMap.get(annotationClass);
 			Set<ConstraintPropertyMetadata> methods = annotationMethodMetadata.get(annotationClass);
 
+			//also a set of imports, allows other things to be imported into an annotation
+			Set<String> imports = new HashSet<String>();
+			
+			//set up imports (see imports declaration)
+			for(ConstraintPropertyMetadata method : methods) {
+				if(method.getImportType() == null) continue;
+				imports.add(method.getImportType());
+			}
+			
 			//create generated name
 			//uuid
 			UUID uuid = UUID.randomUUID();
@@ -97,6 +106,7 @@ public enum AnnotationInstanceFactoryGenerator {
 			Map<String,Object> templateMap = new HashMap<String, Object>();
 			templateMap.put("constraints",constraints);
 			templateMap.put("methods", methods);
+			templateMap.put("imports", imports);
 			templateMap.put("generatedName",generatedFactoryName);
 			templateMap.put("targetPackage", this.TARGET_PACKAGE + ".instances");
 			templateMap.put("annotationImportName",annotationImportName);

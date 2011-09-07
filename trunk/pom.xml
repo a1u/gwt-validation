@@ -69,7 +69,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
   		<artifactId>gwt-user</artifactId>
   		<version>${gwtVersion}</version>
   	</dependency>
-  	<!-- upgrade to 0.9.5 at the earliest possible time -->
 	<dependency>
 	    <groupId>org.reflections</groupId>
 	    <artifactId>reflections</artifactId>
@@ -85,16 +84,23 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 		<artifactId>slf4j-simple</artifactId>
 		<version>1.6.1</version>
 	</dependency>
+	<dependency>
+		<groupId>javax.validation</groupId>
+		<artifactId>validation-api-sources</artifactId>
+		<version>1.0.0.GA></version>
+		<scope>system</scope>
+		<systemPath>${project.basedir}/lib/validation-api-1.0.0.GA-sources.jar</systemPath>
+	</dependency>	
   </dependencies>
   <build>
   	<resources>
   		<resource>
-  			<directory>${basedir}/src/main/java</directory>
+  			<directory>${project.basedir}/src/main/java</directory>
   		</resource>
   	</resources>
   	<testResources>
   		<testResource>
-  			<directory>${basedir}/src/test/java</directory>
+  			<directory>${project.basedir}/src/test/java</directory>
   		</testResource>
   	</testResources>
   	<pluginManagement>
@@ -122,10 +128,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 			  	<test>**/FullTestSuite.java</test>
 				<argLine>-Dgwt.args="-prod -gen target/testgen"</argLine>
 			    <additionalClasspathElements>
-					<additionalClasspathElement>${basedir}/lib/</additionalClasspathElement>
-					<additionalClasspathElement>${basedir}/lib/validation-api-1.0.0.GA-sources.jar</additionalClasspathElement>
-					<additionalClasspathElement>${basedir}/src/main/java/</additionalClasspathElement>
-			      	<additionalClasspathElement>${basedir}/src/test/java/</additionalClasspathElement>
+					<additionalClasspathElement>${project.basedir}/lib/</additionalClasspathElement>
+					<additionalClasspathElement>${project.basedir}/lib/validation-api-1.0.0.GA-sources.jar</additionalClasspathElement>
+					<additionalClasspathElement>${project.basedir}/src/main/java/</additionalClasspathElement>
+			      	<additionalClasspathElement>${project.basedir}/src/test/java/</additionalClasspathElement>
 			        <additionalClasspathElement>${project.build.sourceDirectory}</additionalClasspathElement>
 			        <additionalClasspathElement>${project.build.testSourceDirectory}</additionalClasspathElement>
 				</additionalClasspathElements>

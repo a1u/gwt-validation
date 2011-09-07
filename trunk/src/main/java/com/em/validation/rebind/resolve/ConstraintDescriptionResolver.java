@@ -134,11 +134,34 @@ public enum ConstraintDescriptionResolver {
 				String returnValue = this.createReturnValueAsString(method, annotation);
 				
 				//get return type
-				String returnType = method.getReturnType().getSimpleName();
-				if(method.getReturnType().getComponentType() != null) {
-					returnType = method.getReturnType().getComponentType().getSimpleName() + "[]";
+				Class<?> returnClass = method.getReturnType();
+				String importType = null;
+				int index = 0;
+
+				//find innermost contained class
+				while(returnClass.getComponentType() != null) {
+					returnClass = returnClass.getComponentType();
+					index++;
 				}
+				String returnType = returnClass.getSimpleName();
+				
+				StringBuilder suffixBuilder = new StringBuilder("");
+				for(int i = 0; i < index; i++) {
+					suffixBuilder.append("[]");
+				}				
+				returnType = returnType + suffixBuilder.toString();
 				aMeta.setReturnType(returnType);
+				
+				//primitive classes do not need to be imported
+				if(!returnClass.isPrimitive()) {
+					importType = returnClass.getName();
+				}
+				
+				//only handle imported values that have an actual value
+				if(importType != null) {
+					importType = importType.replaceAll("\\$", ".");
+					aMeta.setImportType(importType);
+				}				
 				
 				//set the method name and return value
 				aMeta.setMethodName(method.getName());
@@ -307,19 +330,25 @@ public enum ConstraintDescriptionResolver {
 
 		Class<?> returnType = value.getClass();
 		Class<?> containedClass = returnType.getComponentType();
-
 		
 		StringBuilder output = new StringBuilder();
 		if(containedClass == null) {
 			if(String.class.equals(returnType)) {
 				output.append("\"");
 			} 
+			
+			if(returnType.isEnum()) {
+				output.append(returnType.getSimpleName());
+				output.append(".");
+			}
+			
 			if(value instanceof Class<?>) {
 				Class<?> clazz = (Class<?>)value;
 				output.append(clazz.getName() + ".class");
 			} else {				
 				output.append(value);
 			}
+			
 			if(String.class.equals(returnType)) {
 				output.append("\"");
 			}

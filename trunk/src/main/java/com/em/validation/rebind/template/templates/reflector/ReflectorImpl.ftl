@@ -37,6 +37,9 @@ import com.em.validation.client.reflector.IReflector;
 //decorate constraint descriptors so they show up as separate instances
 import com.em.validation.client.metadata.ConstraintDescriptorDecorator;
 
+//exceptions during validation
+import javax.validation.ValidationException;
+
 //we need the full directory where all the generated constraints are stored
 import ${generatedConstraintPackage}.*;
 
@@ -93,9 +96,13 @@ public class ${concreteClassName} extends AbstractCompiledReflector<${reflection
 	public Object getValue(String name, ${reflectionTargetName} target){
 		Object value = null;
 	
-		<#list properties as property><#if property_index &gt; 0> else </#if>if("${property.name}".equals(name)) {
-			value = target.${property.accessor};				
-		}</#list>
+		try {
+			<#list properties as property><#if property_index &gt; 0> else </#if>if("${property.name}".equals(name)) {
+				value = target.${property.accessor};				
+			}</#list>
+		} catch (Exception e) {
+			throw new ValidationException("An error occurred while reflectively accessing a property.",e);
+		}
 		
 		if(value == null) {
 			value = this.getSuperValues(name, target);
