@@ -28,6 +28,8 @@ import com.em.validation.client.cases.defects.Defect_005;
 import com.em.validation.client.cases.defects.Defect_024;
 import com.em.validation.client.cases.defects.Defect_037;
 import com.em.validation.client.cases.defects.Defect_040;
+import com.em.validation.client.cases.defects.Defect_041;
+import com.em.validation.client.cases.defects.Defect_042;
 import com.google.gwt.junit.tools.GWTTestSuite;
 
 public class DefectTestSuite extends GWTTestSuite {
@@ -39,6 +41,8 @@ public class DefectTestSuite extends GWTTestSuite {
 		suite.addTestSuite(Defect_024.class);
 		suite.addTestSuite(Defect_037.class);
 		suite.addTestSuite(Defect_040.class);
+		suite.addTestSuite(Defect_041.class);
+		suite.addTestSuite(Defect_042.class);
 		
 		return suite;
 	}

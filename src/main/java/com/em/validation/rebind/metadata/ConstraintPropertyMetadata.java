@@ -25,6 +25,8 @@ public class ConstraintPropertyMetadata {
 
 	private String returnType = null;
 	
+	private String importType = null;
+	
 	private String returnValue = "null";
 	
 	private String methodName = "";
@@ -51,6 +53,14 @@ public class ConstraintPropertyMetadata {
 
 	public void setMethodName(String methodName) {
 		this.methodName = methodName;
+	}
+
+	public String getImportType() {
+		return importType;
+	}
+
+	public void setImportType(String fullReturnType) {
+		this.importType = fullReturnType;
 	}
 
 	@Override

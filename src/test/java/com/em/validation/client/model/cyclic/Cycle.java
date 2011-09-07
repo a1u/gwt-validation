@@ -26,8 +26,8 @@ import javax.validation.constraints.NotNull;
 
 public class Cycle {
 
-	@NotNull
 	@Valid
+	@NotNull
 	private Cycle other = null;
 	
 	@NotNull
