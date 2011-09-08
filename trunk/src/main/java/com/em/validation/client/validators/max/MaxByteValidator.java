@@ -1,10 +1,9 @@
 package com.em.validation.client.validators.max;
 
-/*
+/* 
 GWT Validation Framework - A JSR-303 validation framework for GWT
 
-(c) 2011 Eminent Minds, LLC
-	- Chris Ruffalo
+(c) gwt-validation contributors (http://code.google.com/p/gwt-validation/)
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -20,7 +19,6 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-
 import javax.validation.ConstraintValidatorContext;
 
 public class MaxByteValidator extends MaxValidator<Byte> {
