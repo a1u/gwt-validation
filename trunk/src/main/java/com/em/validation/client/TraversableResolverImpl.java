@@ -73,7 +73,9 @@ public class TraversableResolverImpl implements TraversableResolver {
 	@Override
 	public boolean isCascadable(Object traversableObject, Node traversableProperty, Class<?> rootBeanType, Path pathToTraversableObject, ElementType elementType) {
 		//todo: add cascaded part
-		return this.isReachable(traversableObject, traversableProperty, rootBeanType, pathToTraversableObject, elementType);
+		//the line below caused part of defect #42, please re-evaluate
+		//return this.isReachable(traversableObject, traversableProperty, rootBeanType, pathToTraversableObject, elementType);
+		return true;
 	}
 
 }
