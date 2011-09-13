@@ -42,7 +42,7 @@ public class PropertyConstraintFinderImpl extends AbstractConstraintFinder {
 
 	private String propertyName = "";
 	
-	protected PropertyConstraintFinderImpl(IReflector<?> reflector, String propertyName) {
+	protected PropertyConstraintFinderImpl(IReflector reflector, String propertyName) {
 		this.backingReflector = reflector;
 		this.propertyName = propertyName;
 	}

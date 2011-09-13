@@ -36,7 +36,7 @@ public class CoreDefect_005 extends GwtValidationBaseTestCase {
 	public static void testStrangeCapitalization(IReflectorFactory factory) {
 		StrangeCapitalization capitalization = new StrangeCapitalization();	
 		
-		IReflector<StrangeCapitalization> reflector = factory.getReflector(capitalization.getClass()); 
+		IReflector reflector = factory.getReflector(capitalization.getClass()); 
 		
 		//no null reflectors
 		assertNotNull(reflector);

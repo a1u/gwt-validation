@@ -41,6 +41,8 @@ import javax.validation.Configuration;
 import javax.validation.ValidationProviderResolver;
 import javax.validation.ValidatorFactory;
 import javax.validation.bootstrap.GenericBootstrap;
+import javax.validation.bootstrap.ProviderSpecificBootstrap;
+import javax.validation.spi.ValidationProvider;
 
 import com.em.validation.client.ConfigurationImpl;
 import com.em.validation.client.ValidatorFactoryImpl;
@@ -121,6 +123,23 @@ public class Validation {
 	public static ValidatorFactory buildDefaultValidatorFactory() {
 		return byDefaultProvider().configure().buildValidatorFactory();
 	}
+	
+	/*
+	public static <T extends Configuration<T>, U extends ValidationProvider<T>>	ProviderSpecificBootstrap<T> byProvider(Class<U> providerType) {
+		ProviderSpecificBootstrap<ConfigurationImpl> psBoot = new ProviderSpecificBootstrap<ConfigurationImpl>() {
+			
+			public ProviderSpecificBootstrap<T> providerResolver(ValidationProviderResolver resolver) {
+				return this;
+			}
+
+			public T configure() {
+				return new ConfigurationImpl();
+			}
+		};
+		
+		return psBoot;
+	}
+	*/
 
 	/**
 	 * Build a <code>Configuration</code>. The provider list is resolved

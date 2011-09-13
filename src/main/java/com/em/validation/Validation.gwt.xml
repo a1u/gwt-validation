@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 	<inherits name='com.google.gwt.core.Core'/>
 
 	<!-- inherit javax.validation api for jsr303 -->
-	<inherits name='javax.validation.Validation'/>
+	<inherits name='javax.validation.EmValidation'/>
 	
 	<!-- inherit regex provider form gwt libs -->
 	<inherits name='com.google.gwt.regexp.RegExp'/>

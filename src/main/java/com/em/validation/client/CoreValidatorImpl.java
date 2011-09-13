@@ -99,7 +99,7 @@ public class CoreValidatorImpl implements Validator{
 	@SuppressWarnings("unchecked")
 	private <T> Set<ConstraintViolation<T>> validateProperty(Map<Class<?>,Map<String,Map<Object,Set<ConstraintViolation<?>>>>> validationCache, T object, String propertyName, Class<?>... groups) {
 		//get reflector to get property value
-		IReflector<T> reflector = ReflectorFactory.INSTANCE.getReflector((Class<T>)object.getClass());
+		IReflector reflector = ReflectorFactory.INSTANCE.getReflector((Class<T>)object.getClass());
 		Object value = reflector.getValue(propertyName, object);
 
 		//create path for this level

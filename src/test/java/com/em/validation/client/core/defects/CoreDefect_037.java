@@ -40,10 +40,9 @@ public class CoreDefect_037 {
 		
 		IReflectorFactory factory = testCase.getReflectorFactory();
 		
-		IReflector<Login> loginReflector = factory.getReflector(Login.class);
-		IReflector<BaseAction> baseActionReflector = factory.getReflector(BaseAction.class);
-		@SuppressWarnings("rawtypes")
-		IReflector<Action> actionReflector = factory.getReflector(Action.class);
+		IReflector loginReflector = factory.getReflector(Login.class);
+		IReflector baseActionReflector = factory.getReflector(BaseAction.class);
+		IReflector actionReflector = factory.getReflector(Action.class);
 		
 		//so, what we're checking for here is either that the reflector doesn't exist (gwt mode) or that the reflector
 		//exists and that the constraints that are available are null (runtime mode). either way, we want the login reflector

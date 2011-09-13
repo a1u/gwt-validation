@@ -40,7 +40,7 @@ import com.em.validation.client.reflector.IReflector;
  */
 public class BeanDescriptorImpl extends ProtoDescriptor implements BeanDescriptor {
 
-	public BeanDescriptorImpl(IReflector<?> reflector) {
+	public BeanDescriptorImpl(IReflector reflector) {
 		super(reflector);
 	}
 
@@ -103,7 +103,7 @@ public class BeanDescriptorImpl extends ProtoDescriptor implements BeanDescripto
 	@Override
 	public ConstraintFinder findConstraints() {
 		final class PrivateConstraintFinderImpl extends BeanConstraintFinderImpl {
-			public PrivateConstraintFinderImpl(IReflector<?> reflector, ElementDescriptor descriptor) {
+			public PrivateConstraintFinderImpl(IReflector reflector, ElementDescriptor descriptor) {
 				super(reflector,descriptor);
 			}			
 		}

@@ -28,6 +28,7 @@ import com.em.validation.reflective.cases.ConstraintsTest;
 import com.em.validation.reflective.cases.MetadataTest;
 import com.em.validation.reflective.cases.ValidatorTest;
 import com.em.validation.reflective.cases.messages.MessagesTest;
+import com.em.validation.reflective.cases.reflector.ReflectorTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
@@ -38,7 +39,8 @@ import com.em.validation.reflective.cases.messages.MessagesTest;
 	ValidatorImplementationTestSuite.class,
 	ConstraintValidatorFactoryTest.class,
 	ValidatorTest.class,
-	MessagesTest.class
+	MessagesTest.class,
+	ReflectorTest.class
 })
 public class ReflectiveTestSuite {
 

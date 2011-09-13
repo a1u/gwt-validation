@@ -54,7 +54,7 @@ public class CoreDefect_040 {
 			testCase.localAssertTrue(prop == null);
 			
 			//get a reflector
-			IReflector<Person_040> personReflector = testCase.getReflectorFactory().getReflector(Person_040.class);
+			IReflector personReflector = testCase.getReflectorFactory().getReflector(Person_040.class);
 			
 			//prove property name exists
 			testCase.localAssertTrue(personReflector.getPropertyNames().contains("upperCaseName"));

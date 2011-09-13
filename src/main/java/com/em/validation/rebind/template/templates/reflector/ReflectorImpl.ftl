@@ -46,7 +46,7 @@ import ${generatedConstraintPackage}.*;
 import ${import};
 </#list>
 
-public class ${concreteClassName} extends AbstractCompiledReflector<${reflectionTargetName}> {
+public class ${concreteClassName} extends AbstractCompiledReflector {
 	
 	public ${concreteClassName}() {
 		//set the available property names in the constructor
@@ -92,12 +92,12 @@ public class ${concreteClassName} extends AbstractCompiledReflector<${reflection
 		this.targetClass = ${reflectionTargetName}.class;
 	}
 
-	public Object getValue(String name, ${reflectionTargetName} target){
+	public Object getValue(String name, Object target){
 		Object value = null;
 	
 		try {
 			<#list properties as property><#if property_index &gt; 0> else </#if>if("${property.name}".equals(name)) {
-				value = target.${property.accessor};				
+				value = ((${reflectionTargetName})target).${property.accessor};				
 			}</#list>
 		} catch (Exception e) {
 			throw new ValidationException("An error occurred while reflectively accessing a property.",e);

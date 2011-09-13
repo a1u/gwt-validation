@@ -43,7 +43,7 @@ public class CoreMetadataTest {
 	public static void testGroupFinderOnClass(ITestCase testCase) {
 
 		//get bean descriptor and initial finder
-		IReflector<GroupTestClass> groupTestReflector = ReflectorFactory.INSTANCE.getReflector(GroupTestClass.class);
+		IReflector groupTestReflector = ReflectorFactory.INSTANCE.getReflector(GroupTestClass.class);
 		BeanDescriptor descriptor = DescriptorFactory.INSTANCE.getBeanDescriptor(GroupTestClass.class);
 		ConstraintFinder finder = descriptor.findConstraints();
 		

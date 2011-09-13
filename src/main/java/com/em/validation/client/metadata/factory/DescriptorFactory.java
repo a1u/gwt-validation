@@ -100,7 +100,7 @@ public enum DescriptorFactory {
 	 * @param reflector
 	 * @return
 	 */
-	public BeanDescriptor getBeanDescriptor(final IReflector<?> reflector) {
+	public BeanDescriptor getBeanDescriptor(final IReflector reflector) {
 		BeanDescriptor beanDescriptor = new BeanDescriptorImpl(reflector);
 		return beanDescriptor;
 	}
@@ -111,7 +111,7 @@ public enum DescriptorFactory {
 	 * @param reflector
 	 * @return
 	 */
-	public PropertyDescriptor getPropertyDescriptor(final IReflector<?> reflector, final String name) {
+	public PropertyDescriptor getPropertyDescriptor(final IReflector reflector, final String name) {
 		PropertyDescriptor propDescriptor = new PropertyDescriptorImpl(reflector, name);
 		return propDescriptor;
 	}

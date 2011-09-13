@@ -41,7 +41,7 @@ public class ValidatorImpl implements Validator{
 
 	@Override
 	public <T> Set<ConstraintViolation<T>> validate(T object, Class<?>... groups) {
-		IReflector<?> reflector = ReflectorFactory.INSTANCE.getReflector(object.getClass());
+		IReflector reflector = ReflectorFactory.INSTANCE.getReflector(object.getClass());
 		if(reflector.hasGroupSequence() && (groups == null || groups.length == 0)) {
 			return this.groupSequenceValidator.validate(object, groups);
 		}		
@@ -50,7 +50,7 @@ public class ValidatorImpl implements Validator{
 
 	@Override
 	public <T> Set<ConstraintViolation<T>> validateProperty(T object, String propertyName, Class<?>... groups) {
-		IReflector<?> reflector = ReflectorFactory.INSTANCE.getReflector(object.getClass());
+		IReflector reflector = ReflectorFactory.INSTANCE.getReflector(object.getClass());
 		if(reflector.hasGroupSequence() && (groups == null || groups.length == 0)) {
 			return this.groupSequenceValidator.validateProperty(object, propertyName, groups);
 		}		
@@ -59,7 +59,7 @@ public class ValidatorImpl implements Validator{
 
 	@Override
 	public <T> Set<ConstraintViolation<T>> validateValue(Class<T> beanType,	String propertyName, Object value, Class<?>... groups) {
-		IReflector<?> reflector = ReflectorFactory.INSTANCE.getReflector(beanType);
+		IReflector reflector = ReflectorFactory.INSTANCE.getReflector(beanType);
 		if(reflector.hasGroupSequence() && (groups == null || groups.length == 0)) {
 			return this.groupSequenceValidator.validateValue(beanType, propertyName, value, groups);
 		}		

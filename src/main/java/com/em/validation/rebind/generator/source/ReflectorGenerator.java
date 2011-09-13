@@ -48,7 +48,7 @@ public enum ReflectorGenerator {
 	
 	public ClassDescriptor getReflectorDescirptions(Class<?> targetClass) {
 		//get the runtime reflector (usful for some metadata)
-		IReflector<?> runtimeReflector = ReflectorFactory.INSTANCE.getReflector(targetClass);
+		IReflector runtimeReflector = ReflectorFactory.INSTANCE.getReflector(targetClass);
 		
 		//target of generation
 		String targetPackage = this.TARGET_PACKAGE;

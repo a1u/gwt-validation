@@ -35,21 +35,20 @@ public enum RuntimeReflectorFactory implements IReflectorFactory {
 	
 	INSTANCE;
 	
-	private Map<Class<?>, RuntimeReflectorImpl<?>> reflectorCache = new HashMap<Class<?>, RuntimeReflectorImpl<?>>();
+	private Map<Class<?>, RuntimeReflectorImpl> reflectorCache = new HashMap<Class<?>, RuntimeReflectorImpl>();
 	
 	private RuntimeReflectorFactory() {
 		
 	}
 
 	@Override
-	public <T> IReflector<T> getReflector(Class<? extends T> targetClass) {
+	public IReflector getReflector(Class<?> targetClass) {
 		//return a null reflector when the object doesn't warrant reflecting
 		if(Object.class.equals(targetClass) || Annotation.class.equals(targetClass) || targetClass == null) return null;
 		
-		@SuppressWarnings("unchecked")
-		RuntimeReflectorImpl<T> reflector = (RuntimeReflectorImpl<T>)this.reflectorCache.get(targetClass);				
+		RuntimeReflectorImpl reflector = (RuntimeReflectorImpl)this.reflectorCache.get(targetClass);				
 		if(reflector == null) {
-			reflector = new RuntimeReflectorImpl<T>(targetClass);
+			reflector = new RuntimeReflectorImpl(targetClass);
 			
 			this.reflectorCache.put(targetClass, reflector);
 			
@@ -57,10 +56,10 @@ public enum RuntimeReflectorFactory implements IReflectorFactory {
 			reflector.setConstraintDescriptorMap(ConstraintDescriptionResolver.INSTANCE.getConstraintDescriptors(targetClass));
 
 			//add the super reflector and interface reflectors
-			RuntimeReflectorImpl<T> runtime = (RuntimeReflectorImpl<T>)reflector;
-			runtime.setSuperReflector((Reflector<?>)ReflectorFactory.INSTANCE.getReflector(targetClass.getSuperclass()));
+			RuntimeReflectorImpl runtime = (RuntimeReflectorImpl)reflector;
+			runtime.setSuperReflector((Reflector)ReflectorFactory.INSTANCE.getReflector(targetClass.getSuperclass()));
 			for(Class<?> iface : targetClass.getInterfaces()) {
-				runtime.addReflectorInterface((Reflector<?>)ReflectorFactory.INSTANCE.getReflector(iface));
+				runtime.addReflectorInterface((Reflector)ReflectorFactory.INSTANCE.getReflector(iface));
 			}			
 		}
 		

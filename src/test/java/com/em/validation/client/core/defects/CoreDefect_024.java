@@ -33,7 +33,7 @@ public class CoreDefect_024 extends GwtValidationBaseTestCase {
 	public static void testPatternEscapes(IReflectorFactory factory) {
 		
 		//get pattern reflector
-		IReflector<TestPattern> testPatternReflector = factory.getReflector(TestPattern.class);
+		IReflector testPatternReflector = factory.getReflector(TestPattern.class);
 		
 		//check out pattern 
 		assertNotNull(testPatternReflector);

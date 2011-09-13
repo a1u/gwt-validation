@@ -32,7 +32,7 @@ public class PropertyDescriptorImpl extends ProtoDescriptor implements PropertyD
 
 	protected String propertyName = "";
 	
-	public PropertyDescriptorImpl(IReflector<?> reflector, String name) {
+	public PropertyDescriptorImpl(IReflector reflector, String name) {
 		super(reflector);
 		this.propertyName = name;
 	}
@@ -65,7 +65,7 @@ public class PropertyDescriptorImpl extends ProtoDescriptor implements PropertyD
 	@Override
 	public ConstraintFinder findConstraints() {
 		final class PrivatePropertyConstraintFinderImpl extends PropertyConstraintFinderImpl {
-			public PrivatePropertyConstraintFinderImpl(IReflector<?> reflector, String propertyName) {
+			public PrivatePropertyConstraintFinderImpl(IReflector reflector, String propertyName) {
 				super(reflector,propertyName);
 			}			
 		}
