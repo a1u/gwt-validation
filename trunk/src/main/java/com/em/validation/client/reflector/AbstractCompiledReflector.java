@@ -29,7 +29,7 @@ import java.util.Set;
 import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.Scope;
 
-public abstract class AbstractCompiledReflector<T> extends Reflector<T> {
+public abstract class AbstractCompiledReflector extends Reflector {
 
 	//compile time generated support for marking cascaded properties
 	protected Set<String> cascadedProperties = new LinkedHashSet<String>();
@@ -51,7 +51,7 @@ public abstract class AbstractCompiledReflector<T> extends Reflector<T> {
 				result = this.superReflector.isCascaded(propertyName);
 			}
 			if(result == false) {
-				for(IReflector<?> iface : this.reflectorInterfaces) {
+				for(IReflector iface : this.reflectorInterfaces) {
 					result = iface.isCascaded(propertyName);
 					if(result) break;
 				}
@@ -73,7 +73,7 @@ public abstract class AbstractCompiledReflector<T> extends Reflector<T> {
 				result = this.superReflector.getPropertyType(name);
 			}
 			if(result == null) {
-				for(IReflector<?> iface : this.reflectorInterfaces) {
+				for(IReflector iface : this.reflectorInterfaces) {
 					result = iface.getPropertyType(name);
 					if(result != null) break;
 				}
@@ -100,7 +100,7 @@ public abstract class AbstractCompiledReflector<T> extends Reflector<T> {
 			if(this.superReflector != null) {
 				results.addAll(this.superReflector.declaredOn(scope,property,descriptor));
 			}
-			for(IReflector<?> iface : this.reflectorInterfaces) {
+			for(IReflector iface : this.reflectorInterfaces) {
 				if(iface != null) {
 					results.addAll(iface.declaredOn(scope,property,descriptor));
 				}

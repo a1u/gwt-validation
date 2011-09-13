@@ -55,7 +55,7 @@ public class ConstraintsTest extends GwtValidationBaseTestCase {
 		BeanDescriptor descriptor = DescriptorFactory.INSTANCE.getBeanDescriptor(OverlayClass.class);
 		
 		//get reflector
-		IReflector<OverlayClass> overlayReflector = this.getReflectorFactory().getReflector(OverlayClass.class);
+		IReflector overlayReflector = this.getReflectorFactory().getReflector(OverlayClass.class);
 		
 		//test reflection
 		assertEquals(overlay.getTestString(), overlayReflector.getValue("testString",overlay));

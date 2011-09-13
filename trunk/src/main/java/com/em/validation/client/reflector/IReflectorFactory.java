@@ -36,6 +36,6 @@ public interface IReflectorFactory {
 	 * @param targetClass
 	 * @return
 	 */
-	public <T> IReflector<T> getReflector(Class<? extends T> targetClass);
+	public IReflector getReflector(Class<?> targetClass);
 	
 }

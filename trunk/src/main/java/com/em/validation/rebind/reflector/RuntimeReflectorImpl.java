@@ -47,7 +47,7 @@ import com.em.validation.client.reflector.Reflector;
 import com.em.validation.rebind.metadata.PropertyMetadata;
 import com.em.validation.rebind.resolve.PropertyResolver;
 
-public class RuntimeReflectorImpl<T> extends Reflector<T> {
+public class RuntimeReflectorImpl extends Reflector {
 
 	Map<String,PropertyMetadata> metadataMap = new HashMap<String, PropertyMetadata>();
 	
@@ -77,7 +77,7 @@ public class RuntimeReflectorImpl<T> extends Reflector<T> {
 	}
 	
 	@Override
-	public Object getValue(String name, T target) {
+	public Object getValue(String name, Object target) {
 		//get property metadata
 		PropertyMetadata metadata = this.metadataMap.get(name); 
 		
@@ -86,12 +86,21 @@ public class RuntimeReflectorImpl<T> extends Reflector<T> {
 		if(metadata != null && metadata.getAccessor() != null) {
 			String accessor = metadata.getAccessor();
 			if(metadata.isField()) {
-				try {
-					Field field = this.targetClass.getDeclaredField(accessor);
-					value = field.get(target);
-				} catch (Exception ex) {
-					//field not available
-				}
+					try {
+						Field field = this.targetClass.getDeclaredField(accessor);
+						field.setAccessible(true);
+						value = field.get(target);
+					} catch (SecurityException e) {
+						throw new ValidationException("A security exception occurred during validation.  Please inspect your class definition and security configuration.",e);
+					} catch (NoSuchFieldException e) {
+						throw new ValidationException("The field \"" + accessor + "\" does not exist.  Please inspect your class definition.",e);
+					} catch (IllegalArgumentException e) {
+						throw new ValidationException("Illegal arguments were provided to a property during validation.",e);
+					} catch (IllegalAccessException e) {
+						throw new ValidationException("Illegal access exception caught during validation.  Only accessible properties can be validated.",e);
+					} catch (Exception e) {
+						throw new ValidationException("An exception was thrown during validation: " + e.getMessage(),e);
+					}
 			} else {
 				try {
 					accessor = accessor.substring(0, accessor.lastIndexOf("("));
@@ -157,7 +166,7 @@ public class RuntimeReflectorImpl<T> extends Reflector<T> {
 				result = this.superReflector.isCascaded(propertyName);
 			}
 			if(result == false) {
-				for(IReflector<?> iface : this.reflectorInterfaces) {
+				for(IReflector iface : this.reflectorInterfaces) {
 					result = iface.isCascaded(propertyName);
 					if(result) break;
 				}
@@ -199,7 +208,7 @@ public class RuntimeReflectorImpl<T> extends Reflector<T> {
 				result = this.superReflector.getPropertyType(name);
 			}
 			if(result == null) {
-				for(IReflector<?> iface : this.reflectorInterfaces) {
+				for(IReflector iface : this.reflectorInterfaces) {
 					result = iface.getPropertyType(name);
 					if(result != null) break;
 				}
@@ -269,7 +278,7 @@ public class RuntimeReflectorImpl<T> extends Reflector<T> {
 			if(this.superReflector != null) {
 				results.addAll(this.superReflector.declaredOn(scope, property, descriptor));
 			}
-			for(IReflector<?> iface : this.reflectorInterfaces) {
+			for(IReflector iface : this.reflectorInterfaces) {
 				if(iface != null){
 					results.addAll(iface.declaredOn(scope, property, descriptor));
 				}

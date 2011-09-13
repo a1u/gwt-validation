@@ -255,7 +255,7 @@ public class CoreValidatorTest {
 	
 	public static void testImplicitGroupValidation(ITestCase testCase) {
 		//get reflectors
-		IReflector<ParentClass> parentClassReflector = testCase.getReflectorFactory().getReflector(ParentClass.class);
+		IReflector parentClassReflector = testCase.getReflectorFactory().getReflector(ParentClass.class);
 		
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		Validator validator = factory.getValidator();

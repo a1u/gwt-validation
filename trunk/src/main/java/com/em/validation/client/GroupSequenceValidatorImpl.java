@@ -46,7 +46,7 @@ public class GroupSequenceValidatorImpl implements Validator{
 	}
 	
 	private <T> Set<ConstraintViolation<T>> validate(Set<Class<?>> previousGroups, T object, Class<?>... groups) {
-		IReflector<?> reflector = ReflectorFactory.INSTANCE.getReflector(object.getClass());
+		IReflector reflector = ReflectorFactory.INSTANCE.getReflector(object.getClass());
 		Set<ConstraintViolation<T>> violations = new HashSet<ConstraintViolation<T>>();
 		for(Class<?> group : reflector.getGroupSequence()) {
 			if(previousGroups.contains(group)) {
@@ -69,7 +69,7 @@ public class GroupSequenceValidatorImpl implements Validator{
 	}
 
 	private <T> Set<ConstraintViolation<T>> validateProperty(Set<Class<?>> previousGroups, T object, String propertyName, Class<?>... groups) {
-		IReflector<?> reflector = ReflectorFactory.INSTANCE.getReflector(object.getClass());
+		IReflector reflector = ReflectorFactory.INSTANCE.getReflector(object.getClass());
 		Set<ConstraintViolation<T>> violations = new HashSet<ConstraintViolation<T>>();
 		for(Class<?> group : reflector.getGroupSequence()) {
 			if(previousGroups.contains(group)) {
@@ -92,7 +92,7 @@ public class GroupSequenceValidatorImpl implements Validator{
 	}
 	
 	private <T> Set<ConstraintViolation<T>> validateValue(Set<Class<?>> previousGroups, Class<T> beanType,	String propertyName, Object value, Class<?>... groups) { 
-		IReflector<?> reflector = ReflectorFactory.INSTANCE.getReflector(beanType);
+		IReflector reflector = ReflectorFactory.INSTANCE.getReflector(beanType);
 		Set<ConstraintViolation<T>> violations = new HashSet<ConstraintViolation<T>>();
 		for(Class<?> group : reflector.getGroupSequence()) {
 			if(previousGroups.contains(group)) {

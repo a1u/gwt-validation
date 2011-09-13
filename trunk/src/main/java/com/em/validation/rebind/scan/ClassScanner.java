@@ -176,5 +176,4 @@ public enum ClassScanner {
 	public Set<Class<? extends ConstraintValidator<?, ?>>> getConstraintValidatorClasses() {
 		return this.getConstraintValidatorClasses(RebindConfiguration.INSTANCE.excludedValidatorClassesRegularExpression());
 	}
-	
 }

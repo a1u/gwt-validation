@@ -28,6 +28,7 @@ import com.em.validation.client.cases.ConstraintsTest;
 import com.em.validation.client.cases.MetadataTest;
 import com.em.validation.client.cases.ValidatorTest;
 import com.em.validation.client.cases.messages.MessageTest;
+import com.em.validation.client.cases.reflector.ReflectorTest;
 import com.google.gwt.junit.tools.GWTTestSuite;
 
 public class ClientTestSuite extends GWTTestSuite {
@@ -43,6 +44,7 @@ public class ClientTestSuite extends GWTTestSuite {
 		suite.addTestSuite(ConstraintValidatorFactoryTest.class);
 		suite.addTestSuite(ValidatorTest.class);
 		suite.addTestSuite(MessageTest.class);
+		suite.addTestSuite(ReflectorTest.class);
 		
 		return suite;
 	}

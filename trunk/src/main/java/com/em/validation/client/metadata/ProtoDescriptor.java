@@ -27,9 +27,9 @@ import com.em.validation.client.reflector.IReflector;
 
 public abstract class ProtoDescriptor implements ElementDescriptor{
 	
-	protected IReflector<?> backingReflector = null;
+	protected IReflector backingReflector = null;
 	
-	public ProtoDescriptor(IReflector<?> reflector) {
+	public ProtoDescriptor(IReflector reflector) {
 		this.backingReflector = reflector;
 	}
 

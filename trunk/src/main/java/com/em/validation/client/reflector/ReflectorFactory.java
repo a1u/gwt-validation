@@ -31,7 +31,7 @@ public enum ReflectorFactory implements IReflectorFactory {
 	}
 
 	@Override
-	public <T> IReflector<T> getReflector(Class<? extends T> targetClass) {
+	public IReflector getReflector(Class<?> targetClass) {
 		//at runtime, delegate to a class that uses introspection and reflection
 		//to create (and cache) reflectors
 		return RuntimeReflectorFactory.INSTANCE.getReflector(targetClass);

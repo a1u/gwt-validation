@@ -50,7 +50,7 @@ public abstract class AbstractConstraintFinder implements ConstraintFinder {
 	 * Used for scope searches
 	 * 
 	 */
-	protected IReflector<?> backingReflector = null;
+	protected IReflector backingReflector = null;
 
 	/**
 	 * When the state of the search values has changed, mark the cache as dirty so that the search will be re-run. 
@@ -126,7 +126,7 @@ public abstract class AbstractConstraintFinder implements ConstraintFinder {
 			
 			//create deeper set and check again
 			for(Class<?> group : groupSet) {
-				IReflector<?> gReflector = ReflectorFactory.INSTANCE.getReflector(group);
+				IReflector gReflector = ReflectorFactory.INSTANCE.getReflector(group);
 				
 				if(gReflector != null) {
 					if(gReflector.getParentReflector() != null) {
@@ -134,7 +134,7 @@ public abstract class AbstractConstraintFinder implements ConstraintFinder {
 					}
 					
 					if(gReflector.getInterfaceReflectors() != null) {
-						for(IReflector<?> ireflector : gReflector.getInterfaceReflectors()) {
+						for(IReflector ireflector : gReflector.getInterfaceReflectors()) {
 							if(ireflector != null) {
 								tempSet.add(ireflector.getTargetClass());
 							}

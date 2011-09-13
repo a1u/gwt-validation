@@ -22,5 +22,5 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 	<inherits name='com.em.validation.Validation'/>
 	
 	<!-- unit testing framework -->
-	<inherits name='com.google.gwt.junit.JUnit'/>	
+	<inherits name='com.google.gwt.junit.JUnit'/>
 </module>

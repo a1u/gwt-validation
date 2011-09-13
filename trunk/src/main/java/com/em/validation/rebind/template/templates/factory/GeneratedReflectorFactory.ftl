@@ -20,16 +20,14 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import com.em.validation.client.reflector.IReflectorFactory;
+import com.em.validation.client.reflector.AbstractCompiledReflectorFactory;
 import com.em.validation.client.reflector.IReflector;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ${className} implements IReflectorFactory {
+public class ${className} extends AbstractCompiledReflectorFactory {
 
-	private Map<Class<?>,IReflector<?>> reflectorCache = new HashMap<Class<?>,IReflector<?>>();
-	
 	public ${className}() {
 		<#list reflectorMetadata as reflector>
 		//create ${reflector.reflectorClass} for ${reflector.targetClass}
@@ -39,19 +37,12 @@ public class ${className} implements IReflectorFactory {
 		//now add all of the super reflectors
 		<#list reflectorMetadata as reflector>
 		<#if reflector.superClass != "">
-		((${reflector.reflectorClass})this.reflectorCache.get(${reflector.targetClass}.class)).setSuperReflector((IReflector<?>)this.getReflector(${reflector.superClass}.class));
+		((${reflector.reflectorClass})this.reflectorCache.get(${reflector.targetClass}.class)).setSuperReflector((IReflector)this.getReflector(${reflector.superClass}.class));
 		</#if>
 		<#list reflector.reflectorInterfaces as iface>
-		((${reflector.reflectorClass})this.reflectorCache.get(${reflector.targetClass}.class)).addReflectorInterface((IReflector<?>)this.getReflector(${iface}.class));
+		((${reflector.reflectorClass})this.reflectorCache.get(${reflector.targetClass}.class)).addReflectorInterface((IReflector)this.getReflector(${iface}.class));
 		</#list>
 		</#list>
-		
-	}
-	
-	@Override
-	public <T> IReflector<T> getReflector(Class<? extends T> targetClass) {
-		if(targetClass == null || Object.class.equals(targetClass)) return null;
-		return (IReflector<T>)this.reflectorCache.get(targetClass);
 	}
 
 }

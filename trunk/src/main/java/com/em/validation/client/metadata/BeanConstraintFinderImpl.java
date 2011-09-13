@@ -43,7 +43,7 @@ import com.em.validation.client.reflector.IReflector;
  */
 public class BeanConstraintFinderImpl extends AbstractConstraintFinder {
 
-	protected BeanConstraintFinderImpl(IReflector<?> reflector, ElementDescriptor descriptor) {
+	protected BeanConstraintFinderImpl(IReflector reflector, ElementDescriptor descriptor) {
 		this.backingReflector = reflector;
 	}
 

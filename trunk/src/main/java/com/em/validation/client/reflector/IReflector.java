@@ -28,8 +28,8 @@ import javax.validation.GroupSequence;
 import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.Scope;
 
-public interface IReflector<T> {
-
+public interface IReflector {
+	
 	/**
 	 * Get the value of the field "name" found in the target object "target".
 	 * 
@@ -37,7 +37,7 @@ public interface IReflector<T> {
 	 * @param name
 	 * @return
 	 */
-	public Object getValue(String name, T target);
+	public Object getValue(String name, Object target);
 
 	/**
 	 * Get the bean accessible name (short name) of all of the publicly accessible methods contained in the given concrete class.
@@ -125,14 +125,14 @@ public interface IReflector<T> {
 	 * 
 	 * @return
 	 */
-	public IReflector<?> getParentReflector();
+	public IReflector getParentReflector();
 	
 	/**
 	 * Get the set of reflector interfaces
 	 * 
 	 * @return
 	 */
-	public Set<IReflector<?>> getInterfaceReflectors();
+	public Set<IReflector> getInterfaceReflectors();
 	
 	/**
 	 * Return the group sequence to use in place of default, if not available return an empty class array.

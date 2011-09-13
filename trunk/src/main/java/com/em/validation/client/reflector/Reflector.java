@@ -29,7 +29,7 @@ import java.util.Set;
 import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.Scope;
 
-public abstract class Reflector<T> implements IReflector<T> {
+public abstract class Reflector implements IReflector {
 
 	/**
 	 * Set of unique property names
@@ -41,8 +41,8 @@ public abstract class Reflector<T> implements IReflector<T> {
 	 */
 	protected Map<String,Class<?>> propertyTypes = new HashMap<String, Class<?>>();
 	
-	protected IReflector<?> superReflector = null;
-	protected Set<IReflector<?>> reflectorInterfaces = new HashSet<IReflector<?>>();
+	protected IReflector superReflector = null;
+	protected Set<IReflector> reflectorInterfaces = new HashSet<IReflector>();
 	
 	/**
 	 * Sequence of groups to use for default validation
@@ -75,7 +75,7 @@ public abstract class Reflector<T> implements IReflector<T> {
 		}
 		
 		if(this.reflectorInterfaces != null && this.reflectorInterfaces.size() > 0) {
-			for(IReflector<?> iface : this.reflectorInterfaces) {
+			for(IReflector iface : this.reflectorInterfaces) {
 				if(iface != null) {
 					results.addAll(iface.getPropertyNames());
 				}
@@ -105,7 +105,7 @@ public abstract class Reflector<T> implements IReflector<T> {
 			if(this.superReflector != null) {
 				outputSet.addAll(this.superReflector.getConstraintDescriptors());
 			}
-			for(IReflector<?> iface : this.reflectorInterfaces) {
+			for(IReflector iface : this.reflectorInterfaces) {
 				if(iface != null) {
 					outputSet.addAll(iface.getConstraintDescriptors());
 				}
@@ -130,7 +130,7 @@ public abstract class Reflector<T> implements IReflector<T> {
 			if(this.superReflector != null) {
 				classDescriptors.addAll(this.superReflector.getClassConstraintDescriptors());
 			}
-			for(IReflector<?> iface : this.reflectorInterfaces) {
+			for(IReflector iface : this.reflectorInterfaces) {
 				classDescriptors.addAll(iface.getClassConstraintDescriptors());
 			}
 		}
@@ -153,7 +153,7 @@ public abstract class Reflector<T> implements IReflector<T> {
 			if(this.superReflector != null) {
 				descriptors.addAll(this.superReflector.getConstraintDescriptors(name));	
 			}
-			for(IReflector<?> iface : this.reflectorInterfaces) {
+			for(IReflector iface : this.reflectorInterfaces) {
 				descriptors.addAll(iface.getConstraintDescriptors(name));
 			}
 		}		
@@ -165,22 +165,17 @@ public abstract class Reflector<T> implements IReflector<T> {
 		return this.getConstraintDescriptors(name, Scope.HIERARCHY);
 	}
 
-	@SuppressWarnings("unchecked")
-	public Object getValueFromObject(String name, Object target) {
-		return this.getValue(name, (T)target);
-	}	
-	
-	protected Object getSuperValues(String name, T target) {
+	protected Object getSuperValues(String name, Object target) {
 		//check super classes
 		Object value = null;
 		if(this.superReflector != null && this.superReflector instanceof Reflector) {
-			value = ((Reflector<?>)this.superReflector).getValueFromObject(name, target);
+			value = ((Reflector)this.superReflector).getValue(name, target);
 		}		
 		//if the value is still null, check interfaces
 		if(value == null) {
-			for(IReflector<?> iface : this.reflectorInterfaces) {
+			for(IReflector iface : this.reflectorInterfaces) {
 				if(iface != null && iface instanceof Reflector) {
-					value = ((Reflector<?>)iface).getValueFromObject(name, target);
+					value = ((Reflector)iface).getValue(name, target);
 				}
 				if(value != null) break;
 			}
@@ -190,21 +185,21 @@ public abstract class Reflector<T> implements IReflector<T> {
 	}	
 	
 	
-	public void setSuperReflector(IReflector<?> superReflector) {
+	public void setSuperReflector(IReflector superReflector) {
 		this.superReflector = superReflector;
 	}
 	
-	public void addReflectorInterface(IReflector<?> reflectorInterface) {
+	public void addReflectorInterface(IReflector reflectorInterface) {
 		this.reflectorInterfaces.add(reflectorInterface);
 	}
 
 	@Override
-	public IReflector<?> getParentReflector() {
+	public IReflector getParentReflector() {
 		return this.superReflector;
 	}
 
 	@Override
-	public Set<IReflector<?>> getInterfaceReflectors() {
+	public Set<IReflector> getInterfaceReflectors() {
 		return this.reflectorInterfaces;
 	}	
 	

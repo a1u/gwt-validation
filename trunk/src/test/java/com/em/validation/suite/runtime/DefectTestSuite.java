@@ -29,6 +29,7 @@ import com.em.validation.reflective.cases.defects.Defect_037;
 import com.em.validation.reflective.cases.defects.Defect_040;
 import com.em.validation.reflective.cases.defects.Defect_041;
 import com.em.validation.reflective.cases.defects.Defect_042;
+import com.em.validation.reflective.cases.defects.Defect_043;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
@@ -37,7 +38,8 @@ import com.em.validation.reflective.cases.defects.Defect_042;
 	Defect_037.class,
 	Defect_040.class,
 	Defect_041.class,
-	Defect_042.class
+	Defect_042.class,
+	Defect_043.class
 })
 public class DefectTestSuite {
 

@@ -34,7 +34,7 @@ public enum ReflectorFactory implements IReflectorFactory {
 	}
 
 	@Override
-	public <T> IReflector<T> getReflector(Class<? extends T> targetClass) {
+	public IReflector getReflector(Class<?> targetClass) {
 		return this.factory.getReflector(targetClass);
 	}
 

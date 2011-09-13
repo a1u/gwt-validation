@@ -57,7 +57,7 @@ public class CoreConstraintsTest extends GwtValidationBaseTestCase {
 		
 		//test class
 		TestClass testClassInstance = new TestClass();
-		IReflector<TestClass> testClassReflector = factory.getReflector(TestClass.class);
+		IReflector testClassReflector = factory.getReflector(TestClass.class);
 		
 		assertEquals(0, testClassReflector.getValue("testInt", testClassInstance));
 		//set new value
@@ -167,7 +167,7 @@ public class CoreConstraintsTest extends GwtValidationBaseTestCase {
 	}
 
 	public static void testReflectorGroupSequence(ITestCase testCase) {
-		IReflector<ClassWithSequence> cwsReflector = testCase.getReflectorFactory().getReflector(ClassWithSequence.class);
+		IReflector cwsReflector = testCase.getReflectorFactory().getReflector(ClassWithSequence.class);
 		
 		testCase.localAssertTrue(cwsReflector.hasGroupSequence());
 		
