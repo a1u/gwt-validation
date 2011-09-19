@@ -81,11 +81,29 @@ public enum ReflectorFactoryGenerator {
 			metadata.addAll(this.getReflectorMetadataTreeAsSet(targetClass,factoryDescriptor));
 		}
 		
+		//get uncovered classes/implementors so we can try and botch that together
+		Set<Class<?>> uncovered = ClassScanner.INSTANCE.getUncoveredImplementors();
+		Map<String,Set<String>> uncoveredMap = new HashMap<String, Set<String>>();
+		for(Class<?> u : uncovered) {
+			Class<?>[] interfaces = u.getInterfaces();
+			if(interfaces.length > 0) {
+				Set<String> interfaceSet = new HashSet<String>();
+				for(Class<?> i : interfaces) {
+					String interfaceName = i.getName();
+					interfaceName = interfaceName.replaceAll("\\$", ".");
+					interfaceSet.add(interfaceName);
+				}
+				uncoveredMap.put(u.getName(), interfaceSet);
+			}
+		}
+		//at this point the result is a map from ClassName -> Interface class
+		
 		//prepare metadata map
 		Map<String,Object> reflectorFactoryModel = new HashMap<String, Object>();
 		reflectorFactoryModel.put("reflectorMetadata", metadata);
 		reflectorFactoryModel.put("targetPackage", this.TARGET_PACKAGE);
 		reflectorFactoryModel.put("className", this.CLASS_NAME);
+		reflectorFactoryModel.put("uncoveredMap", uncoveredMap);
 
 		//generate from template
 		factoryDescriptor.setClassContents(TemplateController.INSTANCE.processTemplate("templates/factory/GeneratedReflectorFactory.ftl", reflectorFactoryModel));

@@ -176,4 +176,17 @@ public enum ClassScanner {
 	public Set<Class<? extends ConstraintValidator<?, ?>>> getConstraintValidatorClasses() {
 		return this.getConstraintValidatorClasses(RebindConfiguration.INSTANCE.excludedValidatorClassesRegularExpression());
 	}
+	
+	public Set<Class<?>> getUncoveredImplementors() {
+		Set<Class<?>> uncovered = new LinkedHashSet<Class<?>>();
+		Set<Class<?>> constrainedClasses = this.getConstrainedClasses();
+		
+		for(Class<?> constrained : constrainedClasses) {
+			uncovered.addAll(this.reflections.getSubTypesOf(constrained));			
+		}
+		
+		uncovered.removeAll(constrainedClasses);
+
+		return uncovered;
+	}
 }

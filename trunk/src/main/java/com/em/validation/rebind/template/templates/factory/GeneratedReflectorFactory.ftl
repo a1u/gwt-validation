@@ -43,6 +43,17 @@ public class ${className} extends AbstractCompiledReflectorFactory {
 		((${reflector.reflectorClass})this.reflectorCache.get(${reflector.targetClass}.class)).addReflectorInterface((IReflector)this.getReflector(${iface}.class));
 		</#list>
 		</#list>
+		
+		//=============================
+		//uncovered interfaces
+		//=============================
+		<#list uncoveredMap?keys as className>
+		//${className}'s interfaces 
+		<#list uncoveredMap[className] as interfaceName>
+		this.addInterfaceToClass("${className}",${interfaceName}.class);
+		</#list>
+		
+		</#list>
 	}
 
 }
