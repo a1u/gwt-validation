@@ -21,18 +21,21 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 import java.lang.annotation.ElementType;
+import java.util.List;
+import java.util.Map;
 
 import javax.validation.Path;
 import javax.validation.Path.Node;
 import javax.validation.TraversableResolver;
+import javax.validation.metadata.BeanDescriptor;
+import javax.validation.metadata.PropertyDescriptor;
+
+import com.em.validation.client.metadata.factory.DescriptorFactory;
 
 public class TraversableResolverImpl implements TraversableResolver {
 
 	@Override
 	public boolean isReachable(Object traversableObject, Node traversableProperty, Class<?> rootBeanType, Path pathToTraversableObject, ElementType elementType) {
-		return true;
-		/*
-		
 		//don't even bother if the object is null
 		if(traversableObject == null) return false;
 		
@@ -65,7 +68,6 @@ public class TraversableResolverImpl implements TraversableResolver {
 		}
 		
 		return false;
-		*/
 	}
 
 	@Override

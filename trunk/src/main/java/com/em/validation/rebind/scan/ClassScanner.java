@@ -30,6 +30,7 @@ import java.util.Set;
 
 import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;
+import javax.validation.Valid;
 
 import org.reflections.Reflections;
 import org.reflections.scanners.FieldAnnotationsScanner;
@@ -114,8 +115,12 @@ public enum ClassScanner {
 		//create empty result set
 		Set<Class<?>> result = new LinkedHashSet<Class<?>>();
 		
+		//empty constraint set
+		Set<Class<?>> constraints = new HashSet<Class<?>>();
 		//get everything annotated with @javax.validation.Constraint
-		Set<Class<?>> constraints = this.reflections.getTypesAnnotatedWith(Constraint.class);
+		constraints.addAll(reflections.getTypesAnnotatedWith(Constraint.class));
+		//also account for classes, fields, and method with only @Valid
+		constraints.add(Valid.class);
 		
 		//for each Constraint found in the above line, look for classes annotated with that constraint
 		for(Class<?> constraint : constraints) {
@@ -148,7 +153,7 @@ public enum ClassScanner {
 				}
 			}
 		}
-		
+	
 		return result;
 	}
 	
@@ -177,6 +182,14 @@ public enum ClassScanner {
 		return this.getConstraintValidatorClasses(RebindConfiguration.INSTANCE.excludedValidatorClassesRegularExpression());
 	}
 	
+	/**
+	 * This method is designed to return all of the classes that <i>implement</i> a constrained class but <b>do not</b> have 
+	 * annotations of their own.  This allows the generation step to create a way (through string matching) to grab the 
+	 * interfaces of those classes.  extended classes don't have this problem because gwt's JRE emulation implements 
+	 * the getSuperclass() method but not getInterfaces(). 
+	 * 
+	 * @return
+	 */
 	public Set<Class<?>> getUncoveredImplementors() {
 		Set<Class<?>> uncovered = new LinkedHashSet<Class<?>>();
 		Set<Class<?>> constrainedClasses = this.getConstrainedClasses();
