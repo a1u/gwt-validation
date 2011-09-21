@@ -457,25 +457,34 @@ public class CoreValidatorImpl implements Validator{
 	}
 	
 	private PathImpl getPath(Path rootPath, String propertyPath, Integer index, Object key) {
-		//append to path
+		//create new path from old path
 		PathImpl cascadePath = new PathImpl();
 		for(Node node : rootPath) {
 			cascadePath.push(node);
 		}
 		
 		//create a node that represents the object map or array index
-		NodeImpl cascadeNode = new NodeImpl();
+		NodeImpl cascadeNode = null;
 		if(index != null || key != null) {
+			cascadeNode = new NodeImpl();
 			if(index != null) {
 				cascadeNode.setIndex(index);
 			} else if(key != null) {
 				cascadeNode.setKey(key);
 			}
 			cascadeNode.setInIterable(true);
+		//otherwise one that represents property access
 		} else if(propertyPath != null && !propertyPath.isEmpty()) {
+			cascadeNode = new NodeImpl();
 			cascadeNode.setName(propertyPath);
 		}
-		cascadePath.push(cascadeNode);
+		
+		//part of issue #43 was that it would happily stick in a node that came from a null source
+		//since this code was substituted all over the core validator all of the null filtering is
+		//done here and NOT in the source anymore.
+		if(cascadeNode != null) {
+			cascadePath.push(cascadeNode);
+		}
 		
 		return cascadePath;
 	}
