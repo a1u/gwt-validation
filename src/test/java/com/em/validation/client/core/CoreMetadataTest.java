@@ -24,6 +24,7 @@ import java.lang.annotation.ElementType;
 
 import javax.validation.groups.Default;
 import javax.validation.metadata.BeanDescriptor;
+import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.ElementDescriptor.ConstraintFinder;
 import javax.validation.metadata.PropertyDescriptor;
 import javax.validation.metadata.Scope;
@@ -51,7 +52,7 @@ public class CoreMetadataTest {
 		testCase.localAssertEquals("parentSizeConstrainedString",groupTestReflector.getValue("parentSizeConstrainedString", new GroupTestClass()));
 		
 		//test with no groups
-		testCase.localAssertEquals(8, finder.getConstraintDescriptors().size());
+		testCase.localAssertEquals(5, finder.getConstraintDescriptors().size());
 		testCase.localAssertTrue(finder.hasConstraints());
 
 		//test with the MaxGroup class alone
@@ -87,9 +88,11 @@ public class CoreMetadataTest {
 		testCase.localAssertEquals(3, descriptor.findConstraints().unorderedAndMatchingGroups(ExtendedGroup.class).getConstraintDescriptors().size());
 		
 		//new finder, looking at local (element) scope
-		finder = descriptor.findConstraints()
-				.lookingAt(Scope.LOCAL_ELEMENT);
-		testCase.localAssertEquals(6, finder.getConstraintDescriptors().size());
+		finder = descriptor.findConstraints().lookingAt(Scope.LOCAL_ELEMENT);
+		for(ConstraintDescriptor<?> d : finder.getConstraintDescriptors()) {
+			//System.out.printf("%s\n", d.getAnnotation().toString());
+		}
+		testCase.localAssertEquals(3, finder.getConstraintDescriptors().size());
 	}
 	
 	public static void testGroupFinderOnProperty(ITestCase testCase) {
@@ -98,7 +101,7 @@ public class CoreMetadataTest {
 		ConstraintFinder finder = propertyDescriptor.findConstraints();
 		
 		//all constraints
-		testCase.localAssertEquals(3, finder.getConstraintDescriptors().size());
+		testCase.localAssertEquals(2, finder.getConstraintDescriptors().size());
 		
 		//only the extended group
 		testCase.localAssertEquals(2, finder.unorderedAndMatchingGroups(ExtendedGroup.class).getConstraintDescriptors().size());

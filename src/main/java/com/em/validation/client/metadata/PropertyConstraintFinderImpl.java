@@ -75,28 +75,30 @@ public class PropertyConstraintFinderImpl extends AbstractConstraintFinder {
 					
 				}
 				
-				//if there are matching groups at all, perform this test
-				if(matchingGroups.size() > 0) {
-					//finding the groups
-					//all of the groups in the matching group set
-					//MUST either:
-					//be found in the descriptor's group set
-					//be a superclass of a group in the descriptors group set
-
-					//get group set so we can manipulate
-					Set<Class<?>> groupSet = descriptor.getGroups();
-					
-					//account for the default group if no groups are present
-					if(groupSet.size() == 0) {
-						groupSet.add(Default.class);
-					}
-
-					//check each found group
-					for(Class<?> mGroup : matchingGroups) {
-						//check to see if mGroup or one of the interfaces or superclasses of mGroup is found in the group set on the descriptor
-						keep = keep && this.foundIn(groupSet, mGroup);
-					}					
+				//if there are no matching groups, the matching set is the default group
+				if(matchingGroups.isEmpty()) {
+					matchingGroups.add(Default.class);
 				}
+				
+				//finding the groups
+				//all of the groups in the matching group set
+				//MUST either:
+				//be found in the descriptor's group set
+				//be a superclass of a group in the descriptors group set
+
+				//get group set so we can manipulate
+				Set<Class<?>> groupSet = descriptor.getGroups();
+				
+				//account for the default group if no groups are present (this is never called)
+				if(groupSet.isEmpty()) {
+					groupSet.add(Default.class);
+				}
+
+				//check each found group
+				for(Class<?> mGroup : matchingGroups) {
+					//check to see if mGroup or one of the interfaces or superclasses of mGroup is found in the group set on the descriptor
+					keep = keep && this.foundIn(groupSet, mGroup);
+				}					
 			}
 			
 			if(keep) {
