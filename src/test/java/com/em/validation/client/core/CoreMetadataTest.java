@@ -24,7 +24,6 @@ import java.lang.annotation.ElementType;
 
 import javax.validation.groups.Default;
 import javax.validation.metadata.BeanDescriptor;
-import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.ElementDescriptor.ConstraintFinder;
 import javax.validation.metadata.PropertyDescriptor;
 import javax.validation.metadata.Scope;
@@ -89,9 +88,6 @@ public class CoreMetadataTest {
 		
 		//new finder, looking at local (element) scope
 		finder = descriptor.findConstraints().lookingAt(Scope.LOCAL_ELEMENT);
-		for(ConstraintDescriptor<?> d : finder.getConstraintDescriptors()) {
-			//System.out.printf("%s\n", d.getAnnotation().toString());
-		}
 		testCase.localAssertEquals(3, finder.getConstraintDescriptors().size());
 	}
 	
