@@ -89,7 +89,7 @@ public class PropertyConstraintFinderImpl extends AbstractConstraintFinder {
 				//get group set so we can manipulate
 				Set<Class<?>> groupSet = descriptor.getGroups();
 				
-				//account for the default group if no groups are present (this is never called)
+				//account for the default group if no groups are present
 				if(groupSet.isEmpty()) {
 					groupSet.add(Default.class);
 				}
