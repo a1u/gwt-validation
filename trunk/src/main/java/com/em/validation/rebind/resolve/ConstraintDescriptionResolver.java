@@ -343,7 +343,9 @@ public enum ConstraintDescriptionResolver {
 			
 			if(value instanceof Class<?>) {
 				Class<?> clazz = (Class<?>)value;
-				output.append(clazz.getName() + ".class");
+				String className = clazz.getName();
+				className = className.replaceAll("\\$",".");
+				output.append(className + ".class");
 			} else {				
 				output.append(value);
 			}
@@ -369,7 +371,9 @@ public enum ConstraintDescriptionResolver {
 				} 
 				if(v instanceof Class<?>) {
 					Class<?> clazz = (Class<?>)v;
-					output.append(clazz.getName() + ".class");
+					String className = clazz.getName();
+					className = className.replaceAll("\\$",".");
+					output.append(className + ".class");
 				} else {				
 					output.append(v);
 				}
