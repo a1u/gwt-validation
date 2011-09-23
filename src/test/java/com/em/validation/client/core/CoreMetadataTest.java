@@ -88,7 +88,7 @@ public class CoreMetadataTest {
 		
 		//new finder, looking at local (element) scope
 		finder = descriptor.findConstraints().lookingAt(Scope.LOCAL_ELEMENT);
-		testCase.localAssertEquals(3, finder.getConstraintDescriptors().size());
+		testCase.localAssertEquals(4, finder.getConstraintDescriptors().size());
 	}
 	
 	public static void testGroupFinderOnProperty(ITestCase testCase) {
@@ -100,8 +100,7 @@ public class CoreMetadataTest {
 		testCase.localAssertEquals(2, finder.getConstraintDescriptors().size());
 		
 		//only the extended group
-		testCase.localAssertEquals(2, finder.unorderedAndMatchingGroups(ExtendedGroup.class).getConstraintDescriptors().size());
-		
+		testCase.localAssertEquals(2, finder.unorderedAndMatchingGroups(ExtendedGroup.class).getConstraintDescriptors().size());		
 	}
 	
 	public static void testDeclaredOnFinder(ITestCase testCase) {
