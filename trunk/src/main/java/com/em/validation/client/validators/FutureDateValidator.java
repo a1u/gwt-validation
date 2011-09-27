@@ -24,12 +24,12 @@ import java.util.Date;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import javax.validation.constraints.Past;
+import javax.validation.constraints.Future;
 
-public class FutureDateValidator implements ConstraintValidator<Past, Date> {
+public class FutureDateValidator implements ConstraintValidator<Future, Date> {
 
 	@Override
-	public void initialize(Past constraintAnnotation) {
+	public void initialize(Future constraintAnnotation) {
 		
 	}
 
