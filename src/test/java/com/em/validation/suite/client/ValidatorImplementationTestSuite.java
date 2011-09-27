@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import com.em.validation.client.cases.validators.DateValidatorTest;
 import com.em.validation.client.cases.validators.NotEmptyValidatorTest;
 import com.em.validation.client.cases.validators.NotNullObjectValidatorTest;
 import com.google.gwt.junit.tools.GWTTestSuite;
@@ -34,6 +35,7 @@ public class ValidatorImplementationTestSuite extends GWTTestSuite {
 		
 		suite.addTestSuite(NotNullObjectValidatorTest.class);
 		suite.addTestSuite(NotEmptyValidatorTest.class);
+		suite.addTestSuite(DateValidatorTest.class);
 		
 		return suite;
 	}
