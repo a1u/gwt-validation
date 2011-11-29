@@ -22,9 +22,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 
 import java.lang.annotation.ElementType;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
 import javax.validation.groups.Default;
 import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.Scope;
@@ -34,14 +34,14 @@ import com.em.validation.client.reflector.IReflector;
 /**
  * The constraint finder implementation that uses the special properties of the implemented descriptors to do things
  * like navigate the type hierarchy for local and other scopes.
- * 
+ *
  * @author chris
  *
  */
 public class PropertyConstraintFinderImpl extends AbstractConstraintFinder {
 
 	private String propertyName = "";
-	
+
 	protected PropertyConstraintFinderImpl(IReflector reflector, String propertyName) {
 		this.backingReflector = reflector;
 		this.propertyName = propertyName;
@@ -51,61 +51,63 @@ public class PropertyConstraintFinderImpl extends AbstractConstraintFinder {
 	public Set<ConstraintDescriptor<?>> findConstraints(Scope scope, Set<ElementType> declaredOnTypes, Set<Class<?>> matchingGroups) {
 		Set<ConstraintDescriptor<?>> start = this.backingReflector.getConstraintDescriptors(this.propertyName,scope);
 		Set<ConstraintDescriptor<?>> results = new LinkedHashSet<ConstraintDescriptor<?>>();
-		
+
 		for(ConstraintDescriptor<?> descriptor : start) {
-			
+
 			//keep the descriptor in the set
-			boolean keep = true; 
-			
+			boolean keep = true;
+
 			//skip this test if the decision has already been made not to keep the constraint descriptor
 			if(keep) {
 				//if the size of declared on types is > 0, use it to filter
 				if(declaredOnTypes.size() > 0) {
 					//get declared on set from the backing reflector 
 					Set<ElementType> propertyFoundOn = this.backingReflector.declaredOn(scope, this.propertyName, descriptor);
-					
+
 					keep = false;
-					
+
 					for(ElementType type : propertyFoundOn) {
 						if(declaredOnTypes.contains(type)) {
 							keep = true;
 							break;
 						}
 					}
-					
+
 				}
-				
+
 				//if there are no matching groups, the matching set is the default group
 				if(matchingGroups.isEmpty()) {
 					matchingGroups.add(Default.class);
 				}
-				
+
 				//finding the groups
-				//all of the groups in the matching group set
+				//any of the groups in the matching group set
 				//MUST either:
 				//be found in the descriptor's group set
 				//be a superclass of a group in the descriptors group set
 
 				//get group set so we can manipulate
 				Set<Class<?>> groupSet = descriptor.getGroups();
-				
+
 				//account for the default group if no groups are present
 				if(groupSet.isEmpty()) {
 					groupSet.add(Default.class);
 				}
 
 				//check each found group
-				for(Class<?> mGroup : matchingGroups) {
-					//check to see if mGroup or one of the interfaces or superclasses of mGroup is found in the group set on the descriptor
-					keep = keep && this.foundIn(groupSet, mGroup);
-				}					
+				boolean found = false;
+				Iterator<Class<?>> matchingGroupsIter = matchingGroups.iterator();
+				while (!found && matchingGroupsIter.hasNext()) {
+					found = this.foundIn(groupSet, matchingGroupsIter.next());
+				}
+				keep = keep && found;
 			}
-			
+
 			if(keep) {
 				results.add(descriptor);
 			}
 		}
-		
+
 		return results;
 	}
 

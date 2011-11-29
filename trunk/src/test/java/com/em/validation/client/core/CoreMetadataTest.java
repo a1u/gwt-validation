@@ -21,7 +21,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 import java.lang.annotation.ElementType;
-
 import javax.validation.groups.Default;
 import javax.validation.metadata.BeanDescriptor;
 import javax.validation.metadata.ElementDescriptor.ConstraintFinder;
@@ -70,22 +69,22 @@ public class CoreMetadataTest {
 		//add MaxGroup.class
 		finder.unorderedAndMatchingGroups(Default.class,MaxGroup.class);
 		finder.lookingAt(Scope.LOCAL_ELEMENT);
-		testCase.localAssertEquals(3, finder.getConstraintDescriptors().size());
+		testCase.localAssertEquals(5, finder.getConstraintDescriptors().size());
 
 		//add ExtendedGroup.class
 		finder.unorderedAndMatchingGroups(Default.class,MaxGroup.class,ExtendedGroup.class);
-		testCase.localAssertEquals(2, finder.getConstraintDescriptors().size());
-		
+		testCase.localAssertEquals(6, finder.getConstraintDescriptors().size());
+
 		//add BasicGroup.class
 		finder.unorderedAndMatchingGroups(Default.class,MaxGroup.class,ExtendedGroup.class,BasicGroup.class);
-		testCase.localAssertEquals(1, finder.getConstraintDescriptors().size());
-		
+		testCase.localAssertEquals(6, finder.getConstraintDescriptors().size());
+
 		//new finder, only max group
 		testCase.localAssertEquals(5, descriptor.findConstraints().unorderedAndMatchingGroups(MaxGroup.class).getConstraintDescriptors().size());
-		
+
 		//new finder, only extended
 		testCase.localAssertEquals(3, descriptor.findConstraints().unorderedAndMatchingGroups(ExtendedGroup.class).getConstraintDescriptors().size());
-		
+
 		//new finder, looking at local (element) scope
 		finder = descriptor.findConstraints().lookingAt(Scope.LOCAL_ELEMENT);
 		testCase.localAssertEquals(4, finder.getConstraintDescriptors().size());
