@@ -31,7 +31,7 @@ public class MinBigDecimalValidator extends MinValidator<BigDecimal> {
 		
 		if(value == null) return true;
 		
-		BigDecimal minValue = new BigDecimal(this.minValue);
+		BigDecimal minValue = BigDecimal.valueOf(this.minValue);
 		
 		return minValue.compareTo(value) <= 0;
 	}

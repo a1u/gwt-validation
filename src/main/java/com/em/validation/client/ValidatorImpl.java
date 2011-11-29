@@ -41,6 +41,14 @@ public class ValidatorImpl implements Validator{
 
 	@Override
 	public <T> Set<ConstraintViolation<T>> validate(T object, Class<?>... groups) {
+		if(object == null) {
+			throw new IllegalArgumentException("Cannot validate a null object.");
+		}
+		
+		if(groups == null) {
+			throw new IllegalArgumentException("The groups list cannot be null.");
+		}
+		
 		IReflector reflector = ReflectorFactory.INSTANCE.getReflector(object.getClass());
 		if(reflector.hasGroupSequence() && (groups == null || groups.length == 0)) {
 			return this.groupSequenceValidator.validate(object, groups);
@@ -50,6 +58,18 @@ public class ValidatorImpl implements Validator{
 
 	@Override
 	public <T> Set<ConstraintViolation<T>> validateProperty(T object, String propertyName, Class<?>... groups) {
+		if(object == null) {
+			throw new IllegalArgumentException("Cannot validate a property on a null object.");
+		}
+		
+		if(propertyName == null) {
+			throw new IllegalArgumentException("Cannot validate a property from a null name.");
+		}
+		
+		if(groups == null) {
+			throw new IllegalArgumentException("The groups list cannot be null.");
+		}
+
 		IReflector reflector = ReflectorFactory.INSTANCE.getReflector(object.getClass());
 		if(reflector.hasGroupSequence() && (groups == null || groups.length == 0)) {
 			return this.groupSequenceValidator.validateProperty(object, propertyName, groups);
@@ -59,6 +79,18 @@ public class ValidatorImpl implements Validator{
 
 	@Override
 	public <T> Set<ConstraintViolation<T>> validateValue(Class<T> beanType,	String propertyName, Object value, Class<?>... groups) {
+		if(beanType == null) {
+			throw new IllegalArgumentException("The bean type for validation cannot be null.");
+		}
+		
+		if(propertyName == null) {
+			throw new IllegalArgumentException("The property name for validation cannot be null.");
+		}
+		
+		if(groups == null) {
+			throw new IllegalArgumentException("The groups list cannot be null.");
+		}
+		
 		IReflector reflector = ReflectorFactory.INSTANCE.getReflector(beanType);
 		if(reflector.hasGroupSequence() && (groups == null || groups.length == 0)) {
 			return this.groupSequenceValidator.validateValue(beanType, propertyName, value, groups);

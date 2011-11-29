@@ -122,4 +122,12 @@ public class ConstraintViolationImpl<T> implements ConstraintViolation<T>, Seria
 		return this.constraintDescriptor;
 	}
 
+	@Override
+	public String toString() {
+		if(this.getConstraintDescriptor() != null && this.getConstraintDescriptor().getAnnotation() != null) {
+			return this.getConstraintDescriptor().getAnnotation().annotationType().getClass().getName();	
+		} 
+		return super.toString();		
+	}
+	
 }
