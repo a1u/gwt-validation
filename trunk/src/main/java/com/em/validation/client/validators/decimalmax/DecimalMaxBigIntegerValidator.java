@@ -29,8 +29,8 @@ public class DecimalMaxBigIntegerValidator extends DecimalMaxValidator<BigIntege
 	public boolean isValid(BigInteger value, ConstraintValidatorContext context) {
 		
 		if(value == null) return true;
-		
-		BigInteger minValue = new BigInteger(this.maxValueString);
+				
+		BigInteger minValue = BigInteger.valueOf((new Double(this.maxValue)).longValue());
 		
 		return minValue.compareTo(value) >= 0;
 	}

@@ -23,6 +23,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import javax.validation.ConstraintValidator;
 import javax.validation.constraints.DecimalMax;
 
+import com.em.validation.client.format.NumberFormatProvider;
+
 public abstract class DecimalMaxValidator<T> implements ConstraintValidator<DecimalMax,T> {
 
 	protected double maxValue = 0;
@@ -34,11 +36,12 @@ public abstract class DecimalMaxValidator<T> implements ConstraintValidator<Deci
 		String stringValue = constraintAnnotation.value(); 
 		
 		try {
-			this.maxValue = Double.valueOf(stringValue);
+			this.maxValue = NumberFormatProvider.INSTANCE.getDoubleFromString(stringValue);
 		} catch (Exception ex) {
 			//no valid max value from string
-			this.maxValueString = "0";
 		}
+		
+		this.maxValueString = String.valueOf(this.maxValue);
 	}
 	
 }

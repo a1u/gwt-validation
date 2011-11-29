@@ -80,6 +80,7 @@ public enum PropertyResolver {
 		//know if a property has a publicly accessible field or if it has a method that should
 		//be used instead.
 		HashMap<String,Field> publicFields = new HashMap<String, Field>();
+		//for(Field field : targetClass.getDeclaredFields()) {
 		for(Field field : targetClass.getDeclaredFields()) {
 			publicFields.put(field.getName(),field);
 		}
@@ -132,7 +133,7 @@ public enum PropertyResolver {
 			int modifiers = 0;
 			if(pMeta.isField()) {
 				try {
-					Field field = targetClass.getField(propertyName);
+					Field field = targetClass.getDeclaredField(propertyName);
 					modifiers = field.getModifiers();
 				} catch (SecurityException e) {
 					System.out.println("Error: " + e.getMessage());
@@ -146,10 +147,10 @@ public enum PropertyResolver {
 				modifiers = method.getModifiers();
 			}
 			
-			//we cannot access a private or protected field/method on a target class, so we need to skip it.  this is part of the 
+			//we cannot access a static field/method on a target class, so we need to skip it.  this is part of the 
 			//fix for issue #037 (http://code.google.com/p/gwt-validation/issues/detail?id=37) where the private static serialid
 			//was causing problems.
-			if(Modifier.isPrivate(modifiers) || Modifier.isProtected(modifiers)) {
+			if(Modifier.isStatic(modifiers)) {
 				continue;
 			}
 			

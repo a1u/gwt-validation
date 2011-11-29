@@ -31,7 +31,7 @@ public class DecimalMinBigIntegerValidator extends DecimalMinValidator<BigIntege
 		
 		if(value == null) return true;
 		
-		BigInteger minValue = new BigInteger(this.minValueString);
+		BigInteger minValue = BigInteger.valueOf((new Double(this.minValue)).longValue());
 		
 		return minValue.compareTo(value) <= 0;
 	}

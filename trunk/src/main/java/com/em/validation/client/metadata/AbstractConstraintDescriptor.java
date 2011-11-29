@@ -131,29 +131,39 @@ public abstract class AbstractConstraintDescriptor<T extends Annotation> impleme
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}			
+		
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		
+		if (getClass() != obj.getClass()) {
 			return false;
-		AbstractConstraintDescriptor<?> other = (AbstractConstraintDescriptor<?>) obj;
+		}
+		
+		if(!(obj instanceof ConstraintDescriptor)) {
+			return false;
+		}
+		
+		ConstraintDescriptor<?> other = (ConstraintDescriptor<?>) obj;
 		if (annotation == null) {
-			if (other.annotation != null)
+			if (other.getAnnotation() != null)
 				return false;
-		} else if (!annotation.equals(other.annotation))
+		} else if (!annotation.equals(other.getAnnotation()))
 			return false;
 		if (composedOf == null) {
-			if (other.composedOf != null)
+			if (other.getComposingConstraints() != null)
 				return false;
-		} else if (!composedOf.equals(other.composedOf))
+		} else if (!composedOf.equals(other.getComposingConstraints()))
 			return false;
 		if (propertyMap == null) {
-			if (other.propertyMap != null)
+			if (other.getAttributes() != null)
 				return false;
-		} else if (!propertyMap.equals(other.propertyMap))
+		} else if (!propertyMap.equals(other.getAttributes()))
 			return false;
-		if (reportAsSingleViolation != other.reportAsSingleViolation)
+		if (reportAsSingleViolation != other.isReportAsSingleViolation())
 			return false;
 		return true;
 	}

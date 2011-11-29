@@ -73,6 +73,7 @@ public class BeanDescriptorImpl extends ProtoDescriptor implements BeanDescripto
 		if(!this.backingReflector.getPropertyNames().contains(name)) {
 			return null;
 		}
+		
 		PropertyDescriptor descriptor = DescriptorFactory.INSTANCE.getPropertyDescriptor(this.backingReflector, name);
 		if(!descriptor.hasConstraints() && !descriptor.isCascaded()) {
 			return null;

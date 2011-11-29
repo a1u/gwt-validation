@@ -29,10 +29,12 @@ import javax.validation.ValidatorFactory;
 public abstract class AbstractConfiguration implements Configuration<AbstractConfiguration> {
 	private TraversableResolver traversableResolver = null;
 	private MessageInterpolator interpolator = null;
+	private ConstraintValidatorFactory constraintValidatorFactory = null;
 	
 	public AbstractConfiguration() {
 		this.traversableResolver = new TraversableResolverImpl();
 		this.interpolator = new MessageInterpolatorImpl();
+		this.constraintValidatorFactory = ConstraintValidatorFactoryImpl.INSTANCE;
 	}
 	
 	@Override
@@ -54,6 +56,7 @@ public abstract class AbstractConfiguration implements Configuration<AbstractCon
 
 	@Override
 	public AbstractConfiguration constraintValidatorFactory(ConstraintValidatorFactory constraintValidatorFactory) {
+		this.constraintValidatorFactory = constraintValidatorFactory;
 		return this;
 	}
 
@@ -76,11 +79,12 @@ public abstract class AbstractConfiguration implements Configuration<AbstractCon
 
 	@Override
 	public ConstraintValidatorFactory getDefaultConstraintValidatorFactory() {
-		return ConstraintValidatorFactoryImpl.INSTANCE;
+		return this.constraintValidatorFactory;
 	}
 
 	@Override
 	public ValidatorFactory buildValidatorFactory() {
+		ValidatorFactoryImpl.INSTANCE.setConfiguration(this);
 		return ValidatorFactoryImpl.INSTANCE;
 	}
 }

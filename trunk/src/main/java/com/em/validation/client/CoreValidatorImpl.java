@@ -28,6 +28,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.validation.ConstraintDefinitionException;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorFactory;
 import javax.validation.ConstraintViolation;
@@ -58,6 +59,7 @@ public class CoreValidatorImpl implements Validator{
 	
 	public CoreValidatorImpl() {		
 		this.cvFactory = ValidatorFactoryImpl.INSTANCE.getConstraintValidatorFactory();
+		
 		//this.context = ValidatorFactoryImpl.INSTANCE.usingContext();
 		this.resolver = ValidatorFactoryImpl.INSTANCE.getTraversableResolver();
 		this.interpolator = ValidatorFactoryImpl.INSTANCE.getMessageInterpolator();
@@ -297,6 +299,10 @@ public class CoreValidatorImpl implements Validator{
 
 	@Override
 	public BeanDescriptor getConstraintsForClass(Class<?> clazz) {
+		if(clazz == null) {
+			throw new IllegalArgumentException("Cannot get constraints for a null class.");
+		}
+		
 		return DescriptorFactory.INSTANCE.getBeanDescriptor(clazz);
 	}
 
@@ -335,11 +341,20 @@ public class CoreValidatorImpl implements Validator{
 					
 					@SuppressWarnings("rawtypes")
 					ConstraintValidator cValidator = this.cvFactory.getInstance(validatorClass);
-					if(cValidator != null) {
-						cValidator.initialize(descriptor.getAnnotation());
-						result = cValidator.isValid(value, (javax.validation.ConstraintValidatorContext)null);
-					}		
+
+					//throw an exception if a null validator is found (JSR-303 TCK "testValidationexceptionIsThrowInCaseFactoryReturnsNull")
+					if(cValidator == null) {
+						throw new ValidationException("Validation factory returned a null constraint validator for the class " + validatorClass.getName() + ".");
+					}
 					
+					//otherwise, continue validation
+					try {
+						cValidator.initialize(descriptor.getAnnotation());
+					} catch (ClassCastException ccex) {
+						throw new ConstraintDefinitionException("Could not cast constraint definition.",ccex);
+					}
+					result = cValidator.isValid(value, (javax.validation.ConstraintValidatorContext)null);
+
 					//when the result is false, create a constraint violation for the local element
 					if(!result) {
 						//craft single constraint violation on this node
@@ -354,6 +369,7 @@ public class CoreValidatorImpl implements Validator{
 						String interpolatedMessage = this.interpolator.interpolate(messageKey, context);
 						
 						//set violation
+						localViolation.setConstraintDescriptor(descriptor);
 						localViolation.setMessage(interpolatedMessage);
 						localViolation.setMessageTemplate(messageKey);
 						localViolation.setInvalidValue(value);
@@ -400,6 +416,7 @@ public class CoreValidatorImpl implements Validator{
 					String interpolatedMessage = this.interpolator.interpolate(messageKey, context);
 					
 					//set violation
+					localViolation.setConstraintDescriptor(descriptor);
 					localViolation.setMessage(interpolatedMessage);
 					localViolation.setMessageTemplate(messageKey);
 					localViolation.setInvalidValue(value);

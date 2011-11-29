@@ -41,6 +41,8 @@ public enum ValidatorFactoryImpl implements ValidatorFactory {
 	
 	private MessageInterpolator interpolator = null;
 	
+	private ConstraintValidatorFactory constraintValidatorFactory = null;
+	
 	private ValidatorFactoryImpl() {
 		this.setConfiguration(new ConfigurationImpl());
 	}
@@ -50,6 +52,7 @@ public enum ValidatorFactoryImpl implements ValidatorFactory {
 		this.configuration = configuration;
 		this.resolver = this.configuration.getDefaultTraversableResolver();
 		this.interpolator = this.configuration.getDefaultMessageInterpolator();
+		this.constraintValidatorFactory = this.configuration.getDefaultConstraintValidatorFactory();
 	}
 
 	@Override
@@ -74,7 +77,7 @@ public enum ValidatorFactoryImpl implements ValidatorFactory {
 
 	@Override
 	public ConstraintValidatorFactory getConstraintValidatorFactory() {
-		return ConstraintValidatorFactoryImpl.INSTANCE;
+		return this.constraintValidatorFactory;
 	}
 
 	@SuppressWarnings("unchecked")

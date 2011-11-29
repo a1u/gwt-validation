@@ -33,7 +33,7 @@ public class MaxBigIntegerValidator extends MaxValidator<BigInteger> {
 		
 		Long minValueLong = Long.valueOf(this.maxValue);
 		
-		BigInteger minValue = new BigInteger(minValueLong.toString());
+		BigInteger minValue = BigInteger.valueOf(minValueLong);
 		
 		return minValue.compareTo(value) >= 0;
 	}

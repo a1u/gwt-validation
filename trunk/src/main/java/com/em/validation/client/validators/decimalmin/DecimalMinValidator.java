@@ -23,6 +23,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import javax.validation.ConstraintValidator;
 import javax.validation.constraints.DecimalMin;
 
+import com.em.validation.client.format.NumberFormatProvider;
+
 public abstract class DecimalMinValidator<T> implements ConstraintValidator<DecimalMin, T> {
 
 	protected double minValue = 0;
@@ -34,11 +36,12 @@ public abstract class DecimalMinValidator<T> implements ConstraintValidator<Deci
 		String stringValue = constraintAnnotation.value(); 
 		
 		try {
-			this.minValue = Double.valueOf(stringValue);
+			this.minValue = NumberFormatProvider.INSTANCE.getDoubleFromString(stringValue);
 		} catch (Exception ex) {
 			//no valid max value from string
-			this.minValueString = "0";
 		}
+		
+		this.minValueString = String.valueOf(this.minValueString);
 	}
 	
 }
