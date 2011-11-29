@@ -20,9 +20,6 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import com.em.validation.client.cases.defects.Defect_005;
 import com.em.validation.client.cases.defects.Defect_024;
 import com.em.validation.client.cases.defects.Defect_037;
@@ -31,7 +28,11 @@ import com.em.validation.client.cases.defects.Defect_041;
 import com.em.validation.client.cases.defects.Defect_042;
 import com.em.validation.client.cases.defects.Defect_043;
 import com.em.validation.client.cases.defects.Defect_045;
+import com.em.validation.client.cases.defects.Defect_049;
 import com.google.gwt.junit.tools.GWTTestSuite;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 public class DefectTestSuite extends GWTTestSuite {
 
@@ -46,6 +47,7 @@ public class DefectTestSuite extends GWTTestSuite {
 		suite.addTestSuite(Defect_042.class);
 		suite.addTestSuite(Defect_043.class);
 		suite.addTestSuite(Defect_045.class);
+		suite.addTestSuite(Defect_049.class);
 		
 		return suite;
 	}

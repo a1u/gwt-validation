@@ -195,7 +195,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
                     <suiteXmlFiles>
                         <suiteXmlFile>${basedir}/testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
-                    <argLine>-Xmx128m</argLine>
+                    <argLine>-Xmx256m</argLine>
                     <forkMode>once</forkMode>
                     <systemProperties>
                         <property>
