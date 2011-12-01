@@ -33,19 +33,19 @@ It is entirely possible to create a fully, or almost fully, complete JSR-303 val
     3.1:  Requirements on classes to be validated [implemented with Introspector] (100%) <br/>
     3.2:  Constraint declaration (100%) <br/>
     3.3:  Inheritance (100%) <br/>
-    3.4:  Group and group sequence (50% - 100% group and 0% group sequence) <br/>
-    3.5:  Validation Routine (75% - needs testing with complex object graphs) <br/>
+    3.4:  Group and group sequence (100%) <br/>
+    3.5:  Validation Routine (100%) <br/>
     3.6:  Examples [implemented in JUnit] (0%) <br/>
 
-*Chapter 4: Validation APIs (75%)* 
+*Chapter 4: Validation APIs (100%)* 
     4.1  Validator API (100%) <br/>
     4.2  ConstraintViolation (100%) <br/>
-    4.3  Message Interpolation (0%) <br/>
+    4.3  Message Interpolation (100%) <br/>
     4.4  Bootstrapping (100%) <br/>
 
-*Chapter 5: Constraint metadata request APIs (95%)*
+*Chapter 5: Constraint metadata request APIs (100%)*
     5.1: Validator (100%) <br/>
-    5.2: ElementDescriptor (90%), ConstraintFinder (100% reflective, 80% client)
+    5.2: ElementDescriptor (100%), ConstraintFinder (100%)
     5.3: BeanDescriptor (100%) <br/>
     5.4: PropertyDescriptor (100%) <br/>
     5.5: ConstraintDescriptor (100%) <br/>
