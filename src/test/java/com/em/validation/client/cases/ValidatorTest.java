@@ -60,4 +60,8 @@ public class ValidatorTest extends GwtValidationBaseTestCase {
 	public void testImplicitGroupValidation() {
 		CoreValidatorTest.testImplicitGroupValidation(this);
 	}
+	
+	public void testClassLevelValidation() {
+		CoreValidatorTest.testClassLevelValidation(this);
+	}
 }

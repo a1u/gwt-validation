@@ -34,7 +34,10 @@ import javax.validation.ConstraintValidator;
 import javax.validation.OverridesAttribute;
 import javax.validation.ReportAsSingleViolation;
 import javax.validation.metadata.ConstraintDescriptor;
+import javax.validation.metadata.Scope;
 
+import com.em.validation.client.reflector.IReflector;
+import com.em.validation.client.reflector.ReflectorFactory;
 import com.em.validation.rebind.metadata.ConstraintMetadata;
 import com.em.validation.rebind.metadata.ConstraintPropertyMetadata;
 import com.em.validation.rebind.metadata.OverridesMetadata;
@@ -83,13 +86,22 @@ public enum ConstraintDescriptionResolver {
 	
 	public Set<ConstraintMetadata> getAllMetadata(Class<?> targetClass) {
 		Set<ConstraintMetadata> metadataResult = new LinkedHashSet<ConstraintMetadata>();
+
 		Map<String,PropertyMetadata> propertyMetadata = PropertyResolver.INSTANCE.getPropertyMetadata(targetClass);
+		
+		IReflector reflector = ReflectorFactory.INSTANCE.getReflector(targetClass);
+		
+		for(ConstraintDescriptor<?> classLevelConstraint : reflector.getClassConstraintDescriptors(Scope.LOCAL_ELEMENT)) {
+			metadataResult.add(this.getConstraintMetadata(classLevelConstraint.getAnnotation(), targetClass));
+		}
+
 		for(String propertyName : propertyMetadata.keySet()) {
 			PropertyMetadata property = propertyMetadata.get(propertyName);
 			for(Annotation annotation : property.getAnnotationInstances()) {
 				metadataResult.add(this.getConstraintMetadata(annotation,property.getReturnType()));
 			}
 		}		
+		
 		return metadataResult;
 	}
 	

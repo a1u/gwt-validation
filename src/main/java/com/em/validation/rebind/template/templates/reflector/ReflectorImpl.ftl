@@ -49,6 +49,9 @@ import ${import};
 public class ${concreteClassName} extends AbstractCompiledReflector {
 	
 	public ${concreteClassName}() {
+		//set the target class
+		this.targetClass = ${reflectionTargetName}.class;
+	
 		//set the available property names in the constructor
 		<#list properties as property>
 		//${property.name}
@@ -74,6 +77,15 @@ public class ${concreteClassName} extends AbstractCompiledReflector {
 		</#if>
 		</#list>
 		
+		//class level validations
+		<#if classLevelConstraints?size &gt; 0>
+		Set<ConstraintDescriptor<?>> classLevelConstraints = new LinkedHashSet<ConstraintDescriptor<?>>();
+		<#list classLevelConstraints as clConstraint>
+		classLevelConstraints.add(new ConstraintDescriptorDecorator(${clConstraint}.INSTANCE));
+		</#list>
+		this.constraintDescriptors.put(this.targetClass.getName(),classLevelConstraints);
+		</#if>
+		
 		//put the cascaded properties in the cascade
 		<#list cascades as cascade>
 		this.cascadedProperties.add("${cascade}");
@@ -87,9 +99,6 @@ public class ${concreteClassName} extends AbstractCompiledReflector {
 		this.groupSequence[groupIndex++] = ${group};
 		</#list>
 		</#if>
-		
-		//set the target class
-		this.targetClass = ${reflectionTargetName}.class;
 	}
 
 	public Object getValue(String name, Object target){

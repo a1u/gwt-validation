@@ -71,4 +71,9 @@ public class ValidatorTest extends ReflectiveValidationBaseTestClass {
 	public void testImplicitGroupValidation() {
 		CoreValidatorTest.testImplicitGroupValidation(this);
 	}
+	
+	@Test
+	public void testClassLevelValidation() {
+		CoreValidatorTest.testClassLevelValidation(this);
+	}
 }
