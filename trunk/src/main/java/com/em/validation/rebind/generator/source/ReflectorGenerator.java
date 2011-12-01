@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import java.lang.annotation.ElementType;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -120,6 +121,14 @@ public enum ReflectorGenerator {
 			}
 		}
 		
+		Set<String> classLevelConstraints = new HashSet<String>();
+		for(ConstraintDescriptor<?> classLevel : runtimeReflector.getClassConstraintDescriptors(Scope.LOCAL_ELEMENT)) {
+			//generate the class descriptor (the actual ascii data that makes up the class) from the annotation and property metadata
+			ClassDescriptor descriptor = ConstraintDescriptionGenerator.INSTANCE.generateConstraintDescriptor(classLevel.getAnnotation(),targetClass);
+			reflectorDescriptor.getDependencies().add(descriptor);
+			classLevelConstraints.add(descriptor.getClassName());			
+		}
+		
 		//create data model
 		Map<String,Object> templateDataModel = new HashMap<String, Object>();
 		templateDataModel.put("concreteClassName", concreteClassName);
@@ -132,6 +141,7 @@ public enum ReflectorGenerator {
 		templateDataModel.put("declaredOnMethod", declaredOnMethod);
 		templateDataModel.put("declaredOnField", declaredOnField);
 		templateDataModel.put("groupSequence",groupSequences);
+		templateDataModel.put("classLevelConstraints",classLevelConstraints);
 
 		//create class descriptor from generated code
 		reflectorDescriptor.setClassContents(TemplateController.INSTANCE.processTemplate("templates/reflector/ReflectorImpl.ftl", templateDataModel));

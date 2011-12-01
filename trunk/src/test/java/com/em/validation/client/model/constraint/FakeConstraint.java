@@ -26,6 +26,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import javax.validation.Payload;
+
 import com.em.validation.client.model.composed.ComposedConstraint;
 
 /**
@@ -38,6 +40,10 @@ import com.em.validation.client.model.composed.ComposedConstraint;
 @Target({ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.FIELD, ElementType.CONSTRUCTOR, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FakeConstraint {
+	
+	String message() default "{com.em.validation.client.model.constraint.FakeConstraint}";
+	Class<?>[] groups() default {};
+	Class<? extends Payload>[] payload() default {};
 	
 	@Target({ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.FIELD, ElementType.CONSTRUCTOR, ElementType.PARAMETER})
 	@Retention(RetentionPolicy.RUNTIME)

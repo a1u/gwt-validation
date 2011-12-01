@@ -40,6 +40,7 @@ import com.em.validation.client.model.cyclic.Cycle;
 import com.em.validation.client.model.generic.ParentClass;
 import com.em.validation.client.model.generic.ParentInterface;
 import com.em.validation.client.model.generic.TestClass;
+import com.em.validation.client.model.generic.ValidatedAtClassLevel;
 import com.em.validation.client.model.sequence.ClassWithSequence;
 import com.em.validation.client.model.tests.ITestCase;
 import com.em.validation.client.model.validator.ChildNode;
@@ -311,6 +312,20 @@ public class CoreValidatorTest {
 		violations = validator.validate(testClass, ParentInterface.class);
 		
 		testCase.localAssertEquals("Expecting only one violation directly on the parent interface class (implicit group)", 1, violations.size());
+	}
+	
+	public static void testClassLevelValidation(ITestCase testCase) {
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		Validator validator = factory.getValidator();
+		
+		ValidatedAtClassLevel atClassLevel = new ValidatedAtClassLevel();
+		
+		Set<ConstraintViolation<ValidatedAtClassLevel>> violations = validator.validate(atClassLevel);
+		testCase.localAssertEquals("Should be 1 violation", 1, violations.size());
+		
+		atClassLevel.setValid(true);
+		violations = validator.validate(atClassLevel);
+		testCase.localAssertEquals("Should be 0 violations", 0, violations.size());
 	}
 }
 
