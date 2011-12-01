@@ -26,6 +26,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
     <name>GWT Validation TCK Runner</name>
     <description>Aggregates dependencies and runs the JSR-303 TCK</description>
 
+	<repositories>
+		<repository>
+			<id>jboss-releases</id>
+			<name>JBoss Releases</name>
+			<url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
+		</repository>
+	</repositories>
 
     <properties>
         <jboss.home>${env.JBOSS_HOME}</jboss.home>

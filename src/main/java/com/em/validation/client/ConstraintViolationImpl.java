@@ -129,5 +129,79 @@ public class ConstraintViolationImpl<T> implements ConstraintViolation<T>, Seria
 		} 
 		return super.toString();		
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((invalidValue == null) ? 0 : invalidValue.hashCode());
+		result = prime * result
+				+ ((leafBean == null) ? 0 : leafBean.hashCode());
+		result = prime * result + ((message == null) ? 0 : message.hashCode());
+		result = prime * result + ((path == null) ? 0 : path.hashCode());
+		result = prime * result
+				+ ((rootBean == null) ? 0 : rootBean.hashCode());
+		result = prime * result
+				+ ((rootBeanClass == null) ? 0 : rootBeanClass.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof ConstraintViolationImpl)) {
+			return false;
+		}
+		ConstraintViolationImpl<?> other = (ConstraintViolationImpl<?>) obj;
+		if (invalidValue == null) {
+			if (other.invalidValue != null) {
+				return false;
+			}
+		} else if (!invalidValue.equals(other.invalidValue)) {
+			return false;
+		}
+		if (leafBean == null) {
+			if (other.leafBean != null) {
+				return false;
+			}
+		} else if (!leafBean.equals(other.leafBean)) {
+			return false;
+		}
+		if (message == null) {
+			if (other.message != null) {
+				return false;
+			}
+		} else if (!message.equals(other.message)) {
+			return false;
+		}
+		if (path == null) {
+			if (other.path != null) {
+				return false;
+			}
+		} else if (!path.equals(other.path)) {
+			return false;
+		}
+		if (rootBean == null) {
+			if (other.rootBean != null) {
+				return false;
+			}
+		} else if (!rootBean.equals(other.rootBean)) {
+			return false;
+		}
+		if (rootBeanClass == null) {
+			if (other.rootBeanClass != null) {
+				return false;
+			}
+		} else if (!rootBeanClass.equals(other.rootBeanClass)) {
+			return false;
+		}
+		return true;
+	}
 	
 }

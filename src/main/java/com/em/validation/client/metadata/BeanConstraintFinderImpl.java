@@ -23,8 +23,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import java.lang.annotation.ElementType;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
+import javax.validation.groups.Default;
 import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.ElementDescriptor;
 import javax.validation.metadata.ElementDescriptor.ConstraintFinder;
@@ -59,6 +61,40 @@ public class BeanConstraintFinderImpl extends AbstractConstraintFinder {
 			propertySet.addAll(this.backingReflector.getPropertyNames());
 		} else if(Scope.LOCAL_ELEMENT.equals(scope)) {
 			propertySet.addAll(this.backingReflector.getDeclaredPropertyNames());
+		}
+		
+		//find class level constraint descriptors
+		if(declaredOnTypes == null || declaredOnTypes.isEmpty() || declaredOnTypes.contains(ElementType.TYPE)) {
+			Set<ConstraintDescriptor<?>> classDescriptors = this.backingReflector.getClassConstraintDescriptors(scope);
+			
+			for(ConstraintDescriptor<?> descriptor : classDescriptors) {
+				//get group set so we can manipulate
+				Set<Class<?>> groupSet = descriptor.getGroups();
+
+				boolean keep = true;
+				
+				//if there are no matching groups, the matching set is the default group
+				if(matchingGroups.isEmpty()) {
+					matchingGroups.add(Default.class);
+				}
+				
+				//account for the default group if no groups are present
+				if(groupSet.isEmpty()) {
+					groupSet.add(Default.class);
+				}
+			
+				//check each found group
+				boolean found = false;
+				Iterator<Class<?>> matchingGroupsIter = matchingGroups.iterator();
+				while (!found && matchingGroupsIter.hasNext()) {
+					found = this.foundIn(groupSet, matchingGroupsIter.next());
+				}
+				keep = keep && found;
+				
+				if(keep) {
+					results.add(descriptor);
+				}
+			}
 		}
 		
 		//get constraints for each property name

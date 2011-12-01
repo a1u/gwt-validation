@@ -73,6 +73,11 @@ public class CoreValidatorImpl implements Validator{
 		//create empty constraint violation set
 		Set<ConstraintViolation<T>> violations = new LinkedHashSet<ConstraintViolation<T>>();
 		
+		//validate class level properties
+		for(ConstraintDescriptor<?> descriptor : bean.findConstraints().declaredOn(ElementType.TYPE).unorderedAndMatchingGroups(groups).getConstraintDescriptors()) {
+			violations.addAll(this.validateConstraint((Class<T>)object.getClass(), descriptor, object));
+		}
+		
 		//validate each constrained property individually
 		for(PropertyDescriptor property : bean.getConstrainedProperties()) {
 			violations.addAll(this.validateProperty(validationCache, object, property.getPropertyName(), groups));
