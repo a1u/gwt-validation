@@ -151,8 +151,8 @@ public abstract class AbstractConstraintDescriptor<T extends Annotation> impleme
 		if (annotation == null) {
 			if (other.getAnnotation() != null)
 				return false;
-		} else if (!annotation.equals(other.getAnnotation()))
-			return false;
+		}// else if (!annotation.equals(other.getAnnotation()))
+		//	return false;
 		if (composedOf == null) {
 			if (other.getComposingConstraints() != null)
 				return false;
@@ -161,13 +161,10 @@ public abstract class AbstractConstraintDescriptor<T extends Annotation> impleme
 		if (propertyMap == null) {
 			if (other.getAttributes() != null)
 				return false;
-		} else if (!propertyMap.equals(other.getAttributes()))
-			return false;
+		}// else if (!propertyMap.equals(other.getAttributes()))
+		//	return false;
 		if (reportAsSingleViolation != other.isReportAsSingleViolation())
 			return false;
 		return true;
-	}
-
-	
-	
+	}	
 }
