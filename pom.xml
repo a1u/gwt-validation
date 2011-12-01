@@ -1,141 +1,184 @@
-<!-- GWT Validation Framework - A JSR-303 validation framework for GWT
+<!-- GWT Validation Framework - A JSR-303 validation framework for GWT (c) 
+	gwt-validation contributors (http://code.google.com/p/gwt-validation/) This 
+	library is free software; you can redistribute it and/or modify it under 
+	the terms of the GNU Lesser General Public License as published by the Free 
+	Software Foundation; either version 2.1 of the License, or (at your option) 
+	any later version. This library is distributed in the hope that it will be 
+	useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+	or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License 
+	for more details. You should have received a copy of the GNU Lesser General 
+	Public License along with this library; if not, write to the Free Software 
+	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 
+	USA -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.googlecode</groupId>
+	<artifactId>gwt-validation</artifactId>
+	<version>2.0-BETA-SNAPSHOT</version>
+	<name>gwt-validation</name>
+	<description>gwt validation framework based on JSR-303</description>
+	<url>http://code.google.com/p/gwt-validation/</url>
 
-(c) gwt-validation contributors (http://code.google.com/p/gwt-validation/)
+	<properties>
+		<gwtVersion>2.4.0</gwtVersion>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
+	<licenses>
+		<license>
+			<name>GNU Lesser General Public License, Version 2.1</name>
+			<url>http://www.gnu.org/licenses/lgpl-2.1.html</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
+	<scm>
+		<url>http://code.google.com/p/gwt-validation/source/list</url>
+		<connection>http://gwt-validation.googlecode.com/svn/trunk</connection>
+	</scm>
 
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.em</groupId>
-  <artifactId>gwt-validation</artifactId>
-  <version>2.0-SNAPSHOT</version>
-  <name>gwt-validation</name>
-  <description>gwt validation framework based on JSR-303</description>
-  <properties>
-  	<gwtVersion>2.4.0</gwtVersion>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-  <repositories>
-	  <repository>
-	    <id>reflections-repo</id>
-	    <name>Reflections Maven2 Repository</name>
-	    <url>http://reflections.googlecode.com/svn/repo</url>
-	  </repository>
-  </repositories>
-  <dependencies>
-  	<dependency>
-  		<groupId>javax.validation</groupId>
-  		<artifactId>validation-api</artifactId>
-  		<version>1.0.0.GA</version>
-  		<type>jar</type>
-		<classifier>sources</classifier>
-  	</dependency>  
-  	<dependency>
-  		<groupId>javax.validation</groupId>
-  		<artifactId>validation-api</artifactId>
-  		<version>1.0.0.GA</version>
-  		<type>jar</type>
-  	</dependency>
-  	<dependency>
-  		<groupId>junit</groupId>
-  		<artifactId>junit</artifactId>
-  		<version>4.8.2</version>
-  		<scope>test</scope>
-  	</dependency>
-  	<dependency>
-  		<groupId>com.google.guava</groupId>
-  		<artifactId>guava</artifactId>
-  		<version>r09</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>com.google.gwt</groupId>
-  		<artifactId>gwt-dev</artifactId>
-  		<version>${gwtVersion}</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>com.google.gwt</groupId>
-  		<artifactId>gwt-user</artifactId>
-  		<version>${gwtVersion}</version>
-  	</dependency>
-	<dependency>
-	    <groupId>org.reflections</groupId>
-	    <artifactId>reflections</artifactId>
-	    <version>0.9.5</version>
-	</dependency>
-	<dependency>
-		<groupId>org.freemarker</groupId>
-		<artifactId>freemarker</artifactId>
-		<version>2.3.18</version>
-	</dependency>
-	<dependency>
-		<groupId>org.slf4j</groupId>
-		<artifactId>slf4j-simple</artifactId>
-		<version>1.6.1</version>
-	</dependency>
-  </dependencies>
-  <build>
-  	<resources>
-  		<resource>
-  			<directory>${project.basedir}/src/main/java</directory>
-  		</resource>
-  	</resources>
-  	<testResources>
-  		<testResource>
-  			<directory>${project.basedir}/src/test/java</directory>
-  		</testResource>
-  	</testResources>
-  	<pluginManagement>
-  		<plugins>
+	<developers>
+		<developer>
+			<id>chris.ruffalo</id>
+			<name>Chris Ruffalo</name>
+			<email>chris.ruffalo@gmail.com</email>
+		</developer>
+	</developers>
+
+	<dependencies>
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>1.0.0.GA</version>
+			<type>jar</type>
+			<classifier>sources</classifier>
+		</dependency>
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>1.0.0.GA</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>r09</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-dev</artifactId>
+			<version>${gwtVersion}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-user</artifactId>
+			<version>${gwtVersion}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.reflections</groupId>
+			<artifactId>reflections</artifactId>
+			<version>0.9.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.freemarker</groupId>
+			<artifactId>freemarker</artifactId>
+			<version>2.3.18</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.6.1</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<resources>
+			<resource>
+				<directory>${project.basedir}/src/main/java</directory>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>${project.basedir}/src/test/java</directory>
+			</testResource>
+		</testResources>
+
+		<plugins>
 			<plugin>
-			    <groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-eclipse-plugin</artifactId>
-			    <configuration>
-			        <downloadSources>true</downloadSources>
-			        <downloadJavadocs>true</downloadJavadocs>
-			    </configuration>
-			</plugin>  		
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.8</version>
+				<configuration>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>true</downloadJavadocs>
+				</configuration>
+			</plugin>
 			<plugin>
-    			<groupId>org.apache.maven.plugins</groupId>
-    			<artifactId>maven-compiler-plugin</artifactId>
-    			<configuration>
-     				<source>1.6</source>
-     				<target>1.6</target>
-    				<excludes><excludes>**/emul/**</excludes></excludes>
-    			</configuration>
-   			</plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<excludes>
+						<excludes>**/emul/**</excludes>
+					</excludes>
+				</configuration>
+			</plugin>
 			<plugin>
-			    <artifactId>maven-surefire-plugin</artifactId>
-			    <configuration>
-			  	<test>**/FullTestSuite.java</test>
-				<argLine>-Dgwt.args="-prod -gen target/testgen -style PRETTY"</argLine>
-			    <additionalClasspathElements>
-					<additionalClasspathElement>${project.basedir}/lib/</additionalClasspathElement>
-					<additionalClasspathElement>${project.basedir}/lib/validation-api-1.0.0.GA-sources.jar</additionalClasspathElement>
-					<additionalClasspathElement>${project.basedir}/src/main/java/</additionalClasspathElement>
-			      	<additionalClasspathElement>${project.basedir}/src/test/java/</additionalClasspathElement>
-			        <additionalClasspathElement>${project.build.sourceDirectory}</additionalClasspathElement>
-			        <additionalClasspathElement>${project.build.testSourceDirectory}</additionalClasspathElement>
-				</additionalClasspathElements>
-				<useSystemClassLoader>true</useSystemClassLoader>
-				<useManifestOnlyJar>false</useManifestOnlyJar>
-				<forkMode>always</forkMode>
-			    </configuration>
-			</plugin>	
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.7.2</version>
+				<configuration>
+					<test>**/FullTestSuite.java</test>
+					<argLine>-Dgwt.args="-prod -gen target/testgen -style PRETTY"</argLine>
+					<additionalClasspathElements>
+						<additionalClasspathElement>${project.build.sourceDirectory}</additionalClasspathElement>
+						<additionalClasspathElement>${project.build.testSourceDirectory}</additionalClasspathElement>
+					</additionalClasspathElements>
+					<useSystemClassLoader>true</useSystemClassLoader>
+					<useManifestOnlyJar>false</useManifestOnlyJar>
+					<forkMode>always</forkMode>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.8</version>
+				<configuration>
+					<show>private</show>
+					<nohelp>true</nohelp>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-javadoc</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>				
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.1.2</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
-  	</pluginManagement>
-  </build>
-  <reporting>
-  </reporting>  	
+
+	</build>
 </project>
