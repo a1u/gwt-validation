@@ -12,11 +12,11 @@ Even though the GWT SDK will include (some or all) JSR-303 compatibility with ve
 It is entirely possible to create a fully, or almost fully, complete JSR-303 validation solution, with GWT, that has the following features:
 
  * No special markers - naturally, fluently, use the JSR-303 (javax.validation) annotations without marker interfaces or annotations. (*COMPLETE*)
- * Metadata support - all of javax.valiation.metadata is supported. (*ALMOST COMPLETE*)
+ * Metadata support - all of javax.valiation.metadata is supported. (*COMPLETE*)
  * All levels of validation (field, class, cascading). (*COMPLETE*)
  * Full group, message, and payload support. (*COMPLETE*)
  * Composed constraint support. (*COMPLETE*)
- * Full i18n support and message interpolation/parameterization support. (*ALMOST COMPLETE*)
+ * Full i18n support and message interpolation/parameterization support. (*COMPLETE*)
 
 ----
 
