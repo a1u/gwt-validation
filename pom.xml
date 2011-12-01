@@ -45,6 +45,15 @@
 			<email>chris.ruffalo@gmail.com</email>
 		</developer>
 	</developers>
+	
+	<contributors>
+		<contributor>
+			<name>flugendufel</name>
+		</contributor>
+		<contributor>
+			<name>Niels aka 'nsoeffers'</name>
+		</contributor>
+	</contributors>
 
 	<dependencies>
 		<dependency>
