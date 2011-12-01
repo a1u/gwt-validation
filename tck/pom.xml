@@ -77,7 +77,7 @@
 			<artifactId>jbossas-container</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.googlecode</groupId>
+			<groupId>com.googlecode.gwt-validation</groupId>
 			<artifactId>gwt-validation</artifactId>
 			<version>${project.version}</version>
 		</dependency>
