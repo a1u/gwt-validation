@@ -107,6 +107,11 @@ public class CoreValidatorImpl implements Validator{
 	private <T> Set<ConstraintViolation<T>> validateProperty(Map<Class<?>,Map<String,Map<Object,Set<ConstraintViolation<?>>>>> validationCache, T object, String propertyName, Class<?>... groups) {
 		//get reflector to get property value
 		IReflector reflector = ReflectorFactory.INSTANCE.getReflector((Class<T>)object.getClass());
+		
+		if(!reflector.getPropertyNames().contains(propertyName)) {
+			throw new IllegalArgumentException("Bean type " + object.getClass().getName() + " does not contain property " + propertyName);
+		}
+		
 		Object value = reflector.getValue(propertyName, object);
 
 		//create path for this level
@@ -116,7 +121,13 @@ public class CoreValidatorImpl implements Validator{
 		path.push(localNode);
 		
 		//reachable
-		boolean reachable = this.resolver.isReachable(object, localNode, object.getClass(), this.getPath(new PathImpl(), propertyName), (ElementType)null);
+		boolean reachable = false;
+		
+		try {
+			reachable = this.resolver.isReachable(object, localNode, object.getClass(), this.getPath(new PathImpl(), propertyName), (ElementType)null);
+		} catch (Exception ex) {
+			throw new ValidationException("An exception occurred while checking the traversable resolver",ex);
+		}
 		
 		//null violation set
 		Set<ConstraintViolation<T>> violations = null;
@@ -154,6 +165,13 @@ public class CoreValidatorImpl implements Validator{
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private <T> Set<ConstraintViolation<T>> validateValue(Map<Class<?>,Map<String,Map<Object,Set<ConstraintViolation<?>>>>> validationCache, Class<T> beanType, String propertyName, Object value, Class<?>... groups) {
 		
+		//get reflector to get property value
+		IReflector reflector = ReflectorFactory.INSTANCE.getReflector(beanType);
+		
+		if(!reflector.getPropertyNames().contains(propertyName)) {
+			throw new IllegalArgumentException("Bean type " + beanType.getName() + " does not contain property " + propertyName);
+		}
+		
 		//create path for this level
 		PathImpl path = new PathImpl();
 		NodeImpl localNode = new NodeImpl();
@@ -183,6 +201,7 @@ public class CoreValidatorImpl implements Validator{
 		if(cachedViolations == null) {
 			//get the bean descriptor and the property descriptor
 			BeanDescriptor bean = this.getConstraintsForClass(beanType);
+			
 			PropertyDescriptor property = bean.getConstraintsForProperty(propertyName);
 			
 			//get constraints for beanType.propertyName
@@ -239,7 +258,13 @@ public class CoreValidatorImpl implements Validator{
 						int index = 0;
 						
 						for(Object subValue : ((Object[])value)) {
-							boolean cascadable = this.resolver.isCascadable(value, localNode, beanType, this.getPath(path, index), (ElementType)null);
+							boolean cascadable = false;
+							try {
+								cascadable = this.resolver.isCascadable(value, localNode, beanType, this.getPath(path, index), (ElementType)null);
+							} catch (Exception ex) {
+								throw new ValidationException("An exception occurred while checking the traversable resolver",ex);
+							}
+							
 							if(cascadable) {
 								Set<ConstraintViolation<Object>> cascadeViolations = new LinkedHashSet<ConstraintViolation<Object>>();
 								cascadeViolations.addAll(this.validate(validationCache, subValue, groups));	
@@ -249,23 +274,39 @@ public class CoreValidatorImpl implements Validator{
 						}
 					//perform validation on each iterable object
 					} else if (value instanceof Iterable) {
-						
-						int index = 0;
-						
+					
+						//sets have no index
+						int index = (value instanceof Set) ? -1 : 0;
+											
 						for(Object subValue : ((Iterable)value)) {
-							boolean cascadable = this.resolver.isCascadable(value, localNode, beanType, this.getPath(path, index), (ElementType)null);
+							boolean cascadable = false;
+							try {
+								cascadable = this.resolver.isCascadable(value, localNode, beanType, this.getPath(path, index), (ElementType)null);
+							} catch (Exception ex) {
+								throw new ValidationException("An exception occurred while checking the traversable resolver",ex);
+							}
+							
 							if(cascadable) {
 								Set<ConstraintViolation<Object>> cascadeViolations = new LinkedHashSet<ConstraintViolation<Object>>();
 								cascadeViolations.addAll(this.validate(validationCache, subValue, groups));	
 								violations.addAll(this.convertViolations(cascadeViolations, valueMap, beanType, path, index, null));
 							}
 							
-							index++;
+							//sets have no index
+							if(!(value instanceof Set)) {
+								index++;
+							}
 						}
 					//perform validation on a map type object
 					} else 	if(value instanceof Map) {
 						for(Object key : ((Map)value).keySet()) {
-							boolean cascadable = this.resolver.isCascadable(value, localNode, beanType, this.getPath(path, key), (ElementType)null);
+							boolean cascadable = false;
+							try {
+								cascadable = this.resolver.isCascadable(value, localNode, beanType, this.getPath(path, key), (ElementType)null);
+							} catch (Exception ex) {
+								throw new ValidationException("An exception occurred while checking the traversable resolver",ex);
+							}
+							
 							if(cascadable) {
 								Object subValue = ((Map)value).get(key);
 								Set<ConstraintViolation<Object>> cascadeViolations = new LinkedHashSet<ConstraintViolation<Object>>();	
@@ -275,7 +316,14 @@ public class CoreValidatorImpl implements Validator{
 						}						
 					//perform validation on the object itself
 					} else {
-						boolean cascadable = this.resolver.isCascadable(value, localNode, beanType, this.getPath(path, propertyName), (ElementType)null);
+						boolean cascadable = false;
+						
+						try {
+							cascadable = this.resolver.isCascadable(value, localNode, beanType, this.getPath(path, propertyName), (ElementType)null);
+						} catch (Exception ex) {
+							throw new ValidationException("An exception occurred while checking the traversable resolver",ex);
+						}
+						
 						if(cascadable) {
 							Set<ConstraintViolation<Object>> cascadeViolations = new LinkedHashSet<ConstraintViolation<Object>>();
 							cascadeViolations.addAll(this.validate(validationCache, value, groups));	
@@ -357,8 +405,11 @@ public class CoreValidatorImpl implements Validator{
 						cValidator.initialize(descriptor.getAnnotation());
 					} catch (ClassCastException ccex) {
 						throw new ConstraintDefinitionException("Could not cast constraint definition.",ccex);
+					} catch (Exception ex) {
+						throw new ValidationException("An exception occured while intializing constraint description.", ex);
 					}
-					result = cValidator.isValid(value, (javax.validation.ConstraintValidatorContext)null);
+					//todo: fix dummy instance of constraint validator context impl
+					result = cValidator.isValid(value, new ConstraintValidatorContextImpl());
 
 					//when the result is false, create a constraint violation for the local element
 					if(!result) {

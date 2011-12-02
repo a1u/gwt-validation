@@ -20,7 +20,9 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.Stack;
 import javax.validation.Path;
 import javax.validation.Path.Node;
@@ -39,6 +41,15 @@ public class PathImpl extends Stack<Node> implements Path {
 	 * @return
 	 */
 	public boolean cyclicCheck(Path fragment) {
+		Set<String> nodes = new HashSet<String>();
+		for(Node node : fragment) {
+			if(node.getName() == null || node.getName().isEmpty()) continue;
+			String key = node.getName() + ":" + node.getIndex() + ":" + node.getKey();
+			if(nodes.contains(key)) {
+				return true;
+			}
+			nodes.add(key);
+		}
 		return false;
 	}
 
@@ -59,7 +70,9 @@ public class PathImpl extends Stack<Node> implements Path {
 					builder.append("}");
 				} else if(node.getIndex() != null) {
 					builder.append("[");
-					builder.append(node.getIndex());
+					if(node.getIndex() != -1) {
+						builder.append(node.getIndex());
+					}
 					builder.append("]");
 				}
 			} else {
