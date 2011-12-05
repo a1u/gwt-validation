@@ -9,52 +9,6 @@ The goal of this project is to provide a validation framework for web applicatio
 
 The JUnit framework and the GWT adapters to it will provide the unit testing framework.
 
-=== Constraint Testing ===
+== TCK Compatibility Testing ==
 
-Each constraint must have both a pass (true) and fail (false) test for each of the scenarios that it is meant to check.  
-
-Take length for example:
-{{{
-public class LengthValidator implements IConstraint<Length> {
-
-	public boolean isValid(Object value) {
-		if(value == null) return true;
-		
-		boolean valid = false;
-		
-		int size = -1;
-		
-		if(value.getClass().toString().equals(String.class.toString())) {
-			size = ((String)value).trim().length();
-		}
-
-		if(size >= 0 && this.maximum >= size && this.minimum <= size) valid = true;
-		
-		return valid;
-	}
-}
-}}}
-
-LengthValidator has 5 test cases.  One under the minimum, one at the minimum, one in the middle, one at the maximum, and one over the maximum.  This exhaustively tests that the validator works.  In order to make this more complete some testing could be done with both null and by passing not strings.
-
-The same tests must be made for both the client side and for the server side so that it can be shown that the validator works the same on both sides of GWT.
-
-=== Validator Testing ===
-
-There is a use case for the client side validator and for the jvm validator.  As new features (ex: GroupSequence) are added they are added (nearly identically, allowing for differing creation mechanisms) to both the [http://code.google.com/p/gwt-validation/source/browse/trunk/test/com/google/gwt/validation/client/ClientValidatorTest.java ClientValidatorTest] and the [http://code.google.com/p/gwt-validation/source/browse/trunk/test/com/google/gwt/validation/server/ServerValidatorTest.java ServerValidatorTest] so that it can be shown that they work and they work identically.  
-
-These validator tests will also implement all of the examples from the JSR-303 framework so that it can show conformance with the operating specifications of the standard.
-
-=== Automated Unit Testing Procedure ===
-
-All of the unit tests will be built into the Test suites that are run from through Ant using JUnit.  Each client side unit test (in the [http://code.google.com/p/gwt-validation/source/browse/trunk/test/com/google/gwt/validation/client/ClientTestSuite.java ClientTestSuite]) will use GWT specific JUnit tests and will be run (by Ant) in both hosted and compiled (browser) modes.  A failure in either equates to a full test failure.
-
-== Inspections ==
-
-Code inspections are important to the operation of this project.  New code shall be submitted to the project for review before being included in the repository.  
-
-== User Testing ==
-
-User feedback will be solicited through the Google group for this project as well as through the issue tracker on the Google code page.  
-
-Users are encouraged to focus on making their own validators and to come up with as complex schemes as they can manage to fully exercise the capabilites of GWTVF.
+Each failing TCK test will have a matching JUnit test created so that it can be tested and validated in both the server (reflective) and generated (client) code.
