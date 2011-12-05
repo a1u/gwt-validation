@@ -34,7 +34,7 @@ public abstract class AbstractConfiguration implements Configuration<AbstractCon
 	public AbstractConfiguration() {
 		this.traversableResolver = new TraversableResolverImpl();
 		this.interpolator = new MessageInterpolatorImpl();
-		this.constraintValidatorFactory = ConstraintValidatorFactoryImpl.INSTANCE;
+		this.constraintValidatorFactory = new ConstraintValidatorFactoryImpl();
 	}
 	
 	@Override
@@ -84,7 +84,8 @@ public abstract class AbstractConfiguration implements Configuration<AbstractCon
 
 	@Override
 	public ValidatorFactory buildValidatorFactory() {
-		ValidatorFactoryImpl.INSTANCE.setConfiguration(this);
-		return ValidatorFactoryImpl.INSTANCE;
+		ValidatorFactoryImpl factory = new ValidatorFactoryImpl();
+		factory.setConfiguration(this);
+		return factory;
 	}
 }

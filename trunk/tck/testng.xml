@@ -17,11 +17,14 @@
         <exclude name="broken"/>
       </run>
     </groups>
+    <!-- 
     <packages>
-  <package name="org.hibernate.jsr303.tck.tests">
-  </package>
+	  <package name="org.hibernate.jsr303.tck.tests">
+	  </package>
     </packages>
+     -->
     <classes>
+      <!-- 
       <class name="org.hibernate.jsr303.tck.tests.bootstrap.ConfigurationTest"/>
       <class name="org.hibernate.jsr303.tck.tests.bootstrap.CustomMessageInterpolatorTest$1"/>
       <class name="org.hibernate.jsr303.tck.tests.bootstrap.CustomMessageInterpolatorTest$DummyMessageInterpolator"/>
@@ -36,6 +39,7 @@
       <class name="org.hibernate.jsr303.tck.tests.bootstrap.ValidationProviderTest$2"/>
       <class name="org.hibernate.jsr303.tck.tests.bootstrap.ValidationProviderTest$3"/>
       <class name="org.hibernate.jsr303.tck.tests.bootstrap.ValidationProviderTest"/>
+ 
       <class name="org.hibernate.jsr303.tck.tests.constraints.application.Building"/>
       <class name="org.hibernate.jsr303.tck.tests.constraints.application.Citizen"/>
       <class name="org.hibernate.jsr303.tck.tests.constraints.application.DummyGroup"/>
@@ -49,6 +53,8 @@
       <class name="org.hibernate.jsr303.tck.tests.constraints.application.ValidationRequirementTest"/>
       <class name="org.hibernate.jsr303.tck.tests.constraints.application.Visibility"/>
       <class name="org.hibernate.jsr303.tck.tests.constraints.application.Woman"/>
+		 -->
+	  <!-- 
       <class name="org.hibernate.jsr303.tck.tests.constraints.builtinconstraints.BuiltinConstraintsTest$AssertFalseDummyEntity"/>
       <class name="org.hibernate.jsr303.tck.tests.constraints.builtinconstraints.BuiltinConstraintsTest$AssertTrueDummyEntity"/>
       <class name="org.hibernate.jsr303.tck.tests.constraints.builtinconstraints.BuiltinConstraintsTest$DecimalMaxDummyEntity"/>
@@ -62,7 +68,11 @@
       <class name="org.hibernate.jsr303.tck.tests.constraints.builtinconstraints.BuiltinConstraintsTest$PastDummyEntity"/>
       <class name="org.hibernate.jsr303.tck.tests.constraints.builtinconstraints.BuiltinConstraintsTest$PatternDummyEntity"/>
       <class name="org.hibernate.jsr303.tck.tests.constraints.builtinconstraints.BuiltinConstraintsTest$SizeDummyEntity"/>
-      <class name="org.hibernate.jsr303.tck.tests.constraints.builtinconstraints.BuiltinConstraintsTest"/>
+      -->
+      
+      <class name="org.hibernate.jsr303.tck.tests.constraints.builtinconstraints.BuiltinConstraintsTest"/> 
+
+      <!-- 
       <class name="org.hibernate.jsr303.tck.tests.constraints.builtinconstraints.BuiltinValidatorOverrideTest$DummyEntity"/>
       <class name="org.hibernate.jsr303.tck.tests.constraints.builtinconstraints.BuiltinValidatorOverrideTest"/>
       <class name="org.hibernate.jsr303.tck.tests.constraints.builtinconstraints.InvertedNotNullValidator"/>
@@ -346,6 +356,8 @@
       <class name="org.hibernate.jsr303.tck.tests.validatorfactory.MyConstraintValidator"/>
       <class name="org.hibernate.jsr303.tck.tests.validatorfactory.MySecondConstraint"/>
       <class name="org.hibernate.jsr303.tck.tests.validatorfactory.MySecondConstraintValidator"/>
+       -->
+      <!-- 
       <class name="org.hibernate.jsr303.tck.tests.xmlconfiguration.ConfigurationDefinedConstraintValidatorFactoryResolver"/>
       <class name="org.hibernate.jsr303.tck.tests.xmlconfiguration.ConfigurationDefinedMessageInterpolator"/>
       <class name="org.hibernate.jsr303.tck.tests.xmlconfiguration.ConfigurationDefinedTraversableResolver"/>
@@ -413,6 +425,7 @@
       <class name="org.hibernate.jsr303.tck.tests.xmlconfiguration.XmlDefinedMessageInterpolator"/>
       <class name="org.hibernate.jsr303.tck.tests.xmlconfiguration.XmlDefinedTraversableResolver$NoDefaultConstructorResolver"/>
       <class name="org.hibernate.jsr303.tck.tests.xmlconfiguration.XmlDefinedTraversableResolver"/>
+       -->
     </classes>
   </test>
 </suite>

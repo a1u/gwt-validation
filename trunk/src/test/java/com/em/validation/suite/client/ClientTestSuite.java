@@ -20,33 +20,40 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
-import com.em.validation.client.cases.ConstraintValidatorFactoryTest;
-import com.em.validation.client.cases.ConstraintsTest;
-import com.em.validation.client.cases.MetadataTest;
-import com.em.validation.client.cases.ValidatorTest;
-import com.em.validation.client.cases.messages.MessageTest;
-import com.em.validation.client.cases.reflector.ReflectorTest;
-import com.google.gwt.junit.tools.GWTTestSuite;
+import com.em.validation.client.core.ConstraintValidatorFactoryTest;
+import com.em.validation.client.core.ConstraintsTest;
+import com.em.validation.client.core.MetadataTest;
+import com.em.validation.client.core.ValidatorTest;
+import com.em.validation.client.core.messages.MessageTest;
+import com.em.validation.client.core.reflector.ReflectorTest;
 
-public class ClientTestSuite extends GWTTestSuite {
+@RunWith(Suite.class)
+@Suite.SuiteClasses({
+	DefectTestSuite.class,
+	ConstraintsTest.class,
+	MetadataTest.class,
+	ExampleTestSuite.class,
+	ValidatorImplementationTestSuite.class,
+	ConstraintValidatorFactoryTest.class,
+	ValidatorTest.class,
+	MessageTest.class,
+	ReflectorTest.class
+})
+public class ClientTestSuite {
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite("GWT Client Test Suite");
-		
-		suite.addTest(DefectTestSuite.suite());
-		suite.addTestSuite(ConstraintsTest.class);
-		suite.addTestSuite(MetadataTest.class);
-		suite.addTest(ExampleTestSuite.suite());
-		suite.addTest(ValidatorImplementationTestSuite.suite());
-		suite.addTestSuite(ConstraintValidatorFactoryTest.class);
-		suite.addTestSuite(ValidatorTest.class);
-		suite.addTestSuite(MessageTest.class);
-		suite.addTestSuite(ReflectorTest.class);
-		
-		return suite;
-	}
+    @BeforeClass
+    public static void setUp() {
+
+    }
+
+    @AfterClass
+    public static void tearDown() {
+        
+    }
 	
 }

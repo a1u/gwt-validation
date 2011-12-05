@@ -20,36 +20,31 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import com.em.validation.client.cases.defects.Defect_005;
-import com.em.validation.client.cases.defects.Defect_024;
-import com.em.validation.client.cases.defects.Defect_037;
-import com.em.validation.client.cases.defects.Defect_040;
-import com.em.validation.client.cases.defects.Defect_041;
-import com.em.validation.client.cases.defects.Defect_042;
-import com.em.validation.client.cases.defects.Defect_043;
-import com.em.validation.client.cases.defects.Defect_045;
-import com.em.validation.client.cases.defects.Defect_049;
-import com.google.gwt.junit.tools.GWTTestSuite;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import com.em.validation.client.core.defects.Defect_005;
+import com.em.validation.client.core.defects.Defect_024;
+import com.em.validation.client.core.defects.Defect_037;
+import com.em.validation.client.core.defects.Defect_040;
+import com.em.validation.client.core.defects.Defect_041;
+import com.em.validation.client.core.defects.Defect_042;
+import com.em.validation.client.core.defects.Defect_043;
+import com.em.validation.client.core.defects.Defect_045;
+import com.em.validation.client.core.defects.Defect_049;
 
-public class DefectTestSuite extends GWTTestSuite {
+@RunWith(Suite.class)
+@Suite.SuiteClasses({
+	Defect_005.class,
+	Defect_024.class,
+	Defect_037.class,
+	Defect_040.class,
+	Defect_041.class,
+	Defect_042.class,
+	Defect_043.class,
+	Defect_045.class,
+	Defect_049.class
+})
+public class DefectTestSuite {
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite("GWT Defect Test Suite");
-		
-		suite.addTestSuite(Defect_005.class);
-		suite.addTestSuite(Defect_024.class);
-		suite.addTestSuite(Defect_037.class);
-		suite.addTestSuite(Defect_040.class);
-		suite.addTestSuite(Defect_041.class);
-		suite.addTestSuite(Defect_042.class);
-		suite.addTestSuite(Defect_043.class);
-		suite.addTestSuite(Defect_045.class);
-		suite.addTestSuite(Defect_049.class);
-		
-		return suite;
-	}
-	
 }

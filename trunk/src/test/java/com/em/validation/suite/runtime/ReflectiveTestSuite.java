@@ -23,12 +23,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import com.em.validation.reflective.cases.ConstraintValidatorFactoryTest;
-import com.em.validation.reflective.cases.ConstraintsTest;
-import com.em.validation.reflective.cases.MetadataTest;
-import com.em.validation.reflective.cases.ValidatorTest;
-import com.em.validation.reflective.cases.messages.MessagesTest;
-import com.em.validation.reflective.cases.reflector.ReflectorTest;
+import com.em.validation.client.core.ConstraintValidatorFactoryTest;
+import com.em.validation.client.core.ConstraintsTest;
+import com.em.validation.client.core.MetadataTest;
+import com.em.validation.client.core.ValidatorTest;
+import com.em.validation.client.core.messages.MessageTest;
+import com.em.validation.client.core.reflector.ReflectorTest;
+import com.em.validation.reflective.cases.messages.RebindMessageTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
@@ -39,7 +40,8 @@ import com.em.validation.reflective.cases.reflector.ReflectorTest;
 	ValidatorImplementationTestSuite.class,
 	ConstraintValidatorFactoryTest.class,
 	ValidatorTest.class,
-	MessagesTest.class,
+	MessageTest.class,
+	RebindMessageTest.class,
 	ReflectorTest.class
 })
 public class ReflectiveTestSuite {

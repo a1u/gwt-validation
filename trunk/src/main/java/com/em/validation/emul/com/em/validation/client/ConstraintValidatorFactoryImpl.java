@@ -26,13 +26,11 @@ import javax.validation.ValidationException;
 import com.em.validation.client.reflector.IReflectorFactory;
 import com.google.gwt.core.client.GWT;
 
-public enum ConstraintValidatorFactoryImpl implements ConstraintValidatorFactory {
-	
-	INSTANCE;
+public class ConstraintValidatorFactoryImpl implements ConstraintValidatorFactory {
 	
 	private ConstraintValidatorFactory factory = null;
 	
-	private ConstraintValidatorFactoryImpl(){
+	public ConstraintValidatorFactoryImpl(){
 		this.factory = (ConstraintValidatorFactory)GWT.create(ConstraintValidatorFactory.class);
 	}
 

@@ -44,7 +44,7 @@ public class ValidationProviderImpl implements ValidationProvider<AbstractConfig
 
 	@Override
 	public ValidatorFactory buildValidatorFactory(ConfigurationState configurationState) {
-		return ValidatorFactoryImpl.INSTANCE;
+		return new ValidatorFactoryImpl();
 	}
 
 }

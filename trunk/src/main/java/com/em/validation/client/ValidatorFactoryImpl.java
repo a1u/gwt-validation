@@ -29,10 +29,8 @@ import javax.validation.Validator;
 import javax.validation.ValidatorContext;
 import javax.validation.ValidatorFactory;
 
-public enum ValidatorFactoryImpl implements ValidatorFactory {
+public class ValidatorFactoryImpl implements ValidatorFactory {
 
-	INSTANCE;
-	
 	private Configuration<?> configuration = null;
 	
 	private TraversableResolver resolver = null;
@@ -43,7 +41,7 @@ public enum ValidatorFactoryImpl implements ValidatorFactory {
 	
 	private ConstraintValidatorFactory constraintValidatorFactory = null;
 	
-	private ValidatorFactoryImpl() {
+	public ValidatorFactoryImpl() {
 		this.setConfiguration(new ConfigurationImpl());
 	}
 	
@@ -57,7 +55,7 @@ public enum ValidatorFactoryImpl implements ValidatorFactory {
 
 	@Override
 	public Validator getValidator() {
-		return new ValidatorImpl();
+		return new ValidatorImpl(this);
 	}
 
 	@Override
@@ -84,7 +82,7 @@ public enum ValidatorFactoryImpl implements ValidatorFactory {
 	@Override
 	public <T> T unwrap(Class<T> type) {
 		if(ValidatorFactoryImpl.class.equals(type)) {
-			return (T) ValidatorFactoryImpl.INSTANCE;
+			return (T) this;
 		}
 		throw new ValidationException("This API only supports unwrapping " + ValidatorFactoryImpl.class.getName() + " (and not " + type.getName() + ").");
 	}

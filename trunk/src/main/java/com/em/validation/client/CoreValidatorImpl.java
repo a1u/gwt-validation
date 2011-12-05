@@ -39,6 +39,7 @@ import javax.validation.TraversableResolver;
 import javax.validation.UnexpectedTypeException;
 import javax.validation.ValidationException;
 import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import javax.validation.metadata.BeanDescriptor;
 import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.PropertyDescriptor;
@@ -51,18 +52,17 @@ public class CoreValidatorImpl implements Validator{
 	
 	private ConstraintValidatorFactory cvFactory = null;
 	
-	//private ValidatorContext context = new ValidatorContextImpl();
-	
 	private TraversableResolver resolver = null;
 	
 	private MessageInterpolator interpolator = null;
 	
-	public CoreValidatorImpl() {		
-		this.cvFactory = ValidatorFactoryImpl.INSTANCE.getConstraintValidatorFactory();
-		
-		//this.context = ValidatorFactoryImpl.INSTANCE.usingContext();
-		this.resolver = ValidatorFactoryImpl.INSTANCE.getTraversableResolver();
-		this.interpolator = ValidatorFactoryImpl.INSTANCE.getMessageInterpolator();
+	private ValidatorFactory factory = null; 
+	
+	public CoreValidatorImpl(ValidatorFactory factory) {
+		this.factory = factory;
+		this.cvFactory = this.factory.getConstraintValidatorFactory();
+		this.resolver = this.factory.getTraversableResolver();
+		this.interpolator = this.factory.getMessageInterpolator();
 	}	
 
 	@SuppressWarnings("unchecked")
@@ -363,7 +363,7 @@ public class CoreValidatorImpl implements Validator{
 	@Override
 	public <T> T unwrap(Class<T> type) {
 		if(CoreValidatorImpl.class.equals(type)) {
-			return (T) new CoreValidatorImpl();
+			return (T) new CoreValidatorImpl(this.factory);
 		}
 		throw new ValidationException("This API only supports unwrapping " + CoreValidatorImpl.class.getName() + " (and not " + type.getName() + ").");
 	}
@@ -408,8 +408,8 @@ public class CoreValidatorImpl implements Validator{
 					} catch (Exception ex) {
 						throw new ValidationException("An exception occured while intializing constraint description.", ex);
 					}
-					//todo: fix dummy instance of constraint validator context impl
-					result = cValidator.isValid(value, new ConstraintValidatorContextImpl());
+					ConstraintValidatorContextImpl validatorContext = new ConstraintValidatorContextImpl(descriptor);
+					result = cValidator.isValid(value, validatorContext);
 
 					//when the result is false, create a constraint violation for the local element
 					if(!result) {

@@ -20,6 +20,10 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Set;
 
 import javax.validation.ConstraintValidator;
@@ -30,8 +34,6 @@ import com.em.validation.client.model.generic.ExtendedInterface;
 import com.em.validation.client.model.generic.TestClass;
 import com.em.validation.client.model.groups.GroupTestClass;
 import com.em.validation.rebind.scan.ClassScanner;
-
-import static org.junit.Assert.*;
 
 public class ClassScannerTest {
 

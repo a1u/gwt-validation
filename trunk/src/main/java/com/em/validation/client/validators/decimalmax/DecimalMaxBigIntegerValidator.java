@@ -19,6 +19,7 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import javax.validation.ConstraintValidatorContext;
@@ -30,9 +31,9 @@ public class DecimalMaxBigIntegerValidator extends DecimalMaxValidator<BigIntege
 		
 		if(value == null) return true;
 				
-		BigInteger minValue = BigInteger.valueOf((new Double(this.maxValue)).longValue());
+		BigInteger maxValue = BigInteger.valueOf(BigDecimal.valueOf(this.maxValue).longValue());
 		
-		return minValue.compareTo(value) >= 0;
+		return maxValue.compareTo(value) >= 0;
 	}
 
 }

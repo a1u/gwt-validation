@@ -24,11 +24,9 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorFactory;
 import javax.validation.ValidationException;
 
-public enum ConstraintValidatorFactoryImpl implements ConstraintValidatorFactory {
+public class ConstraintValidatorFactoryImpl implements ConstraintValidatorFactory {
 	
-	INSTANCE;
-	
-	private ConstraintValidatorFactoryImpl() {
+	public ConstraintValidatorFactoryImpl() {
 		
 	}
 

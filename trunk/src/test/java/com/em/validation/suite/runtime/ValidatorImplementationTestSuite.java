@@ -23,9 +23,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import com.em.validation.reflective.cases.validators.DateValidatorTest;
-import com.em.validation.reflective.cases.validators.NotEmptyValidatorTest;
-import com.em.validation.reflective.cases.validators.NotNullObjectValidatorTest;
+import com.em.validation.client.core.validators.DateValidatorTest;
+import com.em.validation.client.core.validators.NotEmptyValidatorTest;
+import com.em.validation.client.core.validators.NotNullObjectValidatorTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({

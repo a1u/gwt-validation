@@ -31,9 +31,9 @@ public class DecimalMaxBigDecimalValidator extends DecimalMaxValidator<BigDecima
 		
 		if(value == null) return true;
 		
-		BigDecimal minValue = new BigDecimal(this.maxValue);
+		BigDecimal maxValue = BigDecimal.valueOf(this.maxValue);
 		
-		return minValue.compareTo(value) >= 0;
+		return maxValue.compareTo(value) >= 0;
 	}
 
 }

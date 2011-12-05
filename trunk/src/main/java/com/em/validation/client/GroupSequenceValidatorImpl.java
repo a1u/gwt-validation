@@ -27,6 +27,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.GroupDefinitionException;
 import javax.validation.ValidationException;
 import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import javax.validation.metadata.BeanDescriptor;
 
 import com.em.validation.client.reflector.IReflector;
@@ -34,10 +35,14 @@ import com.em.validation.client.reflector.ReflectorFactory;
 
 public class GroupSequenceValidatorImpl implements Validator{
 	
-	private Validator coreValidator = new CoreValidatorImpl();
+	private Validator coreValidator = null;
 	
-	public GroupSequenceValidatorImpl() {		
+	private ValidatorFactory factory = null;
+	
+	public GroupSequenceValidatorImpl(ValidatorFactory factory) {
+		this.factory = factory;
 		
+		this.coreValidator = new CoreValidatorImpl(factory);
 	}
 
 	@Override
@@ -118,7 +123,7 @@ public class GroupSequenceValidatorImpl implements Validator{
 	@Override
 	public <T> T unwrap(Class<T> type) {
 		if(GroupSequenceValidatorImpl.class.equals(type)) {
-			return (T) new GroupSequenceValidatorImpl();
+			return (T) new GroupSequenceValidatorImpl(this.factory);
 		}
 		throw new ValidationException("This API only supports unwrapping " + GroupSequenceValidatorImpl.class.getName() + " (and not " + type.getName() + ").");
 	}

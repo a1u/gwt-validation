@@ -22,8 +22,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 import javax.validation.Path.Node;
 
-public class NodeImpl implements Node {
+public class NodeImpl extends PathImpl implements Node {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private String name = null;
 	
 	private Integer index = null;
@@ -43,7 +48,12 @@ public class NodeImpl implements Node {
 
 	@Override
 	public boolean isInIterable() {
-		return this.inIterable;
+		boolean inIterable = this.inIterable;
+		for(Node node : this) {
+			if(inIterable) break;
+			inIterable = inIterable || node.isInIterable();
+		}		
+		return inIterable;
 	}
 
 	@Override
@@ -104,6 +114,26 @@ public class NodeImpl implements Node {
 		
 		//none of the individual checks failed, so must be equal
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(super.toString());
+		if(this.getName() == null) {
+			builder.append("[");
+			if(this.getIndex() != null) {
+				if(this.getIndex() >= 0) {
+					builder.append(this.getIndex());
+				}
+			} else if(this.getKey() != null) {
+				builder.append(this.getKey());
+			}
+			builder.append("]");
+		} else if(this.getName() != null) {
+			builder.append(this.getName());
+		}		
+		return builder.toString();
 	}
 	
 	

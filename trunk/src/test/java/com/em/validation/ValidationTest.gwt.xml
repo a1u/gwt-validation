@@ -23,4 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 	
 	<!-- unit testing framework -->
 	<inherits name='com.google.gwt.junit.JUnit'/>
+	
+	<!-- this, at gwtc compile time, replaces reflective classes with the deferred binding points -->
+ 	<super-source path='emul' />
 </module>

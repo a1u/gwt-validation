@@ -25,6 +25,7 @@ import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.ValidationException;
 import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import javax.validation.metadata.BeanDescriptor;
 
 import com.em.validation.client.reflector.IReflector;
@@ -32,11 +33,16 @@ import com.em.validation.client.reflector.ReflectorFactory;
 
 public class ValidatorImpl implements Validator{
 	
-	private Validator coreValidator = new CoreValidatorImpl();
-	private Validator groupSequenceValidator = new GroupSequenceValidatorImpl();
+	private Validator coreValidator = null;
+	private Validator groupSequenceValidator = null;
 	
-	public ValidatorImpl() {		
-
+	private ValidatorFactory factory = null;
+	
+	public ValidatorImpl(ValidatorFactory factory) {
+		this.factory = factory;
+		
+		this.coreValidator = new CoreValidatorImpl(factory);
+		this.groupSequenceValidator = new GroupSequenceValidatorImpl(factory);
 	}
 
 	@Override
@@ -108,11 +114,11 @@ public class ValidatorImpl implements Validator{
 	@Override
 	public <T> T unwrap(Class<T> type) {
 		if(ValidatorImpl.class.equals(type)) {
-			return (T) new ValidatorImpl();
+			return (T) new ValidatorImpl(this.factory);
 		} else if (GroupSequenceValidatorImpl.class.equals(type)) {
-			return (T) new GroupSequenceValidatorImpl();
+			return (T) new GroupSequenceValidatorImpl(this.factory);
 		} else if (CoreValidatorImpl.class.equals(type)) {
-			return (T) new CoreValidatorImpl();
+			return (T) new CoreValidatorImpl(this.factory);
 		}
 		throw new ValidationException("This API does not support unwrapping " + type.getName() + ".");
 	}
