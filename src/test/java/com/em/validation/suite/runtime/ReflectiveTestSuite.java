@@ -45,5 +45,5 @@ import com.em.validation.reflective.cases.messages.RebindMessageTest;
 	ReflectorTest.class
 })
 public class ReflectiveTestSuite {
-
+	
 }

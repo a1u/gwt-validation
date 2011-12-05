@@ -23,13 +23,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import com.em.validation.suite.client.ClientTestSuite;
+import com.em.validation.suite.client.GwtTestSuite;
 import com.em.validation.suite.runtime.RuntimeTestSuite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	RuntimeTestSuite.class,
-	ClientTestSuite.class
+	GwtTestSuite.class
 })
 public class FullTestSuite {
 

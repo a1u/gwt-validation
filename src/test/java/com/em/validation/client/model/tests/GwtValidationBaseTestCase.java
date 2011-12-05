@@ -32,7 +32,6 @@ public class GwtValidationBaseTestCase extends GWTTestCase {
 	@Override
 	public String getModuleName() {
 		return null;
-		//return "com.em.validation.ValidationTest";
 	}
 
 	public IReflectorFactory getReflectorFactory() {
@@ -42,4 +41,5 @@ public class GwtValidationBaseTestCase extends GWTTestCase {
 	public ConstraintValidatorFactory getConstraintValidationFactory() {
 		return new ConstraintValidatorFactoryImpl();
 	}
+
 }

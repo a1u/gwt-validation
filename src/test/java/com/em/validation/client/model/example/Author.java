@@ -1,4 +1,4 @@
-package com.em.validation.client.model.example.jsr303.section5_6.model;
+package com.em.validation.client.model.example;
 
 /*
 Based on work in the JSR-303 for provable conformity to the standard 
@@ -22,41 +22,37 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.validation.groups.Default;
 
 import com.em.validation.client.constraints.NotEmpty;
 
-public class Book {
-	private String title;
-	private String description;
+public class Author {
+	private String firstName;
 	
-	@Valid
-	@NotNull
-	private Author author;
+	@NotEmpty(message="lastname must not be null")
+	private String lastName;
 	
-	@NotEmpty(groups={FirstLevelCheck.class, Default.class})
 	@Size(max=30)
-	public String getTitle() {
-		return title;
-	}
+	private String company;
 	
-	public void setTitle(String title) {
-	this.title = title;
+	public String getFirstName() {
+		return firstName;
 	}
-	public Author getAuthor() {
-	return author;
-	}
-	public void setAuthor(Author author) {
-	this.author = author;
-	}
-	public String getDescription() {
-	return description;
-	}
-	public void setAuthor(String description) {
-	this.description = description;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
+	public String getLastName() {
+		return lastName;
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+	
+	public String getCompany() {
+		return company;
+	}
+	public void setCompany(String company) {
+		this.company = company;
+	}
 }

@@ -20,40 +20,31 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import com.em.validation.client.core.ConstraintValidatorFactoryTest;
-import com.em.validation.client.core.ConstraintsTest;
-import com.em.validation.client.core.MetadataTest;
-import com.em.validation.client.core.ValidatorTest;
-import com.em.validation.client.core.messages.MessageTest;
-import com.em.validation.client.core.reflector.ReflectorTest;
+import com.em.validation.client.gwt.defects.GwtDefect_005;
+import com.em.validation.client.gwt.defects.GwtDefect_024;
+import com.em.validation.client.gwt.defects.GwtDefect_037;
+import com.em.validation.client.gwt.defects.GwtDefect_040;
+import com.em.validation.client.gwt.defects.GwtDefect_041;
+import com.em.validation.client.gwt.defects.GwtDefect_042;
+import com.em.validation.client.gwt.defects.GwtDefect_043;
+import com.em.validation.client.gwt.defects.GwtDefect_045;
+import com.em.validation.client.gwt.defects.GwtDefect_049;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	DefectTestSuite.class,
-	ConstraintsTest.class,
-	MetadataTest.class,
-	ExampleTestSuite.class,
-	ValidatorImplementationTestSuite.class,
-	ConstraintValidatorFactoryTest.class,
-	ValidatorTest.class,
-	MessageTest.class,
-	ReflectorTest.class
+	GwtDefect_005.class,
+	GwtDefect_024.class,
+	GwtDefect_037.class,
+	GwtDefect_040.class,
+	GwtDefect_041.class,
+	GwtDefect_042.class,
+	GwtDefect_043.class,
+	GwtDefect_045.class,
+	GwtDefect_049.class
 })
-public class ClientTestSuite {
+public class GwtDefectTestSuite {
 
-    @BeforeClass
-    public static void setUp() {
-
-    }
-
-    @AfterClass
-    public static void tearDown() {
-        
-    }
-	
 }

@@ -1,4 +1,4 @@
-package com.em.validation.client.core.example.jsr303.section5_6;
+package com.em.validation.client.core.example;
 
 /*
 Based on work in the JSR-303 for provable conformity to the standard
@@ -33,10 +33,10 @@ import org.junit.Test;
 
 import com.em.validation.client.constraints.NotEmpty;
 import com.em.validation.client.metadata.factory.DescriptorFactory;
-import com.em.validation.client.model.example.jsr303.section5_6.model.Book;
+import com.em.validation.client.model.example.Book;
 import com.em.validation.client.model.tests.GwtValidationBaseTestCase;
 
-public class Section5_6Test extends GwtValidationBaseTestCase {
+public class Jsr303_Section_5_Part_6_Test extends GwtValidationBaseTestCase {
 
 	@Test
 	public void testConstraintMetadataSectionTest() {
