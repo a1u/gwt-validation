@@ -23,28 +23,27 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import com.em.validation.client.core.defects.Defect_005;
-import com.em.validation.client.core.defects.Defect_024;
-import com.em.validation.client.core.defects.Defect_037;
-import com.em.validation.client.core.defects.Defect_040;
-import com.em.validation.client.core.defects.Defect_041;
-import com.em.validation.client.core.defects.Defect_042;
-import com.em.validation.client.core.defects.Defect_043;
-import com.em.validation.client.core.defects.Defect_045;
-import com.em.validation.client.core.defects.Defect_049;
+import com.em.validation.client.gwt.GwtConstraintValidatorFactoryTest;
+import com.em.validation.client.gwt.GwtConstraintsTest;
+import com.em.validation.client.gwt.GwtMetadataTest;
+import com.em.validation.client.gwt.GwtValidatorTest;
+import com.em.validation.client.gwt.messages.GwtMessageTest;
+import com.em.validation.client.gwt.reflector.GwtReflectorTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	Defect_005.class,
-	Defect_024.class,
-	Defect_037.class,
-	Defect_040.class,
-	Defect_041.class,
-	Defect_042.class,
-	Defect_043.class,
-	Defect_045.class,
-	Defect_049.class
+	//gwt
+	GwtDefectTestSuite.class,
+	GwtConstraintsTest.class,
+	GwtMetadataTest.class,
+	GwtConstraintValidatorFactoryTest.class,
+	GwtValidatorTest.class,
+	GwtMessageTest.class,
+	GwtReflectorTest.class,
+	//suites
+	GwtExampleTestSuite.class,
+	GwtValidatorImplementationTestSuite.class
 })
-public class DefectTestSuite {
-
+public class GwtTestSuite {
+	
 }

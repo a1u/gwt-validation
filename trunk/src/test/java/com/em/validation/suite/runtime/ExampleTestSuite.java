@@ -23,11 +23,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import com.em.validation.client.core.example.jsr303.section5_6.Section5_6Test;
+import com.em.validation.client.core.example.Jsr303_Section_5_Part_6_Test;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	Section5_6Test.class
+	Jsr303_Section_5_Part_6_Test.class
 })
 public class ExampleTestSuite {
 

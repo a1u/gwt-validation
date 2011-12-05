@@ -23,16 +23,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import com.em.validation.client.core.validators.DateValidatorTest;
-import com.em.validation.client.core.validators.NotEmptyValidatorTest;
-import com.em.validation.client.core.validators.NotNullObjectValidatorTest;
+import com.em.validation.client.gwt.validators.GwtDateValidatorTest;
+import com.em.validation.client.gwt.validators.GwtNotEmptyValidatorTest;
+import com.em.validation.client.gwt.validators.GwtNotNullObjectValidatorTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	NotNullObjectValidatorTest.class,
-	NotEmptyValidatorTest.class,
-	DateValidatorTest.class
+	GwtNotNullObjectValidatorTest.class,
+	GwtNotEmptyValidatorTest.class,
+	GwtDateValidatorTest.class
 })
-public class ValidatorImplementationTestSuite {
+public class GwtValidatorImplementationTestSuite {
 
 }
