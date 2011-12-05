@@ -1,4 +1,4 @@
-package com.em.validation.suite.client;
+package com.em.validation.client.core.defects;
 
 /*
 GWT Validation Framework - A JSR-303 validation framework for GWT
@@ -20,19 +20,24 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import org.junit.Assert;
+import org.junit.Test;
 
-import com.em.validation.client.core.validators.DateValidatorTest;
-import com.em.validation.client.core.validators.NotEmptyValidatorTest;
-import com.em.validation.client.core.validators.NotNullObjectValidatorTest;
+import com.em.validation.client.model.defects.defect_024.TestPattern;
+import com.em.validation.client.model.tests.GwtValidationBaseTestCase;
+import com.em.validation.client.reflector.IReflector;
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
-	NotNullObjectValidatorTest.class,
-	NotEmptyValidatorTest.class,
-	DateValidatorTest.class
-})
-public class ValidatorImplementationTestSuite {
+public class Defect_024 extends GwtValidationBaseTestCase {
+
+	@Test
+	public void testPatternEscapes() {
+		
+		//get pattern reflector
+		IReflector testPatternReflector = this.getReflectorFactory().getReflector(TestPattern.class);
+		
+		//check out pattern 
+		Assert.assertNotNull(testPatternReflector);
+		
+	}
 
 }

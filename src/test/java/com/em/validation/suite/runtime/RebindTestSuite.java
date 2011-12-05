@@ -31,7 +31,7 @@ import com.em.validation.rebind.ValidatorResolverTest;
 @Suite.SuiteClasses({
 	ClassScannerTest.class,
 	OverrideProxyTest.class,
-	ValidatorResolverTest.class
+	ValidatorResolverTest.class,
 })
 public class RebindTestSuite {
 

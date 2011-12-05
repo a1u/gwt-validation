@@ -27,24 +27,30 @@ import javax.validation.Validator;
 
 public class ValidatorContextImpl implements javax.validation.ValidatorContext {
 
+	private Validator validator = null;
+	
+	public ValidatorContextImpl(Validator validator) {
+		this.validator = validator;
+	}
+	
 	@Override
 	public javax.validation.ValidatorContext messageInterpolator(MessageInterpolator messageInterpolator) {
-		return null;
+		return this;
 	}
 
 	@Override
 	public javax.validation.ValidatorContext traversableResolver(TraversableResolver traversableResolver) {
-		return null;
+		return this;
 	}
 
 	@Override
 	public javax.validation.ValidatorContext constraintValidatorFactory(ConstraintValidatorFactory factory) {
-		return null;
+		return this;
 	}
 
 	@Override
 	public Validator getValidator() {
-		return ValidatorFactoryImpl.INSTANCE.getValidator();
+		return this.validator;
 	}
 
 }

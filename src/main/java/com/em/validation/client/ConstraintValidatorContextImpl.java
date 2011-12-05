@@ -20,26 +20,46 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+import javax.validation.ConstraintDefinitionException;
 import javax.validation.ConstraintValidatorContext;
+import javax.validation.metadata.ConstraintDescriptor;
 
 public class ConstraintValidatorContextImpl implements ConstraintValidatorContext {
 
+	private ConstraintDescriptor<?> descriptor = null;
+	
+	private boolean disableDefault = false;
+	
+	public ConstraintValidatorContextImpl(ConstraintDescriptor<?> descriptor) {
+		this.descriptor = descriptor;
+	}
+	
 	@Override
 	public void disableDefaultConstraintViolation() {
-		// TODO Auto-generated method stub
-
+		this.disableDefault = true;
 	}
 
 	@Override
 	public String getDefaultConstraintMessageTemplate() {
-		// TODO Auto-generated method stub
-		return null;
+		String templateString = "";
+		if(this.disableDefault) {
+			
+		} else {
+			if(this.descriptor.getAttributes().containsKey("message")) {
+				templateString = (String)descriptor.getAttributes().get("message");
+			} else {
+				throw new ConstraintDefinitionException("An @Constraint annotation must have a message defined.");
+			}
+		}		
+		return templateString;
 	}
 
 	@Override
 	public ConstraintViolationBuilder buildConstraintViolationWithTemplate(String messageTemplate) {
-		// TODO Auto-generated method stub
-		return null;
+		ConstraintViolationBuilderImpl builder = new ConstraintViolationBuilderImpl();
+				
+		
+		return builder;
 	}
 
 }

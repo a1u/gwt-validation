@@ -27,65 +27,19 @@ import com.em.validation.client.reflector.IReflectorFactory;
 import com.em.validation.client.reflector.ReflectorFactory;
 import com.google.gwt.junit.client.GWTTestCase;
 
-public class GwtValidationBaseTestCase extends GWTTestCase implements ITestCase{
+public class GwtValidationBaseTestCase extends GWTTestCase {
 	
 	@Override
 	public String getModuleName() {
-		return "com.em.validation.ValidationTest";
+		return null;
+		//return "com.em.validation.ValidationTest";
 	}
 
-	@Override
 	public IReflectorFactory getReflectorFactory() {
 		return ReflectorFactory.INSTANCE;
 	}
 
-	@Override
 	public ConstraintValidatorFactory getConstraintValidationFactory() {
-		return ConstraintValidatorFactoryImpl.INSTANCE;
-	}
-
-	@Override
-	public void localAssertEquals(Object expected, Object actual) {
-		GWTTestCase.assertEquals(expected, actual);
-	}
-
-	@Override
-	public void localAssertEquals(String message, Object expected, Object actual) {
-		GWTTestCase.assertEquals(message, expected, actual);		
-	}
-
-	@Override
-	public void localAssertTrue(boolean actual) {
-		GWTTestCase.assertTrue(actual);
-	}
-
-	@Override
-	public void localAssertTrue(String message, boolean actual) {
-		GWTTestCase.assertTrue(message,actual);	
-	}
-
-	@Override
-	public void localAssertFalse(boolean actual) {
-		GWTTestCase.assertFalse(actual); 
-	}
-
-	@Override
-	public void localAssertFalse(String message, boolean actual) {
-		GWTTestCase.assertFalse(message, actual);		
-	}
-	
-	@Override
-	public void localAssertNotNull(Object value) {
-		GWTTestCase.assertNotNull(value); 
-	}
-
-	@Override
-	public void localAssertNotNull(String message, Object value) {
-		GWTTestCase.assertNotNull(message, value);		
-	}
-	
-	@Override
-	public void localFail(String message) {
-		GWTTestCase.fail(message);
+		return new ConstraintValidatorFactoryImpl();
 	}
 }

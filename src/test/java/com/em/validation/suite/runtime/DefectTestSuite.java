@@ -23,15 +23,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import com.em.validation.reflective.cases.defects.Defect_005;
-import com.em.validation.reflective.cases.defects.Defect_024;
-import com.em.validation.reflective.cases.defects.Defect_037;
-import com.em.validation.reflective.cases.defects.Defect_040;
-import com.em.validation.reflective.cases.defects.Defect_041;
-import com.em.validation.reflective.cases.defects.Defect_042;
-import com.em.validation.reflective.cases.defects.Defect_043;
-import com.em.validation.reflective.cases.defects.Defect_045;
-import com.em.validation.reflective.cases.defects.Defect_049;
+import com.em.validation.client.core.defects.Defect_005;
+import com.em.validation.client.core.defects.Defect_024;
+import com.em.validation.client.core.defects.Defect_037;
+import com.em.validation.client.core.defects.Defect_040;
+import com.em.validation.client.core.defects.Defect_041;
+import com.em.validation.client.core.defects.Defect_042;
+import com.em.validation.client.core.defects.Defect_043;
+import com.em.validation.client.core.defects.Defect_045;
+import com.em.validation.client.core.defects.Defect_049;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({

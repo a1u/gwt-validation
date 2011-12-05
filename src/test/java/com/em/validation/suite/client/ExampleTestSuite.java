@@ -20,20 +20,15 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
-import com.em.validation.client.cases.example.jsr303.section5_6.Section5_6Test;
-import com.google.gwt.junit.tools.GWTTestSuite;
+import com.em.validation.client.core.example.jsr303.section5_6.Section5_6Test;
 
-public class ExampleTestSuite extends GWTTestSuite {
+@RunWith(Suite.class)
+@Suite.SuiteClasses({
+	Section5_6Test.class
+})
+public class ExampleTestSuite {
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite("GWT JSR-303 Example Test Suite");
-		
-		suite.addTestSuite(Section5_6Test.class);
-		
-		return suite;
-	}
-	
 }

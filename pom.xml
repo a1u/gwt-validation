@@ -138,6 +138,9 @@
 					<excludes>
 						<excludes>**/emul/**</excludes>
 					</excludes>
+					<testExcludes>
+						<excludes>**/emul/**</excludes>
+					</testExcludes>
 				</configuration>
 			</plugin>
 			<plugin>

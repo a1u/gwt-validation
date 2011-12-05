@@ -123,21 +123,11 @@ public class ConstraintViolationImpl<T> implements ConstraintViolation<T>, Seria
 	}
 
 	@Override
-	public String toString() {
-		if(this.getConstraintDescriptor() != null && this.getConstraintDescriptor().getAnnotation() != null) {
-			return this.getConstraintDescriptor().getAnnotation().annotationType().getClass().getName();	
-		} 
-		return super.toString();		
-	}
-
-	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
 				+ ((invalidValue == null) ? 0 : invalidValue.hashCode());
-		result = prime * result
-				+ ((leafBean == null) ? 0 : leafBean.hashCode());
 		result = prime * result + ((message == null) ? 0 : message.hashCode());
 		result = prime * result + ((path == null) ? 0 : path.hashCode());
 		result = prime * result
@@ -164,13 +154,6 @@ public class ConstraintViolationImpl<T> implements ConstraintViolation<T>, Seria
 				return false;
 			}
 		} else if (!invalidValue.equals(other.invalidValue)) {
-			return false;
-		}
-		if (leafBean == null) {
-			if (other.leafBean != null) {
-				return false;
-			}
-		} else if (!leafBean.equals(other.leafBean)) {
 			return false;
 		}
 		if (message == null) {
@@ -202,6 +185,30 @@ public class ConstraintViolationImpl<T> implements ConstraintViolation<T>, Seria
 			return false;
 		}
 		return true;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.getClass().getName());
+		builder.append(" = [");
+		if(this.getConstraintDescriptor() != null && this.getConstraintDescriptor().getAnnotation() != null) {
+			builder.append(this.getConstraintDescriptor().getAnnotation().annotationType().getName());	
+		} else {
+			builder.append(super.toString());
+		}
+		if(this.path != null && this.path.toString() != null && !this.path.toString().isEmpty()) {
+			builder.append(", path = ");
+			builder.append(this.path.toString());
+		}
+		if(this.invalidValue != null) {
+			builder.append(", value = ");
+			builder.append(this.invalidValue.toString());
+		} else {
+			builder.append(", value = null");
+		}
+		builder.append("]");
+		return builder.toString();		
 	}
 	
 }
