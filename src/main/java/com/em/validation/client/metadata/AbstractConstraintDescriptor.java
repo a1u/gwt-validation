@@ -167,4 +167,9 @@ public abstract class AbstractConstraintDescriptor<T extends Annotation> impleme
 			return false;
 		return true;
 	}	
+	
+	@Override 
+	public String toString() {
+		return this.getAnnotation().toString();
+	}
 }

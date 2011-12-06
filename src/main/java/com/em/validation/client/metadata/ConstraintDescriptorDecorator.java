@@ -93,4 +93,8 @@ public class ConstraintDescriptorDecorator<T extends Annotation> implements Cons
 		return this.descriptor.equals(obj);
 	}
 	
+	@Override
+	public String toString() {
+		return this.descriptor.toString();
+	}
 }

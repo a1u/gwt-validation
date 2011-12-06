@@ -24,7 +24,7 @@
     </packages>
      -->
     <classes>
-      <!-- 
+
       <class name="org.hibernate.jsr303.tck.tests.bootstrap.ConfigurationTest"/>
       <class name="org.hibernate.jsr303.tck.tests.bootstrap.CustomMessageInterpolatorTest$1"/>
       <class name="org.hibernate.jsr303.tck.tests.bootstrap.CustomMessageInterpolatorTest$DummyMessageInterpolator"/>
@@ -53,7 +53,7 @@
       <class name="org.hibernate.jsr303.tck.tests.constraints.application.ValidationRequirementTest"/>
       <class name="org.hibernate.jsr303.tck.tests.constraints.application.Visibility"/>
       <class name="org.hibernate.jsr303.tck.tests.constraints.application.Woman"/>
-		 -->
+
 	  <!-- 
       <class name="org.hibernate.jsr303.tck.tests.constraints.builtinconstraints.BuiltinConstraintsTest$AssertFalseDummyEntity"/>
       <class name="org.hibernate.jsr303.tck.tests.constraints.builtinconstraints.BuiltinConstraintsTest$AssertTrueDummyEntity"/>
@@ -70,12 +70,14 @@
       <class name="org.hibernate.jsr303.tck.tests.constraints.builtinconstraints.BuiltinConstraintsTest$SizeDummyEntity"/>
       -->
       
-      <class name="org.hibernate.jsr303.tck.tests.constraints.builtinconstraints.BuiltinConstraintsTest"/> 
-
       <!-- 
+      <class name="org.hibernate.jsr303.tck.tests.constraints.builtinconstraints.BuiltinConstraintsTest"/>
+       --> 
+      
       <class name="org.hibernate.jsr303.tck.tests.constraints.builtinconstraints.BuiltinValidatorOverrideTest$DummyEntity"/>
       <class name="org.hibernate.jsr303.tck.tests.constraints.builtinconstraints.BuiltinValidatorOverrideTest"/>
       <class name="org.hibernate.jsr303.tck.tests.constraints.builtinconstraints.InvertedNotNullValidator"/>
+      
       <class name="org.hibernate.jsr303.tck.tests.constraints.constraintcomposition.Address"/>
       <class name="org.hibernate.jsr303.tck.tests.constraints.constraintcomposition.ConstraintCompositionTest$DummyEntityWithZipCode"/>
       <class name="org.hibernate.jsr303.tck.tests.constraints.constraintcomposition.ConstraintCompositionTest"/>
@@ -356,7 +358,7 @@
       <class name="org.hibernate.jsr303.tck.tests.validatorfactory.MyConstraintValidator"/>
       <class name="org.hibernate.jsr303.tck.tests.validatorfactory.MySecondConstraint"/>
       <class name="org.hibernate.jsr303.tck.tests.validatorfactory.MySecondConstraintValidator"/>
-       -->
+
       <!-- 
       <class name="org.hibernate.jsr303.tck.tests.xmlconfiguration.ConfigurationDefinedConstraintValidatorFactoryResolver"/>
       <class name="org.hibernate.jsr303.tck.tests.xmlconfiguration.ConfigurationDefinedMessageInterpolator"/>
