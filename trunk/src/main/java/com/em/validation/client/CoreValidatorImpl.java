@@ -409,7 +409,13 @@ public class CoreValidatorImpl implements Validator{
 						throw new ValidationException("An exception occured while intializing constraint description.", ex);
 					}
 					ConstraintValidatorContextImpl validatorContext = new ConstraintValidatorContextImpl(descriptor);
-					result = cValidator.isValid(value, validatorContext);
+					try {
+						result = cValidator.isValid(value, validatorContext);
+					} catch (ClassCastException ccex) {
+						throw new ValidationException("The value of type " + value.getClass().getName() + " is not compatible with the validator " + cValidator.getClass().getName(), ccex);
+					} catch(Exception ex) {
+						throw new ValidationException("An error occured while using the validator " + cValidator.getClass().getName(), ex);
+					}
 
 					//when the result is false, create a constraint violation for the local element
 					if(!result) {

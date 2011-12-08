@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,7 +42,7 @@ import javax.validation.metadata.ConstraintDescriptor;
  *
  * @param <T>
  */
-public abstract class AbstractConstraintDescriptor<T extends Annotation> implements ConstraintDescriptor<T> {
+public class ConstraintDescriptorImpl<T extends Annotation> implements ConstraintDescriptor<T> {
 
 	/**
 	 * The annotation that will be set by the implementing class
@@ -68,9 +69,15 @@ public abstract class AbstractConstraintDescriptor<T extends Annotation> impleme
 	protected Map<String,Object> propertyMap = new HashMap<String,Object>();
 	
 	/**
+	 * The list of classes that implement validations for this constraint descriptor
+	 * 
+	 */
+	protected List<Class<? extends ConstraintValidator<T, ?>>> validatedBy = new ArrayList<Class<? extends ConstraintValidator<T, ?>>>();
+	
+	/**
 	 * Construct a new abstract constraint descriptor
 	 */
-	public AbstractConstraintDescriptor() {
+	public ConstraintDescriptorImpl() {
 		init();
 	}
 	
@@ -78,7 +85,24 @@ public abstract class AbstractConstraintDescriptor<T extends Annotation> impleme
 	 * Override for construction tasks.  On the instances used by the generated code the constructor cannot be used but the
 	 * init can be used to make the required map objects.
 	 */
-	public abstract void init();
+	public void init() {
+		
+	}
+	
+	/**
+	 * Use this for reflective construction.  This is because we need a way to inject reflectively derrived values WITHOUT
+	 * compromising the serialization mechanism.
+	 * 
+	 * @param reportAsSingleViolation
+	 * @param propertyMap
+	 * @param validatedBy
+	 */
+	public void init(T annotation, boolean reportAsSingleViolation, Map<String,Object> propertyMap, List<Class<? extends ConstraintValidator<T, ?>>> validatedBy) {
+		this.annotation = annotation;
+		this.reportAsSingleViolation = reportAsSingleViolation;
+		this.propertyMap = propertyMap;
+		this.validatedBy = validatedBy;
+	}
 
 	@Override
 	public T getAnnotation() {
@@ -124,12 +148,6 @@ public abstract class AbstractConstraintDescriptor<T extends Annotation> impleme
 	}
 
 	@Override
-	public List<Class<? extends ConstraintValidator<T, ?>>> getConstraintValidatorClasses() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -171,5 +189,10 @@ public abstract class AbstractConstraintDescriptor<T extends Annotation> impleme
 	@Override 
 	public String toString() {
 		return this.getAnnotation().toString();
+	}
+
+	@Override
+	public List<Class<? extends ConstraintValidator<T, ?>>> getConstraintValidatorClasses() {
+		return new ArrayList<Class<? extends ConstraintValidator<T,?>>>(this.validatedBy);
 	}
 }
