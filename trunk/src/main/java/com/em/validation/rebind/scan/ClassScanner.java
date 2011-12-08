@@ -82,7 +82,7 @@ public enum ClassScanner {
 		
 		//this little snippet goes through the classpath urls and ommits jars that are on the forbidden list.
 		//this is intended to remove jars from the classpath that we know are not ones that will contain patterns
-		Set<URL> classPathUrls = ClasspathHelper.forJavaClassPath();
+		Set<URL> classPathUrls = ClasspathHelper.forClassLoader(Thread.currentThread().getContextClassLoader());
 		Set<URL> useableUrls = new HashSet<URL>();
 		for(URL url : classPathUrls) {
 			boolean use = true;
