@@ -72,6 +72,9 @@ public enum ValidatorResolver {
 		
 		//check for the type of the initialize method
 		for(Class<? extends ConstraintValidator<?, ?>> validator : validators) {
+			//abstract classes don't help either, they can't be initialized and so... don't work for us
+			if(Modifier.isAbstract(validator.getModifiers())) continue;
+			
 			//check initialize method to see if the annotation type matches the constraint annotation's type
 			try {
 				Method initialize = validator.getMethod("initialize", new Class<?>[]{annotationType});
@@ -94,7 +97,7 @@ public enum ValidatorResolver {
 			try {
 				for(Method method : validator.getDeclaredMethods()) { 
 					if("isValid".equals(method.getName()) && method.getParameterTypes().length == 2) {
-						Class<?> parameterType = method.getParameterTypes()[0];						
+						Class<?> parameterType = method.getParameterTypes()[0];
 						
 						//exact equality makes a candidate a result
 						if(parameterType.equals(elementType)) {
@@ -104,7 +107,7 @@ public enum ValidatorResolver {
 						//the elementType could be used to call the method and that this candidate is a result
 						if(parameterType.isAssignableFrom(elementType)) {
 							results.add(validator);
-						} 			
+						} 
 
 						//the first match to isValid is the one we should use
 						break;
@@ -116,7 +119,7 @@ public enum ValidatorResolver {
 			}
 			
 		}		
-
+		
 		//return
 		return results;
 	}

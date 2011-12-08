@@ -32,7 +32,7 @@ import java.util.Set;
 import javax.validation.ConstraintValidator;
 import javax.validation.Payload;
 import javax.validation.metadata.ConstraintDescriptor;
-import com.em.validation.client.metadata.AbstractConstraintDescriptor;
+import com.em.validation.client.metadata.ConstraintDescriptorImpl;
 import com.em.validation.client.generated.factory.AnnotationInstanceFactory;
 
 //the target constraint annotation
@@ -42,10 +42,10 @@ public enum ${generatedName} implements ConstraintDescriptor<${targetAnnotation}
 
 	INSTANCE;
 
-	private AbstractConstraintDescriptor<${targetAnnotation}> instance = null;
+	private ConstraintDescriptorImpl<${targetAnnotation}> instance = null;
 	
 	private ${generatedName}() {
-		this.instance = new AbstractConstraintDescriptor<${targetAnnotation}>() {
+		this.instance = new ConstraintDescriptorImpl<${targetAnnotation}>() {
 			public void init() {
 				//create underlying annotation
 				this.annotation = AnnotationInstanceFactory.INSTANCE.getAnnotationFactory(${targetAnnotation}.class).getAnnotation("${hash(signature)}");
@@ -62,14 +62,11 @@ public enum ${generatedName} implements ConstraintDescriptor<${targetAnnotation}
 				<#if reportAsSingleViolation != "null">
 				this.reportAsSingleViolation = ${reportAsSingleViolation};
 				</#if>
-			}
-			
-			public List<Class<? extends ConstraintValidator<${targetAnnotation}, ?>>> getConstraintValidatorClasses() {
-				List<Class<? extends ConstraintValidator<${targetAnnotation}, ?>>> validatedBy = new ArrayList<Class<? extends ConstraintValidator<${targetAnnotation}, ?>>>();
+
+				//add classes that validate this constraint				
 				<#list validatedBy as validator>
 				validatedBy.add(${validator}.class);
-				</#list>	
-				return validatedBy;
+				</#list>				
 			}
 		};
 	} 
