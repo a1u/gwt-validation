@@ -15,7 +15,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.googlecode.gwt-validation</groupId>
 	<artifactId>gwt-validation</artifactId>
-	<version>2.0-BETA-SNAPSHOT</version>
+	<version>2.0-SNAPSHOT</version>
 	<name>gwt-validation</name>
 	<description>gwt validation framework based on JSR-303</description>
 	<url>http://code.google.com/p/gwt-validation/</url>
@@ -52,6 +52,9 @@
 		</contributor>
 		<contributor>
 			<name>Niels aka 'nsoeffers'</name>
+		</contributor>
+		<contributor>
+			<name>rodrigue.bouleau</name>
 		</contributor>
 	</contributors>
 
@@ -192,7 +195,6 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.2.2</version>
 				<executions>
 					<execution>
 						<id>make-assembly</id>
