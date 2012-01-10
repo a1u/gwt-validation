@@ -105,7 +105,9 @@ public enum ClassScanner {
 														new MethodAnnotationsScanner(), 
 														new SubTypesScanner()
 										)
-										.useParallelExecutor()
+										//see gwt-validation issue #64 (http://code.google.com/p/gwt-validation/issues/detail?id=64)
+										//see reflections issue #92 (http://code.google.com/p/reflections/issues/detail?id=92)
+										//.useParallelExecutor()
 										;
 			
 		this.reflections = new Reflections(builder);

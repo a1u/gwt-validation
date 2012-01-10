@@ -37,9 +37,15 @@ public class MessageTest extends GwtValidationBaseTestCase {
 		IMessageResolver resolver = MessageResolver.INSTANCE;
 
 		String message = resolver.getLocalizedMessageTemplate("{javax.validation.constraints.AssertFalse.message}");
-
-		Assert.assertEquals("I AM FALSE", message);
-
+		
+		//fix for issue #63 based on patch provided by rodrigue.bouleau (http://code.google.com/p/gwt-validation/issues/detail?id=63)
+		if (!message.equalsIgnoreCase("I AM FALSE") 
+			&& !message.equalsIgnoreCase("NON MERDE!") 
+			&& !message.equalsIgnoreCase("NON EL NINO!"))
+		{
+			Assert.fail("The message has not been translated");
+		}
+		
 		message = resolver.getLocalizedMessageTemplate("NOT A MESSAGE");
 
 		Assert.assertEquals("NOT A MESSAGE", message);
