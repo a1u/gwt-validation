@@ -27,10 +27,13 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.concurrent.Semaphore;
 
+import javax.servlet.ServletContext;
 import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;
 import javax.validation.Valid;
+import javax.validation.ValidationException;
 
 import org.reflections.Reflections;
 import org.reflections.scanners.FieldAnnotationsScanner;
@@ -53,6 +56,12 @@ public enum ClassScanner {
 	INSTANCE;
 	
 	private Reflections reflections = null;
+
+	//the base urls to scan from
+	private Set<URL> baseClassPathUrls = new HashSet<URL>();
+	
+	//lock on scanning/reading (1 at a time, fair)
+	private Semaphore scanningLockSempahore = new Semaphore(1,true);
 
 	/**
 	 * List of jar files that we do not want to include on the classpath because they cannot/will not contain any bits of the 
@@ -79,10 +88,45 @@ public enum ClassScanner {
 	};
 	
 	private ClassScanner() {
+		//base classpaths
+		this.baseClassPathUrls.addAll(ClasspathHelper.forClassLoader(Thread.currentThread().getContextClassLoader()));
+		this.baseClassPathUrls.addAll(ClasspathHelper.forJavaClassPath());
+		
+		//do scan
+		scan();
+	}
+	
+	public void updateWithServletContext(ServletContext context) {
+		//acquire scan lock
+		try {
+			this.scanningLockSempahore.acquire();
+		} catch (InterruptedException e) {
+			throw new ValidationException("An interpution occured while updating with server context.");
+		}
+		
+		//add servlet context to classpath
+		this.baseClassPathUrls.add(ClasspathHelper.forWebInfClasses(context));
+		this.baseClassPathUrls.addAll(ClasspathHelper.forWebInfLib(context));
+		
+		//release scan lock
+		this.scanningLockSempahore.release();
+		
+		scan();
+	}
+	
+	private void scan() {
+		//acquire scan lock
+		try {
+			this.scanningLockSempahore.acquire();
+		} catch (InterruptedException e) {
+			throw new ValidationException("An interpution occured while scanning for resources.");
+		}
+		
+		//create classpath holder
+		Set<URL> classPathUrls = this.baseClassPathUrls;
 		
 		//this little snippet goes through the classpath urls and ommits jars that are on the forbidden list.
 		//this is intended to remove jars from the classpath that we know are not ones that will contain patterns
-		Set<URL> classPathUrls = ClasspathHelper.forClassLoader(Thread.currentThread().getContextClassLoader());
 		Set<URL> useableUrls = new HashSet<URL>();
 		for(URL url : classPathUrls) {
 			boolean use = true;
@@ -111,9 +155,19 @@ public enum ClassScanner {
 										;
 			
 		this.reflections = new Reflections(builder);
+		
+		//release scan lock
+		this.scanningLockSempahore.release();
 	}
 	
 	public Set<Class<?>> getConstrainedClasses(String excludedPattern) {
+		//acquire scan lock
+		try {
+			this.scanningLockSempahore.acquire();
+		} catch (InterruptedException e) {
+			throw new ValidationException("An interpution occured while getting constrained classes.");
+		}
+		
 		//create empty result set
 		Set<Class<?>> result = new LinkedHashSet<Class<?>>();
 		
@@ -155,6 +209,9 @@ public enum ClassScanner {
 				}
 			}
 		}
+		
+		//release scan lock
+		this.scanningLockSempahore.release();
 	
 		return result;
 	}
@@ -165,6 +222,13 @@ public enum ClassScanner {
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Set<Class<? extends ConstraintValidator<?, ?>>> getConstraintValidatorClasses(String excludedPattern) {
+		//acquire scan lock
+		try {
+			this.scanningLockSempahore.acquire();
+		} catch (InterruptedException e) {
+			throw new ValidationException("An interpution occured while getting constraint valdiator classes.");
+		}
+		
 		//create empty result set
 		Set<Class<? extends ConstraintValidator<?, ?>>> result = new LinkedHashSet<Class<? extends ConstraintValidator<?,?>>>();
 		
@@ -176,6 +240,9 @@ public enum ClassScanner {
 			if(excludedPattern != null && validatorClass.getName().matches(excludedPattern)) continue;			
 			result.add((Class<? extends ConstraintValidator<?, ?>>) validatorClass);			
 		}
+		
+		//release scan lock
+		this.scanningLockSempahore.release();
 		
 		return result;
 	}
@@ -193,14 +260,26 @@ public enum ClassScanner {
 	 * @return
 	 */
 	public Set<Class<?>> getUncoveredImplementors() {
+
+		
 		Set<Class<?>> uncovered = new LinkedHashSet<Class<?>>();
 		Set<Class<?>> constrainedClasses = this.getConstrainedClasses();
+		
+		//acquire scan lock
+		try {
+			this.scanningLockSempahore.acquire();
+		} catch (InterruptedException e) {
+			throw new ValidationException("An interpution occured while getting uncovered implementors.");
+		}
 		
 		for(Class<?> constrained : constrainedClasses) {
 			uncovered.addAll(this.reflections.getSubTypesOf(constrained));			
 		}
 		
 		uncovered.removeAll(constrainedClasses);
+		
+		//release scan lock
+		this.scanningLockSempahore.release();
 
 		return uncovered;
 	}
