@@ -271,7 +271,8 @@ public class CoreValidatorImpl implements Validator{
 							if(cascadable) {
 								Set<ConstraintViolation<Object>> cascadeViolations = new LinkedHashSet<ConstraintViolation<Object>>();
 								cascadeViolations.addAll(this.validate(validationCache, subValue, groups));	
-								violations.addAll(this.convertViolations(cascadeViolations, valueMap, beanType, path, index, null));
+								//changed in accordance with dfuerniss' suggestion for issue #65
+								violations.addAll(this.convertViolations(cascadeViolations, value, beanType, path, index, null));
 							}						
 							index++;
 						}
@@ -292,7 +293,8 @@ public class CoreValidatorImpl implements Validator{
 							if(cascadable) {
 								Set<ConstraintViolation<Object>> cascadeViolations = new LinkedHashSet<ConstraintViolation<Object>>();
 								cascadeViolations.addAll(this.validate(validationCache, subValue, groups));	
-								violations.addAll(this.convertViolations(cascadeViolations, valueMap, beanType, path, index, null));
+								//changed in accordance with dfuerniss' suggestion for issue #65
+								violations.addAll(this.convertViolations(cascadeViolations, value, beanType, path, index, null));
 							}
 							
 							//sets have no index
@@ -314,7 +316,8 @@ public class CoreValidatorImpl implements Validator{
 								Object subValue = ((Map)value).get(key);
 								Set<ConstraintViolation<Object>> cascadeViolations = new LinkedHashSet<ConstraintViolation<Object>>();	
 								cascadeViolations.addAll(this.validate(validationCache, subValue, groups));	
-								violations.addAll(this.convertViolations(cascadeViolations, valueMap, beanType, path, null, key));
+								//changed in accordance with dfuerniss' suggestion for issue #65
+								violations.addAll(this.convertViolations(cascadeViolations, value, beanType, path, null, key));
 							}
 						}						
 					//perform validation on the object itself
@@ -330,7 +333,8 @@ public class CoreValidatorImpl implements Validator{
 						if(cascadable) {
 							Set<ConstraintViolation<Object>> cascadeViolations = new LinkedHashSet<ConstraintViolation<Object>>();
 							cascadeViolations.addAll(this.validate(validationCache, value, groups));	
-							violations.addAll(this.convertViolations(cascadeViolations, valueMap, beanType, path, null, null));
+							//changed in accordance with dfuerniss' suggestion for issue #65
+							violations.addAll(this.convertViolations(cascadeViolations, value, beanType, path, null, null));
 						}
 					}
 					
