@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+GWT Validation Framework - A JSR-303 validation framework for GWT
+
+(c) gwt-validation contributors (http://code.google.com/p/gwt-validation/)
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+-->
+<module rename-to='gwt_validation_sample'>
+  <!-- Inherit the core Web Toolkit stuff.                        -->
+  <inherits name='com.google.gwt.user.User'/>
+
+  <!-- Inherit the default GWT style sheet.  You can change       -->
+  <!-- the theme of your GWT application by uncommenting          -->
+  <!-- any one of the following lines.                            -->
+  <inherits name='com.google.gwt.user.theme.clean.Clean'/>
+  <!-- <inherits name='com.google.gwt.user.theme.standard.Standard'/> -->
+  <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
+  <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
+
+  <!-- Other module inherits                                      -->
+  <inherits name='com.em.validation.Validation' />
+  <inherits name='com.google.gwt.editor.Editor' />
+  <inherits name='com.google.gwt.uibinder.UiBinder' />
+
+  <!-- Specify the app entry point class.                         -->
+  <entry-point class='com.em.validation.sample.client.Gwt_validation_sample'/>
+ 
+  <!-- English language, independent of country -->
+  <extend-property name="locale" values="en"/>
+
+  <!-- French language, independent of country -->
+  <extend-property name="locale" values="fr"/>
+  
+  <!-- Spanish language, independent of country -->
+  <extend-property name="locale" values="es"/>
+
+  <!-- Default language (English) -->
+  <set-property-fallback name="locale" value="en"/>
+
+  <!-- Specify the paths for translatable code                    -->
+  <source path='client'/>
+  <source path='shared'/>
+
+</module>
