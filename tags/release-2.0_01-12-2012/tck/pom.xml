@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GWT Validation Framework - A JSR-303 validation framework for GWT (c) 
+	gwt-validation contributors (http://code.google.com/p/gwt-validation/) This 
+	library is free software; you can redistribute it and/or modify it under 
+	the terms of the GNU Lesser General Public License as published by the Free 
+	Software Foundation; either version 2.1 of the License, or (at your option) 
+	any later version. This library is distributed in the hope that it will be 
+	useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+	or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License 
+	for more details. You should have received a copy of the GNU Lesser General 
+	Public License along with this library; if not, write to the Free Software 
+	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 
+	USA -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.googlecode.gwt-validation</groupId>
+	<version>2.0-BETA-SNAPSHOT</version>
+	<artifactId>gwt-validation-tck-runner</artifactId>
+	<name>GWT Validation TCK Runner</name>
+	<description>Aggregates dependencies and runs the JSR-303 TCK</description>
+
+	<repositories>
+		<repository>
+			<id>jboss-releases</id>
+			<name>JBoss Releases</name>
+			<url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
+		</repository>
+	</repositories>
+
+	<properties>
+		<jboss.home>${env.JBOSS_HOME}</jboss.home>
+		<validation.provider>com.em.validation.client.spi.ValidationProviderImpl</validation.provider>
+		<remote.debug />
+		<hibernate.version>4.2.0.Final</hibernate.version>
+		<jsr303.tck.version>1.0.5.GA</jsr303.tck.version>
+		<slf4jVersion>1.6.1</slf4jVersion>
+		<!-- see http://maven.apache.org/general.html -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jdocbook.ignoreTranslations>false</jdocbook.ignoreTranslations>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.0-api</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.jsr303.tck</groupId>
+			<artifactId>jsr303-tck</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.jbossas.as7-cdi-tck</groupId>
+			<artifactId>jbossas-container</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.googlecode.gwt-validation</groupId>
+			<artifactId>gwt-validation</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+		</dependency>
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-validator</artifactId>
+				<version>${hibernate.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-validator-annotation-processor</artifactId>
+				<version>${hibernate.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.validation</groupId>
+				<artifactId>validation-api</artifactId>
+				<version>1.0.0.GA</version>
+			</dependency>
+			<dependency>
+				<groupId>joda-time</groupId>
+				<artifactId>joda-time</artifactId>
+				<version>1.6</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.xml.bind</groupId>
+				<artifactId>jaxb-api</artifactId>
+				<version>2.2</version>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.xml.bind</groupId>
+				<artifactId>jaxb-impl</artifactId>
+				<version>2.1.12</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4jVersion}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-log4j12</artifactId>
+				<version>${slf4jVersion}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-simple</artifactId>
+				<version>${slf4jVersion}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.googlecode.jtype</groupId>
+				<artifactId>jtype</artifactId>
+				<version>0.1.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate.javax.persistence</groupId>
+				<artifactId>hibernate-jpa-2.0-api</artifactId>
+				<version>1.0.1.Final</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-entitymanager</artifactId>
+				<version>3.6.0.Final</version>
+			</dependency>
+			<dependency>
+				<groupId>org.testng</groupId>
+				<artifactId>testng</artifactId>
+				<version>5.14.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.easymock</groupId>
+				<artifactId>easymock</artifactId>
+				<version>3.0</version>
+			</dependency>
+			<dependency>
+				<groupId>com.h2database</groupId>
+				<artifactId>h2</artifactId>
+				<version>1.2.124</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate.jsr303.tck</groupId>
+				<artifactId>jsr303-tck</artifactId>
+				<version>${jsr303.tck.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jsoup</groupId>
+				<artifactId>jsoup</artifactId>
+				<version>1.5.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.as</groupId>
+				<artifactId>jboss-as-arquillian-container-managed</artifactId>
+				<version>7.0.0.Beta2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.jbossas.as7-cdi-tck</groupId>
+				<artifactId>jbossas-container</artifactId>
+				<version>1.0.0.Alpha1</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<suiteXmlFiles>
+						<suiteXmlFile>${basedir}/testng.xml</suiteXmlFile>
+					</suiteXmlFiles>
+					<argLine>-Xmx256m</argLine>
+					<forkMode>once</forkMode>
+					<systemProperties>
+						<property>
+							<name>validation.provider</name>
+							<value>${validation.provider}</value>
+						</property>
+						<property>
+							<name>org.jboss.testharness.spi.StandaloneContainers</name>
+							<value>org.hibernate.jsr303.tck.util.StandaloneContainersImpl</value>
+						</property>
+					</systemProperties>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>generate-test-report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report-only</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<outputDirectory>${project.build.directory}/surefire-reports</outputDirectory>
+					<outputName>test-report</outputName>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
