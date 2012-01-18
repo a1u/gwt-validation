@@ -87,7 +87,9 @@ public enum ClassScanner {
 		"dom4j",
 		"localedata",
 		"xml-apis",
-		"reflections"
+		"reflections",
+		"sunjce",
+		"dnsns"
 	};
 	
 	private ClassScanner() {
