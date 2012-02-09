@@ -23,12 +23,13 @@ package com.em.validation.client;
  under the License.
 */
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Stack;
 import javax.validation.Path;
 import javax.validation.Path.Node;
 
-public class PathImpl extends Stack<Node> implements Path {
+public class PathImpl extends Stack<Node> implements Path, Serializable {
 
 	/**
 	 * Serial ID for stack version
