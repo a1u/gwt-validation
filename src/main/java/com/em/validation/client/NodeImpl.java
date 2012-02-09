@@ -23,9 +23,11 @@ package com.em.validation.client;
  under the License.
 */
 
+import java.io.Serializable;
+
 import javax.validation.Path.Node;
 
-public class NodeImpl extends PathImpl implements Node {
+public class NodeImpl extends PathImpl implements Node, Serializable {
 	
 	/**
 	 * 

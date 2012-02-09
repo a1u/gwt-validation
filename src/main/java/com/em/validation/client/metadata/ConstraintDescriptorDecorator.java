@@ -23,6 +23,7 @@ package com.em.validation.client.metadata;
  under the License.
 */
 
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Map;
@@ -32,8 +33,13 @@ import javax.validation.ConstraintValidator;
 import javax.validation.Payload;
 import javax.validation.metadata.ConstraintDescriptor;
 
-public class ConstraintDescriptorDecorator<T extends Annotation> implements ConstraintDescriptor<T> {
-
+public class ConstraintDescriptorDecorator<T extends Annotation> implements ConstraintDescriptor<T>, Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private ConstraintDescriptor<T> descriptor = null;
 	
 	private ConstraintDescriptorDecorator() {
