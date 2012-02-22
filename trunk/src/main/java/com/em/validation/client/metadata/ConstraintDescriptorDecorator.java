@@ -42,7 +42,11 @@ public class ConstraintDescriptorDecorator<T extends Annotation> implements Cons
 	
 	private ConstraintDescriptor<T> descriptor = null;
 	
-	private ConstraintDescriptorDecorator() {
+	/**
+	 * constructor made public on 02/22/2012 because it was (probably) preventing serialization
+	 * see: defect 67 (http://code.google.com/p/gwt-validation/issues/detail?id=67)
+	 */
+	public ConstraintDescriptorDecorator() {
 		
 	}
 	
