@@ -35,6 +35,7 @@ import com.em.validation.client.gwt.defects.GwtDefect_042;
 import com.em.validation.client.gwt.defects.GwtDefect_043;
 import com.em.validation.client.gwt.defects.GwtDefect_045;
 import com.em.validation.client.gwt.defects.GwtDefect_049;
+import com.em.validation.client.gwt.defects.GwtDefect_068;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
@@ -46,7 +47,8 @@ import com.em.validation.client.gwt.defects.GwtDefect_049;
 	GwtDefect_042.class,
 	GwtDefect_043.class,
 	GwtDefect_045.class,
-	GwtDefect_049.class
+	GwtDefect_049.class,
+	GwtDefect_068.class
 })
 public class GwtDefectTestSuite {
 
