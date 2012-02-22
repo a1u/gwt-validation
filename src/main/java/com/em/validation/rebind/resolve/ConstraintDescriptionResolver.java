@@ -24,6 +24,7 @@ package com.em.validation.rebind.resolve;
 */
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -369,36 +370,35 @@ public enum ConstraintDescriptionResolver {
 				output.append("\"");
 			}
 		} else {
-			//get the array since the return type is of a container 
-			Object[] values = (Object[])value;
-			
-			output.append("new ");
-			output.append(containedClass.getSimpleName());
-			output.append("[]{");
-			int i = 0;
-			for(Object v : values) {
-				if(i > 0) {
-					output.append(",");
-				}
-				i++;
-				if(String.class.equals(containedClass)) {
-					output.append("\"");
-				} 
-				if(v instanceof Class<?>) {
-					Class<?> clazz = (Class<?>)v;
-					String className = clazz.getName();
-					className = className.replaceAll("\\$",".");
-					output.append(className + ".class");
-				} else {				
-					output.append(v);
-				}
-				if(String.class.equals(containedClass)) {
-					output.append("\"");
-				}
-			}
-			output.append("}");
+			output.append(createReturnValueArrayAsString(value));
 		}		
 		
+		return output.toString();
+	}
+
+	/**
+	 * Takes a human readable / string translatable array of values of the type that would be
+	 * found on an annotation and turns it into a string that can be used in a code
+	 * generation template.
+	 *
+	 * @param value the array
+	 * @return a String representation of the array
+	 */
+	private String createReturnValueArrayAsString(final Object value) {
+		final Class<?> containedClass = value.getClass().getComponentType();
+		final StringBuilder output = new StringBuilder();
+		output.append("new ");
+		output.append(containedClass.getSimpleName());
+		output.append("[]{");
+		//get the array since the return type is of a container
+		for (int i = 0; i < Array.getLength(value); i++) {
+			final Object arrayElement = Array.get(value, i);
+			if (i > 0) {
+				output.append(",");
+			}
+			output.append(createReturnValueAsString(arrayElement));
+		}
+		output.append("}");
 		return output.toString();
 	}
 	
