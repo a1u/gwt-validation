@@ -35,7 +35,6 @@ public class ConstraintViolationImpl<T> implements ConstraintViolation<T>, Seria
 	 * Constraint violations should be serializable and thus, need a version id
 	 */
 	private static final long serialVersionUID = 1L;
-
 	
 	private String message = "";
 	
@@ -52,6 +51,10 @@ public class ConstraintViolationImpl<T> implements ConstraintViolation<T>, Seria
 	private T rootBean = null;
 	
 	private Object leafBean = null;
+	
+	public ConstraintViolationImpl() {
+		super();
+	}
 	
 	public void setMessage(String message) {
 		this.message = message;
