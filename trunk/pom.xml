@@ -37,6 +37,9 @@
 	<properties>
 		<gwtVersion>2.4.0</gwtVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		
+		<!-- exclude emulated paths from sonar -->
+		<sonar.exclusions>**/emul/**</sonar.exclusions>
 	</properties>
 
 	<licenses>
