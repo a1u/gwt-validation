@@ -1,5 +1,5 @@
 #summary description of the i18n features of gwt validation.
-#labels Featured
+#labels Featured,i8n
 
 = Description =
 
