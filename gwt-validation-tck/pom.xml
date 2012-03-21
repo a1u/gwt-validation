@@ -86,7 +86,7 @@
 			<groupId>com.googlecode.gwt-validation</groupId>
 			<artifactId>gwt-validation</artifactId>
 		</dependency>
-	
+
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
