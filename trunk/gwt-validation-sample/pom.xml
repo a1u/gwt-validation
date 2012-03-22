@@ -95,6 +95,7 @@
 						</execution>
 					</executions>
 					<configuration>
+						<outputDirectory>target/gwt-validation-sample/WEB-INF/classes</outputDirectory>
 						<module>com.em.validation.sample.GwtValidationSample</module>
 						<copyWebapp>true</copyWebapp>
 						<runTarget>index.html</runTarget>
