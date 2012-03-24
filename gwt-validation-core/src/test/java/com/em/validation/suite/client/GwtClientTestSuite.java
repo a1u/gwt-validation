@@ -26,28 +26,12 @@ package com.em.validation.suite.client;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import com.em.validation.client.gwt.GwtConstraintValidatorFactoryTest;
-import com.em.validation.client.gwt.GwtConstraintsTest;
-import com.em.validation.client.gwt.GwtMetadataTest;
-import com.em.validation.client.gwt.GwtValidatorTest;
-import com.em.validation.client.gwt.messages.GwtMessageTest;
-import com.em.validation.client.gwt.reflector.GwtReflectorTest;
+import com.em.validation.client.gwt.serialization.GwtSerializationTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	//gwt
-	GwtDefectTestSuite.class,
-	GwtConstraintsTest.class,
-	GwtMetadataTest.class,
-	GwtConstraintValidatorFactoryTest.class,
-	GwtValidatorTest.class,
-	GwtMessageTest.class,
-	GwtReflectorTest.class,
-	//suites
-	GwtExampleTestSuite.class,
-	GwtValidatorImplementationTestSuite.class,
-	GwtClientTestSuite.class
+	GwtSerializationTest.class
 })
-public class GwtTestSuite {
-	
+public class GwtClientTestSuite {
+
 }

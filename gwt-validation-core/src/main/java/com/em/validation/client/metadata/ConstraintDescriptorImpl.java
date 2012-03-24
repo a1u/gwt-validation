@@ -24,6 +24,7 @@ package com.em.validation.client.metadata;
 */
 
 
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,13 +46,18 @@ import javax.validation.metadata.ConstraintDescriptor;
  *
  * @param <T>
  */
-public class ConstraintDescriptorImpl<T extends Annotation> implements ConstraintDescriptor<T> {
+public class ConstraintDescriptorImpl<T extends Annotation> implements ConstraintDescriptor<T>, Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The annotation that will be set by the implementing class
 	 * 
 	 */
-	protected T annotation = null;
+	protected transient T annotation = null;
 	
 	/**
 	 * Set of composing constraints
@@ -69,13 +75,13 @@ public class ConstraintDescriptorImpl<T extends Annotation> implements Constrain
 	 * The property map that will be populated by the implementing class
 	 * 
 	 */
-	protected Map<String,Object> propertyMap = new HashMap<String,Object>();
+	protected transient Map<String,Object> propertyMap = new HashMap<String,Object>();
 	
 	/**
 	 * The list of classes that implement validations for this constraint descriptor
 	 * 
 	 */
-	protected List<Class<? extends ConstraintValidator<T, ?>>> validatedBy = new ArrayList<Class<? extends ConstraintValidator<T, ?>>>();
+	protected transient List<Class<? extends ConstraintValidator<T, ?>>> validatedBy = new ArrayList<Class<? extends ConstraintValidator<T, ?>>>();
 	
 	/**
 	 * Construct a new abstract constraint descriptor

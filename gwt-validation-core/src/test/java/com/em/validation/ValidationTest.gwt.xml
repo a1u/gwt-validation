@@ -23,4 +23,6 @@
 	
 	<!-- this, at gwtc compile time, replaces reflective classes with the deferred binding points -->
  	<super-source path='emul' />
+ 	
+ 	<servlet path='/validation' class='com.em.validation.server.ValidationServiceImpl'/>
 </module>
