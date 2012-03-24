@@ -40,17 +40,17 @@ public class ConstraintViolationImpl<T> implements ConstraintViolation<T>, Seria
 	
 	private String messageTemplate = "";
 
-	private Object invalidValue = null;
+	private transient Object invalidValue = null;
 	
 	private ConstraintDescriptor<?> constraintDescriptor = null;
 	
 	private Path path = new PathImpl();  
 	
-	private Class<T> rootBeanClass = null;
+	private transient Class<T> rootBeanClass = null;
 	
-	private T rootBean = null;
+	private transient T rootBean = null;
 	
-	private Object leafBean = null;
+	private transient Object leafBean = null;
 	
 	public ConstraintViolationImpl() {
 		super();

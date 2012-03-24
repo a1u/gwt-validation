@@ -23,6 +23,8 @@ package com.em.validation.client.model.generic;
  under the License.
 */
 
+import java.io.Serializable;
+
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -31,7 +33,12 @@ import javax.validation.constraints.Size;
 
 import com.em.validation.client.model.constraint.FakeConstraint;
 
-public class TestClass extends ParentClass implements TestInterface {
+public class TestClass extends ParentClass implements TestInterface, Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@NotNull(message="NOT NULL 1")
 	@Pattern.List( {

@@ -27,7 +27,6 @@ import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -74,7 +73,7 @@ public class CoreValidatorImpl implements Validator{
 		BeanDescriptor bean = this.getConstraintsForClass(object.getClass());
 		
 		//create empty constraint violation set
-		Set<ConstraintViolation<T>> violations = new LinkedHashSet<ConstraintViolation<T>>();
+		Set<ConstraintViolation<T>> violations = new HashSet<ConstraintViolation<T>>();
 		
 		//validate class level properties
 		for(ConstraintDescriptor<?> descriptor : bean.findConstraints().declaredOn(ElementType.TYPE).unorderedAndMatchingGroups(groups).getConstraintDescriptors()) {
@@ -182,7 +181,7 @@ public class CoreValidatorImpl implements Validator{
 		path.push(localNode);
 		
 		//create empty constraint violation set
-		Set<ConstraintViolation<T>> violations = new LinkedHashSet<ConstraintViolation<T>>();
+		Set<ConstraintViolation<T>> violations = new HashSet<ConstraintViolation<T>>();
 
 		//get the map of property names to the property values found on the given beanType
 		Map<String,Map<Object,Set<ConstraintViolation<?>>>> propertyMap = validationCache.get(beanType);
@@ -232,7 +231,7 @@ public class CoreValidatorImpl implements Validator{
 			}
 
 			//update maps back into cache
-			Set<ConstraintViolation<?>> insertSet = new LinkedHashSet<ConstraintViolation<?>>();
+			Set<ConstraintViolation<?>> insertSet = new HashSet<ConstraintViolation<?>>();
 			insertSet.addAll(violations);
 			for(ConstraintViolation<?> violation : insertSet) {
 				if(violation instanceof ConstraintViolationImpl) {
@@ -269,7 +268,7 @@ public class CoreValidatorImpl implements Validator{
 							}
 							
 							if(cascadable) {
-								Set<ConstraintViolation<Object>> cascadeViolations = new LinkedHashSet<ConstraintViolation<Object>>();
+								Set<ConstraintViolation<Object>> cascadeViolations = new HashSet<ConstraintViolation<Object>>();
 								cascadeViolations.addAll(this.validate(validationCache, subValue, groups));	
 								//changed in accordance with dfuerniss' suggestion for issue #65
 								violations.addAll(this.convertViolations(cascadeViolations, value, beanType, path, index, null));
@@ -291,7 +290,7 @@ public class CoreValidatorImpl implements Validator{
 							}
 							
 							if(cascadable) {
-								Set<ConstraintViolation<Object>> cascadeViolations = new LinkedHashSet<ConstraintViolation<Object>>();
+								Set<ConstraintViolation<Object>> cascadeViolations = new HashSet<ConstraintViolation<Object>>();
 								cascadeViolations.addAll(this.validate(validationCache, subValue, groups));	
 								//changed in accordance with dfuerniss' suggestion for issue #65
 								violations.addAll(this.convertViolations(cascadeViolations, value, beanType, path, index, null));
@@ -314,7 +313,7 @@ public class CoreValidatorImpl implements Validator{
 							
 							if(cascadable) {
 								Object subValue = ((Map)value).get(key);
-								Set<ConstraintViolation<Object>> cascadeViolations = new LinkedHashSet<ConstraintViolation<Object>>();	
+								Set<ConstraintViolation<Object>> cascadeViolations = new HashSet<ConstraintViolation<Object>>();	
 								cascadeViolations.addAll(this.validate(validationCache, subValue, groups));	
 								//changed in accordance with dfuerniss' suggestion for issue #65
 								violations.addAll(this.convertViolations(cascadeViolations, value, beanType, path, null, key));
@@ -331,7 +330,7 @@ public class CoreValidatorImpl implements Validator{
 						}
 						
 						if(cascadable) {
-							Set<ConstraintViolation<Object>> cascadeViolations = new LinkedHashSet<ConstraintViolation<Object>>();
+							Set<ConstraintViolation<Object>> cascadeViolations = new HashSet<ConstraintViolation<Object>>();
 							cascadeViolations.addAll(this.validate(validationCache, value, groups));	
 							//changed in accordance with dfuerniss' suggestion for issue #65
 							violations.addAll(this.convertViolations(cascadeViolations, value, beanType, path, null, null));
@@ -378,7 +377,7 @@ public class CoreValidatorImpl implements Validator{
 	@SuppressWarnings("unchecked")
 	private <T> Set<ConstraintViolation<T>> validateConstraint(Class<T> beanType, ConstraintDescriptor<?> descriptor, Object value) {
 		//create empty constraint violation set
-		Set<ConstraintViolation<T>> violations = new LinkedHashSet<ConstraintViolation<T>>();
+		Set<ConstraintViolation<T>> violations = new HashSet<ConstraintViolation<T>>();
 		
 		//only do this part of the validation if there is at least one constraint validator
 		if(!descriptor.getConstraintValidatorClasses().isEmpty()) {
@@ -458,7 +457,7 @@ public class CoreValidatorImpl implements Validator{
 		}
 		
 		//composed violation
-		Set<ConstraintViolation<T>> composedViolations = new LinkedHashSet<ConstraintViolation<T>>();
+		Set<ConstraintViolation<T>> composedViolations = new HashSet<ConstraintViolation<T>>();
 		
 		//do composing constraints
 		if(!descriptor.getComposingConstraints().isEmpty()) {

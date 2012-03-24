@@ -40,7 +40,7 @@ public class NodeImpl extends PathImpl implements Node, Serializable {
 
 	private boolean inIterable = false;
 	
-	private Object key = null; 
+	private transient Object key = null; 
 
 	public NodeImpl() {
 		

@@ -52,4 +52,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 	<!-- this, at gwtc compile time, replaces reflective classes with the deferred binding points -->
  	<super-source path='emul' />
+ 	
+ 	<!-- do not allow this to be serialized -->
+ 	<!-- this is part of the fix for issue #67 -->
+ 	<!-- for some reason this insists on serializing -->
+	<extend-configuration-property name="rpc.blacklist" value="com.google.gwt.validation.client.impl.PathImpl"/> 	
 </module>
