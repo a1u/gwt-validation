@@ -32,7 +32,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.Semaphore;
 
-import javax.servlet.ServletContext;
 import javax.validation.Constraint;
 import javax.validation.Valid;
 import javax.validation.ValidationException;
@@ -58,9 +57,6 @@ public enum ClassScanner {
 	INSTANCE;
 	
 	private Reflections reflections = null;
-
-	//the base urls to scan from
-	private Set<URL> baseClassPathUrls = new HashSet<URL>();
 	
 	//lock on scanning/reading (1 at a time, fair)
 	private Semaphore scanningLockSempahore = new Semaphore(1,true);
@@ -92,29 +88,6 @@ public enum ClassScanner {
 	};
 	
 	private ClassScanner() {
-		//base classpaths
-		this.baseClassPathUrls.addAll(ClasspathHelper.forClassLoader(Thread.currentThread().getContextClassLoader()));
-		this.baseClassPathUrls.addAll(ClasspathHelper.forJavaClassPath());
-		
-		//do scan
-		scan();
-	}
-	
-	public void updateWithServletContext(ServletContext context) {
-		//acquire scan lock
-		try {
-			this.scanningLockSempahore.acquire();
-		} catch (InterruptedException e) {
-			throw new ValidationException("An interpution occured while updating with server context.");
-		}
-		
-		//add servlet context to classpath
-		this.baseClassPathUrls.add(ClasspathHelper.forWebInfClasses(context));
-		this.baseClassPathUrls.addAll(ClasspathHelper.forWebInfLib(context));
-		
-		//release scan lock
-		this.scanningLockSempahore.release();
-		
 		scan();
 	}
 	
@@ -126,28 +99,48 @@ public enum ClassScanner {
 			throw new ValidationException("An interpution occured while scanning for resources.");
 		}
 		
-		//create classpath holder
-		Set<URL> classPathUrls = this.baseClassPathUrls;
+
+		//urls to scan from
+		Set<URL> classPathUrls = new HashSet<URL>();
+
+		//model packages from configuration
+		String[] modelPackages = RebindConfiguration.INSTANCE.includedModelPackages();
 		
-		//this little snippet goes through the classpath urls and ommits jars that are on the forbidden list.
-		//this is intended to remove jars from the classpath that we know are not ones that will contain patterns
-		Set<URL> useableUrls = new HashSet<URL>();
-		for(URL url : classPathUrls) {
-			boolean use = true;
-			for(String jar : this.doNotScanJarsInThisList) {
-				if(url.toString().contains(jar)) {
-					use = false;
-					break;
+		if(modelPackages != null && modelPackages.length > 0) {
+			//add all model packages
+			for(String modelPackage : modelPackages) {
+				classPathUrls.addAll(ClasspathHelper.forPackage(modelPackage));
+			}
+		} else { //otherwise, grab all classpaths and use them, as a best guess
+			
+			//start with base classpaths
+			classPathUrls.addAll(ClasspathHelper.forClassLoader(Thread.currentThread().getContextClassLoader()));
+			classPathUrls.addAll(ClasspathHelper.forJavaClassPath());
+			
+			//this little snippet goes through the classpath urls and ommits jars that are on the forbidden list.
+			//this is intended to remove jars from the classpath that we know are not ones that will contain (valid/usable) patterns
+			Set<URL> useableUrls = new HashSet<URL>();
+			for(URL url : classPathUrls) {
+				boolean use = true;
+				for(String jar : this.doNotScanJarsInThisList) {
+					if(url.toString().contains(jar)) {
+						use = false;
+						break;
+					}
 				}
+				if(use) {
+					useableUrls.add(url);
+				}
+				use = false;
 			}
-			if(use) {
-				useableUrls.add(url);
-			}
-			use = false;
-		}		
+			
+			//use the usable urls as the overall classpath urls
+			classPathUrls = useableUrls;
+		}
 		
+		//create a reflections configuration object
 		ConfigurationBuilder builder = new ConfigurationBuilder()
-										.setUrls(useableUrls)
+										.setUrls(classPathUrls)
 										.setScanners(	new TypeAnnotationsScanner(), 
 														new FieldAnnotationsScanner(), 
 														new MethodAnnotationsScanner(), 
@@ -155,6 +148,7 @@ public enum ClassScanner {
 										)
 										//see gwt-validation issue #64 (http://code.google.com/p/gwt-validation/issues/detail?id=64)
 										//see reflections issue #92 (http://code.google.com/p/reflections/issues/detail?id=92)
+										//do not use parallel executor until this is fixed
 										//.useParallelExecutor()
 										;
 			
@@ -178,7 +172,7 @@ public enum ClassScanner {
 		//empty constraint set
 		Set<Class<?>> constraints = new HashSet<Class<?>>();
 		//get everything annotated with @javax.validation.Constraint
-		constraints.addAll(reflections.getTypesAnnotatedWith(Constraint.class));
+		constraints.addAll(this.reflections.getTypesAnnotatedWith(Constraint.class));
 		//also account for classes, fields, and method with only @Valid
 		constraints.add(Valid.class);
 		

@@ -135,7 +135,12 @@
 				<version>2.7.2</version>
 				<configuration>
 					<test>**/FullTestSuite.java</test>
-					<argLine>-Dgwt.args="-prod -gen target/testgen -style PRETTY"</argLine>
+					<!-- 
+						-Dgwt.args = gwtc arguments for JUnit that behvaes like production and produces pretty (readable) output
+						-Dgwt.validation.included.ModelPackages = arguments to gwt-validation's processor that specify the model packages to scan (comma separated list)
+						(be warned, when using this option you MUST have javax.validation.constraints and com.em.validation.client.constraints as well!)																	
+					 -->
+					<argLine>-Dgwt.args="-prod -gen target/testgen -style PRETTY" -Dgwt.validation.included.ModelPackages=javax.validation.constraints,com.em.validation.client.constraints,com.em.validation.client.model,</argLine>
 					<additionalClasspathElements>
 						<additionalClasspathElement>${project.build.sourceDirectory}</additionalClasspathElement>
 						<additionalClasspathElement>${project.build.testSourceDirectory}</additionalClasspathElement>

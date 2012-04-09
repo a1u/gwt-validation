@@ -31,8 +31,6 @@ import com.em.validation.rebind.scan.ClassScanner;
  * Singleton for handling all of the rebind configuration issues.  This class was created because of a suggestion by a user, Niels, who was the
  * first to have a problem integrating with Hibernate.  The need for this class and the configuration it supports grew out of there.
  * 
- * The way this works is by first applying any "include" filters and then subtracting the "exclude" filters.  
- * 
  * @author chris
  * @see ClassScanner
  *
@@ -55,9 +53,9 @@ public enum RebindConfiguration {
 	private String excludedModelClassesPropertyString = "gwt.validation.excluded.ModelClassesRegexp";
 	
 	/**
-	 * Property string for included model classes.  
+	 * Property string for included model packages.  Can be a single one, or a comma separated list.  
 	 */
-	private String includedModelClassesPropertyString = "gwt.validation.included.ModelClassesRegexp";
+	private String includedModelPackagesPropertyString = "gwt.validation.included.ModelPackages";
 	
 	/**
 	 * Regular expression representing the classes that implement {@link Validator} to be excluded.
@@ -70,10 +68,10 @@ public enum RebindConfiguration {
 	private String excludedModelClasses = null;
 	
 	/**
-	 * Regular expression representing the annotated model classes to be included.
+	 * Array of all the model package urls.
 	 * 
 	 */
-	private String includedModelClasses = null;
+	private String[] includedModelPackages = null;
 	
 	/**
 	 * Default constructor that populates the properties of the configuration object
@@ -82,7 +80,7 @@ public enum RebindConfiguration {
 	private RebindConfiguration() {
 		String exValidClasses = System.getProperty(this.excludedValidatorClassesPropertyString);
 		String exModelClasses = System.getProperty(this.excludedModelClassesPropertyString);
-		String inModelClasses = System.getProperty(this.includedModelClassesPropertyString);
+		String inModelClasses = System.getProperty(this.includedModelPackagesPropertyString);
 		
 		//this could just as easily be != null, null pointer protection either way, this normalizes it by creating a sharp
 		//divide between a string and a null option
@@ -92,7 +90,17 @@ public enum RebindConfiguration {
 		
 		this.excludedValidatorClasses = exValidClasses;
 		this.excludedModelClasses = exModelClasses;		
-		this.includedModelClasses = inModelClasses;
+		
+		//if there are model packages listed, split, and trim each package name
+		if(inModelClasses != null) {
+			String[] packages = inModelClasses.split(",");
+			this.includedModelPackages = new String[packages.length];
+			int i = 0;
+			for(String p : packages) {
+				this.includedModelPackages[i++] = p.trim();
+			}
+			
+		}
 	}
 	
 	/**
@@ -116,12 +124,12 @@ public enum RebindConfiguration {
 	}
 	
 	/**
-	 * Returns a string containing a regular expression representing the annotated model classes to be included.
+	 * An array of the model packages that should be included.
 	 * 
 	 * @return
 	 * @see ClassScanner
 	 */
-	public String includedModelClassesRegularExpression() {
-		return this.includedModelClasses;
+	public String[] includedModelPackages() {
+		return this.includedModelPackages;
 	}
 }
