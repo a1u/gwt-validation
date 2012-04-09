@@ -453,7 +453,7 @@ public class CoreValidatorImpl implements Validator{
 			}
 		} else if(descriptor.getComposingConstraints().isEmpty()) {
 			//empty constraint validation, fail
-			throw new UnexpectedTypeException("No validator was found for " + descriptor.getAnnotation().annotationType().getName() + " with type " + beanType.getName());
+			throw new UnexpectedTypeException("No validator was found for " + descriptor.getAnnotation().annotationType().getName() + " with type " + value.getClass().getName());
 		}
 		
 		//composed violation

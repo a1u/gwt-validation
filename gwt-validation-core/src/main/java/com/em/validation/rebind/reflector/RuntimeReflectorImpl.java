@@ -139,16 +139,49 @@ public class RuntimeReflectorImpl extends Reflector {
 
 	@Override
 	public boolean isCascaded(String propertyName) {
+		//default to non-cascaded
 		boolean result = false;
 		
+		//get property metadata
+		PropertyMetadata metadata = this.metadataMap.get(propertyName);
+		String accessor = null;
+		if(metadata != null) {
+			accessor = metadata.getAccessor();
+		}
+	
 		//check method names for property that is cascaded
+		Method method = null;//part of fix for issue #69, starts as null
+		
 		try {
-			Method method = this.targetClass.getDeclaredMethod(propertyName, new Class<?>[]{});
+			if(method == null) {
+				method = this.targetClass.getDeclaredMethod(propertyName, new Class<?>[]{});
+			}
+		} catch (Exception ex) {
+			//result will still be false
+		}
+		
+		try {
+			if(method == null && accessor != null) {
+				method = this.targetClass.getDeclaredMethod(accessor, new Class<?>[]{});
+			}			
+		} catch (Exception ex) {
+			//result will still be false			
+		}
+
+		try {
+			if(method == null) {
+				method = this.targetClass.getDeclaredMethod("get" + propertyName.substring(0,1).toUpperCase() + propertyName.substring(1), new Class<?>[]{});
+			}
+		} catch (Exception ex) {
+			//result will still be false			
+		}
+
+		try {
 			if(method != null) {
 				result = method.getAnnotation(Valid.class) != null;
 			}
 		} catch (Exception ex) {
-			//result will still be false			
+			//result will still be false
 		}
 		
 		//check fields for property that is cascaded (only if still false)

@@ -32,9 +32,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.validation.Constraint;
-import javax.validation.ConstraintValidator;
-
-import com.em.validation.rebind.scan.ClassScanner;
 
 public enum ValidatorResolver {
 
@@ -59,6 +56,9 @@ public enum ValidatorResolver {
 		Set<Class<?>> results = new LinkedHashSet<Class<?>>();
 		Set<Class<?>> candidates = new LinkedHashSet<Class<?>>();
 
+		//get toolkit provided validators for built in annotations (in javax.validation.constraints)
+		candidates.addAll(BuiltInValidatorHelper.getBuiltInValidators(annotationType));
+		
 		//get set from the @Constraint annotation
 		Constraint constraint = annotationType.getAnnotation(Constraint.class);
 		if(constraint != null) {
@@ -70,25 +70,6 @@ public enum ValidatorResolver {
 			elementType = this.primitiveClasses.get(elementType);
 		}
 				
-		//get all constraint validators
-		Set<Class<? extends ConstraintValidator<?, ?>>> validators = ClassScanner.INSTANCE.getConstraintValidatorClasses();
-		
-		//check for the type of the initialize method
-		for(Class<? extends ConstraintValidator<?, ?>> validator : validators) {
-			//abstract classes don't help either, they can't be initialized and so... don't work for us
-			if(Modifier.isAbstract(validator.getModifiers())) continue;
-			
-			//check initialize method to see if the annotation type matches the constraint annotation's type
-			try {
-				Method initialize = validator.getMethod("initialize", new Class<?>[]{annotationType});
-				if(initialize != null) {
-					candidates.add(validator);
-				}
-			} catch (Exception ex) {
-				//method isn't there, do nothing
-			}
-		}
-		
 		//go through the candidate classes, and check the validate method for the right types
 		for(Class<?> validator : candidates) {
 			//no anonymous classes
@@ -122,6 +103,11 @@ public enum ValidatorResolver {
 			}
 			
 		}		
+		
+		//if no results are found: ValidationException for no validators found
+		//if(results.size() == 0) {
+		//	throw new ValidationException("No validators for constraint " + annotationType.getName() + " on type " + elementType.getName() + " found.");
+		//}
 		
 		//return
 		return results;

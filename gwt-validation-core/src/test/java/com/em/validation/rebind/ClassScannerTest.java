@@ -23,13 +23,10 @@ package com.em.validation.rebind;
  under the License.
 */
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Set;
-
-import javax.validation.ConstraintValidator;
 
 import org.junit.Test;
 
@@ -61,14 +58,4 @@ public class ClassScannerTest {
 		assertTrue(classes.contains(TestClass.class));
 		assertFalse(classes.contains(GroupTestClass.class));
 	}
-	
-	@Test
-	public void testPatternMatchingValidatorClassScanner() {
-		//get the constrained classes not matching the given pattern
-		Set<Class<? extends ConstraintValidator<?, ?>>> classes = ClassScanner.INSTANCE.getConstraintValidatorClasses(".*");
-	
-		//verify
-		assertEquals(0, classes.size());
-	}
-	
 }

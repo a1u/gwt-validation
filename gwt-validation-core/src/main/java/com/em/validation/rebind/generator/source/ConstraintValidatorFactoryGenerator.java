@@ -25,12 +25,17 @@ package com.em.validation.rebind.generator.source;
 
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
 import javax.validation.ConstraintValidator;
+import javax.validation.metadata.BeanDescriptor;
+import javax.validation.metadata.ConstraintDescriptor;
+import javax.validation.metadata.PropertyDescriptor;
 
+import com.em.validation.client.metadata.factory.DescriptorFactory;
 import com.em.validation.rebind.metadata.ClassDescriptor;
 import com.em.validation.rebind.scan.ClassScanner;
 import com.em.validation.rebind.template.TemplateController;
@@ -56,11 +61,28 @@ public enum ConstraintValidatorFactoryGenerator {
 		factoryDescriptor.setPackageName(this.TARGET_PACKAGE);
 		
 		//set of class names for constraints
-		Set<Class<? extends ConstraintValidator<?, ?>>> scannedValidators = ClassScanner.INSTANCE.getConstraintValidatorClasses();
+		//Set<Class<? extends ConstraintValidator<?, ?>>> scannedValidators = ClassScanner.INSTANCE.getConstraintValidatorClasses();
+		
+		//get all constraint classes
+		Set<Class<?>> constrainedClasses = ClassScanner.INSTANCE.getConstrainedClasses();
+		
+		//fill in the candidate validators by doing validator (validatedBy, validator impl) resolution for all of the constrained classes
+		Set<Class<? extends ConstraintValidator<?, ?>>> foundCandidateValidators = new HashSet<Class<? extends ConstraintValidator<?,?>>>();
+		for(Class<?> constrained : constrainedClasses) {
+			BeanDescriptor beanDesc = DescriptorFactory.INSTANCE.getBeanDescriptor(constrained);
+			for(ConstraintDescriptor<?> descriptor : beanDesc.getConstraintDescriptors()) {
+				foundCandidateValidators.addAll(descriptor.getConstraintValidatorClasses());
+			}
+			for(PropertyDescriptor propDescriptor : beanDesc.getConstrainedProperties()) {
+				for(ConstraintDescriptor<?> descriptor : propDescriptor.getConstraintDescriptors()) {
+					foundCandidateValidators.addAll(descriptor.getConstraintValidatorClasses());
+				}
+			}
+		}
 		
 		Set<String> constraintValidators = new LinkedHashSet<String>();
 		
-		for(Class<?> validator : scannedValidators) {
+		for(Class<?> validator : foundCandidateValidators) {
 			if(validator.isAnonymousClass()) continue;
 			if(Modifier.isAbstract(validator.getModifiers())) continue;
 			

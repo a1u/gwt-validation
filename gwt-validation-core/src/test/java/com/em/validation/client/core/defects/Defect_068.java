@@ -12,9 +12,9 @@ import javax.validation.metadata.PropertyDescriptor;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.em.validation.client.model.defects.defect_68.AllowedValues;
-import com.em.validation.client.model.defects.defect_68.Defect68_TestData;
-import com.em.validation.client.model.defects.defect_68.Values;
+import com.em.validation.client.model.defects.defect_068.AllowedValues;
+import com.em.validation.client.model.defects.defect_068.Defect68_TestData;
+import com.em.validation.client.model.defects.defect_068.Values;
 import com.em.validation.client.model.tests.GwtValidationBaseTestCase;
 
 public class Defect_068 extends GwtValidationBaseTestCase {

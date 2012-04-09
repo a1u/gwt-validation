@@ -1,5 +1,5 @@
 
-package com.em.validation.client.model.defects.defect_68;
+package com.em.validation.client.model.defects.defect_068;
 
 import java.lang.annotation.*;
 import javax.validation.Constraint;
