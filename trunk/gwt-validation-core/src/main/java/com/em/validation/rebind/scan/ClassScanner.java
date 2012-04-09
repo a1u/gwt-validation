@@ -34,7 +34,6 @@ import java.util.concurrent.Semaphore;
 
 import javax.servlet.ServletContext;
 import javax.validation.Constraint;
-import javax.validation.ConstraintValidator;
 import javax.validation.Valid;
 import javax.validation.ValidationException;
 
@@ -225,37 +224,6 @@ public enum ClassScanner {
 		return this.getConstrainedClasses(RebindConfiguration.INSTANCE.excludedModelClassesRegularExpression());
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Set<Class<? extends ConstraintValidator<?, ?>>> getConstraintValidatorClasses(String excludedPattern) {
-		//acquire scan lock
-		try {
-			this.scanningLockSempahore.acquire();
-		} catch (InterruptedException e) {
-			throw new ValidationException("An interpution occured while getting constraint valdiator classes.");
-		}
-		
-		//create empty result set
-		Set<Class<? extends ConstraintValidator<?, ?>>> result = new LinkedHashSet<Class<? extends ConstraintValidator<?,?>>>();
-		
-		Set<Class<? extends ConstraintValidator>> subTypes = new HashSet<Class<? extends ConstraintValidator>>();
-		subTypes.addAll(this.reflections.getSubTypesOf(ConstraintValidator.class));
-		
-		for(Class<? extends ConstraintValidator> validatorClass : subTypes) {
-			//submitted as part of a fix for issue 34, by Niels, this will NOT ALLOW matched classes to be used as validators
-			if(excludedPattern != null && validatorClass.getName().matches(excludedPattern)) continue;			
-			result.add((Class<? extends ConstraintValidator<?, ?>>) validatorClass);			
-		}
-		
-		//release scan lock
-		this.scanningLockSempahore.release();
-		
-		return result;
-	}
-	
-	public Set<Class<? extends ConstraintValidator<?, ?>>> getConstraintValidatorClasses() {
-		return this.getConstraintValidatorClasses(RebindConfiguration.INSTANCE.excludedValidatorClassesRegularExpression());
-	}
-	
 	/**
 	 * This method is designed to return all of the classes that <i>implement</i> a constrained class but <b>do not</b> have 
 	 * annotations of their own.  This allows the generation step to create a way (through string matching) to grab the 
@@ -265,7 +233,6 @@ public enum ClassScanner {
 	 * @return
 	 */
 	public Set<Class<?>> getUncoveredImplementors() {
-
 		
 		Set<Class<?>> uncovered = new LinkedHashSet<Class<?>>();
 		Set<Class<?>> constrainedClasses = this.getConstrainedClasses();

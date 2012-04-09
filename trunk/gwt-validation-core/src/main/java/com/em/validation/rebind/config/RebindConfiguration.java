@@ -31,7 +31,10 @@ import com.em.validation.rebind.scan.ClassScanner;
  * Singleton for handling all of the rebind configuration issues.  This class was created because of a suggestion by a user, Niels, who was the
  * first to have a problem integrating with Hibernate.  The need for this class and the configuration it supports grew out of there.
  * 
+ * The way this works is by first applying any "include" filters and then subtracting the "exclude" filters.  
+ * 
  * @author chris
+ * @see ClassScanner
  *
  */
 public enum RebindConfiguration {
@@ -52,6 +55,11 @@ public enum RebindConfiguration {
 	private String excludedModelClassesPropertyString = "gwt.validation.excluded.ModelClassesRegexp";
 	
 	/**
+	 * Property string for included model classes.  
+	 */
+	private String includedModelClassesPropertyString = "gwt.validation.included.ModelClassesRegexp";
+	
+	/**
 	 * Regular expression representing the classes that implement {@link Validator} to be excluded.
 	 */
 	private String excludedValidatorClasses = null;
@@ -62,20 +70,29 @@ public enum RebindConfiguration {
 	private String excludedModelClasses = null;
 	
 	/**
+	 * Regular expression representing the annotated model classes to be included.
+	 * 
+	 */
+	private String includedModelClasses = null;
+	
+	/**
 	 * Default constructor that populates the properties of the configuration object
 	 * 
 	 */
 	private RebindConfiguration() {
 		String exValidClasses = System.getProperty(this.excludedValidatorClassesPropertyString);
 		String exModelClasses = System.getProperty(this.excludedModelClassesPropertyString);
+		String inModelClasses = System.getProperty(this.includedModelClassesPropertyString);
 		
 		//this could just as easily be != null, null pointer protection either way, this normalizes it by creating a sharp
 		//divide between a string and a null option
 		if(exValidClasses == null || exValidClasses.isEmpty()) exValidClasses = null;
 		if(exModelClasses == null || exModelClasses.isEmpty()) exModelClasses = null;
+		if(inModelClasses == null || inModelClasses.isEmpty()) inModelClasses = null;
 		
 		this.excludedValidatorClasses = exValidClasses;
 		this.excludedModelClasses = exModelClasses;		
+		this.includedModelClasses = inModelClasses;
 	}
 	
 	/**
@@ -98,4 +115,13 @@ public enum RebindConfiguration {
 		return this.excludedModelClasses;
 	}
 	
+	/**
+	 * Returns a string containing a regular expression representing the annotated model classes to be included.
+	 * 
+	 * @return
+	 * @see ClassScanner
+	 */
+	public String includedModelClassesRegularExpression() {
+		return this.includedModelClasses;
+	}
 }

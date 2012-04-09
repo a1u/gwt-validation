@@ -1,4 +1,4 @@
-package com.em.validation.client.model.defects.defect_68;
+package com.em.validation.client.model.defects.defect_068;
 
 import java.util.Arrays;
 import java.util.HashSet;
