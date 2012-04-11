@@ -23,6 +23,8 @@ package com.em.validation.client.regex;
  under the License.
 */
 
+import java.util.regex.Pattern;
+
 import javax.validation.constraints.Pattern.Flag;
 
 import com.google.gwt.regexp.shared.MatchResult;
@@ -37,7 +39,22 @@ public enum RegexProvider {
 	}
 	
 	public boolean matches(String regex, String check, Flag[] flags) {
-		RegExp exp = RegExp.compile(regex);
+		RegExp exp = null;
+		if(flags != null && flags.length > 0) {
+			String flagString = "";
+			for(Flag f : flags) {
+				if(Flag.CASE_INSENSITIVE.equals(f)) {
+					flagString += "i";
+				} else if(Flag.MULTILINE.equals(f)) {
+					flagString += "m";
+				}
+			}		
+			exp = RegExp.compile(regex);
+		} else {
+			exp = RegExp.compile(regex);
+		}
+		
+		
 		return exp.test(check);
 	}
 	

@@ -37,7 +37,16 @@ public enum RegexProvider {
 	}
 	
 	public boolean matches(String regex, String check, Flag[] flags) {
-		Pattern pattern = Pattern.compile(regex);
+		Pattern pattern = null;
+		if(flags != null && flags.length > 0) {
+			int flagBitMask = 0;
+			for(Flag f : flags) {
+				flagBitMask = flagBitMask | f.getValue();
+			}		
+			pattern = Pattern.compile(regex, flagBitMask);
+		} else {
+			pattern = Pattern.compile(regex);
+		}
 		Matcher matcher = pattern.matcher(check);
 		return matcher.matches();
 	}

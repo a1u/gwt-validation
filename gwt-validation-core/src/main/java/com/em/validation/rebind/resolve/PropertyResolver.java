@@ -70,6 +70,14 @@ public enum PropertyResolver {
 		return this.getPropertyMetadata(targetClass).get(propertyName);
 	}
 	
+	/**
+	 * This is one of the more important methods in the resolving toolkit.  It resolves all of the property (field/method) metadata down
+	 * into one item.  It looks at the annotations and such to determine what values are on a particular property so it ultimately controls
+	 * what constraints are on a given property.
+	 * 
+	 * @param targetClass
+	 * @return
+	 */
 	private Map<String,PropertyMetadata> resolve(Class<?> targetClass) {
 		//result map
 		Map<String,PropertyMetadata> metadataMap = new LinkedHashMap<String, PropertyMetadata>();
@@ -175,8 +183,11 @@ public enum PropertyResolver {
 			
 			//recursively resolve all annotations for the method on the given class
 			try {
+				//get the method and the method name
 				Method method = property.getReadMethod();
 				String methodName = property.getReadMethod().getName();
+				
+				//get methods from interfaces
 				Class<?> infoClass = method.getDeclaringClass();
 				for(Class<?> infoInterface : infoClass.getInterfaces()) {
 					if(this.hasMethod(infoInterface, methodName, new Class<?>[]{})) {
