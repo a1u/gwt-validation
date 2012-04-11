@@ -208,11 +208,14 @@ public class ConstraintViolationImpl<T> implements ConstraintViolation<T>, Seria
 			builder.append(this.path.toString());
 		}
 		if(this.invalidValue != null) {
-			builder.append(", value = ");
+			builder.append(", value = \"");
 			builder.append(this.invalidValue.toString());
+			builder.append("\"");
 		} else {
 			builder.append(", value = null");
 		}
+		builder.append(", message = ");
+		builder.append(this.getMessage());
 		builder.append("]");
 		return builder.toString();		
 	}
