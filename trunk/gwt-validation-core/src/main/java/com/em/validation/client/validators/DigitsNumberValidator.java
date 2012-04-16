@@ -58,7 +58,7 @@ public class DigitsNumberValidator implements ConstraintValidator<Digits, Number
 		int frcDigits = 0;
 		
 		if(valueString.contains(".")) {
-			String[] partSplit = valueString.split("\\\\.");
+			String[] partSplit = valueString.split("\\.");
 			intDigits = partSplit[0].length();
 			frcDigits = partSplit[1].length();
 		} else {
