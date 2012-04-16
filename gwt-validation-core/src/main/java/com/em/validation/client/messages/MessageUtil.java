@@ -44,6 +44,11 @@ public class MessageUtil {
 			}
 		}	
 		
+		//replace literals with actuals, and remark at how crazy the java regex stuff can be
+		//we have to escape the escape to get the final literal "\{"
+		output = output.replaceAll("\\\\\\{", "{");
+		output = output.replaceAll("\\\\\\}", "}");
+		
 		return output;
 	}
 	
