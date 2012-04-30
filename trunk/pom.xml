@@ -50,7 +50,7 @@
 		<!-- dependency versions -->
 		<gwt.version>2.4.0</gwt.version>
 		<hibernate.version>4.2.0.Final</hibernate.version>
-		<jsr303.tck.version>1.0.5.GA</jsr303.tck.version>
+		<jsr303.tck.version>1.0.6.GA</jsr303.tck.version>
 		<slf4jVersion>1.6.1</slf4jVersion>
 		
 		<!-- exclude emulated paths from sonar -->
