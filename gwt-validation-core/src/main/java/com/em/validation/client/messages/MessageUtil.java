@@ -33,6 +33,13 @@ import java.util.Map;
  */
 public class MessageUtil {
 
+	/**
+	 * Do not allow utility class to be constructed
+	 */
+	private MessageUtil() {
+		
+	}
+	
 	public static String getMessage(String messageTemplate, Map<String, Object> properties) {
 		String output = messageTemplate;
 		

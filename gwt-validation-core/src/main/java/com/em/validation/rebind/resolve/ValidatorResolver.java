@@ -77,9 +77,10 @@ public enum ValidatorResolver {
 			//abstract classes don't help either, they can't be initialized and so... don't work for us
 			if(Modifier.isAbstract(validator.getModifiers())) continue;
 			
-			//check isValid method to see if the element type
+			//check isValid method to see if the element type is accepted by that method
 			try {
-				for(Method method : validator.getDeclaredMethods()) { 
+				//changed to getMethods from declaredMethods to fix issues with extended/implemented validators
+				for(Method method : validator.getMethods()) { 
 					if("isValid".equals(method.getName()) && method.getParameterTypes().length == 2) {
 						Class<?> parameterType = method.getParameterTypes()[0];
 						

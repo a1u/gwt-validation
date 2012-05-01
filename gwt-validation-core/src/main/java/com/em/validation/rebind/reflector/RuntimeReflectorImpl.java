@@ -106,7 +106,7 @@ public class RuntimeReflectorImpl extends Reflector {
 					}
 			} else {
 				try {
-					accessor = accessor.substring(0, accessor.lastIndexOf("("));
+					accessor = accessor.substring(0, accessor.lastIndexOf('('));
 					Method method = this.targetClass.getDeclaredMethod(accessor, new Class<?>[]{});
 					method.setAccessible(true);
 					value = method.invoke(target, new Object[]{});

@@ -177,7 +177,7 @@ public abstract class Reflector implements IReflector {
 		//if the value is still null, check interfaces
 		if(value == null) {
 			for(IReflector iface : this.reflectorInterfaces) {
-				if(iface != null && iface instanceof Reflector) {
+				if(iface instanceof Reflector) {
 					value = ((Reflector)iface).getValue(name, target);
 				}
 				if(value != null) break;

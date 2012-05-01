@@ -40,6 +40,10 @@ public class NodeImpl extends PathImpl implements Node, Serializable {
 
 	private boolean inIterable = false;
 	
+	/**
+	 * The object key for hash type implementations.  Transient because GWT cannot
+	 * serialize raw objects.
+	 */
 	private transient Object key = null; 
 
 	public NodeImpl() {
@@ -53,12 +57,14 @@ public class NodeImpl extends PathImpl implements Node, Serializable {
 
 	@Override
 	public boolean isInIterable() {
-		boolean inIterable = this.inIterable;
+		boolean localInIterable = this.inIterable;
 		for(Node node : this) {
-			if(inIterable) break;
-			inIterable = inIterable || node.isInIterable();
+			if(localInIterable) {
+				break;
+			}
+			localInIterable = localInIterable || node.isInIterable();
 		}		
-		return inIterable;
+		return localInIterable;
 	}
 
 	@Override
@@ -86,38 +92,54 @@ public class NodeImpl extends PathImpl implements Node, Serializable {
 	public void setInIterable(boolean inIterable) {
 		this.inIterable = inIterable;
 	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + (inIterable ? 1231 : 1237);
+		result = prime * result + ((index == null) ? 0 : index.hashCode());
+		result = prime * result + ((key == null) ? 0 : key.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
 
 	@Override
 	public boolean equals(Object obj) {
-	//check basic preconditions for equality
-		if(obj == null) return false;
-		if(!this.getClass().equals(obj.getClass())) return false;
-		
-		//do specific equality checks
-		NodeImpl compare = (NodeImpl)obj;
-		
-		//check the name (property path must be the same)
-		if(!this.getName().equals(compare.getName())) return false;
-		
-		//check if it is iterable
-		if(this.isInIterable() != compare.isInIterable()) return false;
-		
-		//path is inside of a map or list
-		if(this.isInIterable()) {
-			
-			//we have an index, so compare
-			if(this.getIndex() != null) {
-				if(!this.getIndex().equals(compare.getIndex())) return false;
-			}
-			
-			//we have a key, so compare
-			if(this.getKey() != null) {
-				if(!this.getKey().equals(compare.getKey())) return false;
-			}
-			
+		if (this == obj) {
+			return true;
 		}
-		
-		//none of the individual checks failed, so must be equal
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (!(obj instanceof NodeImpl)) {
+			return false;
+		}
+		NodeImpl other = (NodeImpl) obj;
+		if (inIterable != other.inIterable) {
+			return false;
+		}
+		if (index == null) {
+			if (other.index != null) {
+				return false;
+			}
+		} else if (!index.equals(other.index)) {
+			return false;
+		}
+		if (key == null) {
+			if (other.key != null) {
+				return false;
+			}
+		} else if (!key.equals(other.key)) {
+			return false;
+		}
+		if (name == null) {
+			if (other.name != null) {
+				return false;
+			}
+		} else if (!name.equals(other.name)) {
+			return false;
+		}
 		return true;
 	}
 

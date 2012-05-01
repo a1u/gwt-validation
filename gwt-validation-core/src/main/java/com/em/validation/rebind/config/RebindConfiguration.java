@@ -23,10 +23,6 @@ package com.em.validation.rebind.config;
  under the License.
 */
 
-import javax.validation.Validator;
-
-import com.em.validation.rebind.scan.ClassScanner;
-
 /**
  * Singleton for handling all of the rebind configuration issues.  This class was created because of a suggestion by a user, Niels, who was the
  * first to have a problem integrating with Hibernate.  The need for this class and the configuration it supports grew out of there.

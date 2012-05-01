@@ -27,7 +27,6 @@ package com.em.validation.client.reflector;
 import java.lang.annotation.ElementType;
 import java.util.Set;
 
-import javax.validation.GroupSequence;
 import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.Scope;
 

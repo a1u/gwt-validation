@@ -46,7 +46,7 @@ public class ConstraintValidatorContextImpl implements ConstraintValidatorContex
 	public String getDefaultConstraintMessageTemplate() {
 		String templateString = "";
 		if(this.disableDefault) {
-			
+			//not 100% sure what to do here at this point, need to go over the JSR-303 and implement
 		} else {
 			if(this.descriptor.getAttributes().containsKey("message")) {
 				templateString = (String)descriptor.getAttributes().get("message");
