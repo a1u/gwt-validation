@@ -218,7 +218,13 @@ public class ConstraintMetadata {
 		return key;
 	}
 	
+	@Override
+	public int hashCode() {
+		return this.toString().hashCode();
+	}
+
 	//simple equals method based on key signature
+	@Override
 	public boolean equals(Object object) {
 		if(object == null) return false;
 		if(object instanceof ConstraintMetadata) {

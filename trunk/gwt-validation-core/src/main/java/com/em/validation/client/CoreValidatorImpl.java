@@ -389,7 +389,7 @@ public class CoreValidatorImpl implements Validator{
 				//throw new UnexpectedTypeException("More than one validator was resolved for " + descriptor.getAnnotation().annotationType().getName() + " on " + beanType.getName());
 			}
 			
-			//get the validator
+			//get the (first) validator
 			Class<? extends ConstraintValidator<? extends Annotation, T>> validatorClass = (Class<? extends ConstraintValidator<? extends Annotation, T>>) descriptor.getConstraintValidatorClasses().get(0);
 
 			//if a validator class was found, create the validator and begin validation

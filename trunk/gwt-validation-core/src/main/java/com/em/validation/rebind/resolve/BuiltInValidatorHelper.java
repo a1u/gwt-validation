@@ -64,6 +64,19 @@ import com.em.validation.client.validators.size.SizeStringValidator;
 
 public class BuiltInValidatorHelper {
 
+	/**
+	 * Helper class should not be constructed
+	 */
+	private BuiltInValidatorHelper() {
+		
+	}
+	
+	/**
+	 * Returns the built-in validators for a given constraint annotation.
+	 * 
+	 * @param constraintAnnotationClass
+	 * @return
+	 */
 	public static Set<Class<?>> getBuiltInValidators(Class<?> constraintAnnotationClass) {
 		
 		Set<Class<?>> builtInValidators = new HashSet<Class<?>>();
@@ -125,9 +138,9 @@ public class BuiltInValidatorHelper {
 			builtInValidators.add(SizeCollectionValidator.class);
 			builtInValidators.add(SizeMapValidator.class);
 			builtInValidators.add(SizeStringValidator.class);
-		} else {
+		}// else {
 			//do nothing?  not a built-in validator.
-		}
+		//}
 		
 		return builtInValidators;
 	}
