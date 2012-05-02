@@ -161,8 +161,6 @@ public class ConstraintDescriptorImpl<T extends Annotation> implements Constrain
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + ((this.annotation == null) ? 0 : this.annotation.hashCode());
-		result = prime * result + ((this.composedOf == null) ? 0 : this.composedOf.hashCode());
-		result = prime * result + ((this.propertyMap == null) ? 0 : this.propertyMap.hashCode());
 		result = prime * result + (this.reportAsSingleViolation ? 1231 : 1237);
 		return result;
 	}

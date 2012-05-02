@@ -138,9 +138,9 @@
 					<!-- 
 						-Dgwt.args = gwtc arguments for JUnit that behvaes like production and produces pretty (readable) output
 						-Dgwt.validation.included.ModelPackages = arguments to gwt-validation's processor that specify the model packages to scan (comma separated list)
-						(be warned, when using this option you MUST have javax.validation.constraints and com.em.validation.client.constraints as well!)																	
+						(as of r331 javax.validation.constraints and com.em.validation.client.constraints are added automatically when other packages are specified)																	
 					 -->
-					<argLine>-Dgwt.args="-prod -gen target/testgen -style PRETTY" -Dgwt.validation.included.ModelPackages=javax.validation.constraints,com.em.validation.client.constraints,com.em.validation.client.model,</argLine>
+					<argLine>-Dgwt.args="-prod -gen target/testgen -style PRETTY" -Dgwt.validation.included.ModelPackages=com.em.validation.client.model</argLine>
 					<additionalClasspathElements>
 						<additionalClasspathElement>${project.build.sourceDirectory}</additionalClasspathElement>
 						<additionalClasspathElement>${project.build.testSourceDirectory}</additionalClasspathElement>
