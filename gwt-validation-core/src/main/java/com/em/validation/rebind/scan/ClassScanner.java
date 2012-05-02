@@ -104,9 +104,9 @@ public enum ClassScanner {
 		Set<URL> classPathUrls = new HashSet<URL>();
 
 		//model packages from configuration
-		String[] modelPackages = RebindConfiguration.INSTANCE.includedModelPackages();
+		Set<String> modelPackages = RebindConfiguration.INSTANCE.includedModelPackages();
 		
-		if(modelPackages != null && modelPackages.length > 0) {
+		if(modelPackages != null && !modelPackages.isEmpty()) {
 			//add all model packages
 			for(String modelPackage : modelPackages) {
 				classPathUrls.addAll(ClasspathHelper.forPackage(modelPackage));

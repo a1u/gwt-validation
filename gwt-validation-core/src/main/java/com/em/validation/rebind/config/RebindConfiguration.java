@@ -1,5 +1,8 @@
 package com.em.validation.rebind.config;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /*
  GWT Validation Framework - A JSR-303 validation framework for GWT
 
@@ -64,10 +67,10 @@ public enum RebindConfiguration {
 	private String excludedModelClasses = null;
 	
 	/**
-	 * Array of all the model package urls.
+	 * Set of all the model package urls.
 	 * 
 	 */
-	private String[] includedModelPackages = null;
+	private Set<String> includedModelPackages = null;
 	
 	/**
 	 * Default constructor that populates the properties of the configuration object
@@ -90,13 +93,16 @@ public enum RebindConfiguration {
 		//if there are model packages listed, split, and trim each package name
 		if(inModelClasses != null) {
 			String[] packages = inModelClasses.split(",");
-			this.includedModelPackages = new String[packages.length];
-			int i = 0;
+			this.includedModelPackages = new HashSet<String>();
 			for(String p : packages) {
-				this.includedModelPackages[i++] = p.trim();
+				this.includedModelPackages.add(p.trim());
 			}
 			
+			//add packages that must be included that are local to gwt-validation and javax.validation
+			this.includedModelPackages.add("javax.validation.constraints");
+			this.includedModelPackages.add("com.em.validation.client.constraints");
 		}
+			
 	}
 	
 	/**
@@ -125,7 +131,7 @@ public enum RebindConfiguration {
 	 * @return
 	 * @see ClassScanner
 	 */
-	public String[] includedModelPackages() {
+	public Set<String> includedModelPackages() {
 		return this.includedModelPackages;
 	}
 }
