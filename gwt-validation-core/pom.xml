@@ -28,7 +28,7 @@
 	<parent>
 		<groupId>com.googlecode.gwt-validation</groupId>
 		<artifactId>gwt-validation-parent</artifactId>
-		<version>2.2-SNAPSHOT</version>
+		<version>2.1</version>
 		<relativePath>..</relativePath>
 	</parent>
 
