@@ -140,7 +140,7 @@
 						-Dgwt.validation.included.ModelPackages = arguments to gwt-validation's processor that specify the model packages to scan (comma separated list)
 						(as of r331 javax.validation.constraints and com.em.validation.client.constraints are added automatically when other packages are specified)																	
 					 -->
-					<argLine>-Dgwt.args="-prod -gen target/testgen -style PRETTY" -Dgwt.validation.included.ModelPackages=com.em.validation.client.model</argLine>
+					<argLine>-Dgwt.args="-prod -gen target/gwt-generated -workDir target/gwt-unitCache -war target/gwt-war -extra target/extra -style PRETTY" -Dgwt.validation.included.ModelPackages=com.em.validation.client.model</argLine>
 					<additionalClasspathElements>
 						<additionalClasspathElement>${project.build.sourceDirectory}</additionalClasspathElement>
 						<additionalClasspathElement>${project.build.testSourceDirectory}</additionalClasspathElement>
