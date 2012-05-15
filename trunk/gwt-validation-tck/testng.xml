@@ -1,5 +1,5 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite thread-count="5" skipfailedinvocationCounts="false" verbose="0" name="JSR-303-TCK" junit="false" annotations="JDK">
+<suite thread-count="5" skipfailedinvocationcounts="false" verbose="0" name="JSR-303-TCK" junit="false" annotations="JDK">
   <test name="JSR-303-TCK" junit="false">
     <method-selectors>
       <method-selector>
