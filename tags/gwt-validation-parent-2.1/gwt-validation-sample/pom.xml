@@ -1,0 +1,136 @@
+<!-- 
+ GWT Validation Framework - A JSR-303 validation framework for GWT
+
+ (c) 2008 gwt-validation contributors (http://code.google.com/p/gwt-validation/) 
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ 
+ You may obtain a copy of the License at  http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<!-- artifact details -->
+	<artifactId>gwt-validation-sample</artifactId>
+	<name>GWT Validation Sample Web Application</name>
+	<description>GWT Validation Sample Web Application Project</description>
+	
+	<!-- building a deployable war -->
+	<packaging>war</packaging>
+	
+	<properties>
+	</properties>
+	
+	<!-- gwt-validation parent -->
+	<parent>
+		<groupId>com.googlecode.gwt-validation</groupId>
+		<artifactId>gwt-validation-parent</artifactId>
+		<version>2.1-SNAPSHOT</version>
+		<relativePath>..</relativePath>
+	</parent>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-user</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-servlet</artifactId>
+			<version>${gwt.version}</version>
+		</dependency>
+
+		<!-- needs source and code gwt-validation -->
+		<dependency>
+			<groupId>com.googlecode.gwt-validation</groupId>
+			<artifactId>gwt-validation</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.googlecode.gwt-validation</groupId>
+			<artifactId>gwt-validation</artifactId>
+			<classifier>sources</classifier>
+		</dependency>
+		
+	</dependencies>
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-eclipse-plugin</artifactId>
+					<configuration>
+						<downloadSources>true</downloadSources>
+						<downloadJavadocs>true</downloadJavadocs>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<source>1.6</source>
+						<target>1.6</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<configuration>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>gwt-maven-plugin</artifactId>
+					<version>${gwt.version}</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>compile</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<outputDirectory>target/gwt-validation-sample/WEB-INF/classes</outputDirectory>
+						<module>com.em.validation.sample.GwtValidationSample</module>
+						<copyWebapp>true</copyWebapp>
+						<runTarget>index.html</runTarget>
+						<extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
+						<optimizationLevel>9</optimizationLevel>
+						<localWorkers>6</localWorkers>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>2.1.1</version>
+					<executions>
+						<execution>
+						</execution>
+					</executions>
+					<configuration>
+						<warName>gwt-validation-sample</warName>
+						<warSourceExcludes>
+							WEB-INF/lib/servlet-api-2.5.jar,
+							WEB-INF/lib/gwt-user-${gwt.version}.jar
+						</warSourceExcludes>
+						<webResources>
+					        <resource>
+					            <directory>src/main/webapp</directory>
+					            <!-- enable filtering -->
+					            <filtering>true</filtering>
+				              	<includes>
+					                <include>**/*.html</include>
+				            	</includes>
+					        </resource>
+						</webResources>						
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+</project>
