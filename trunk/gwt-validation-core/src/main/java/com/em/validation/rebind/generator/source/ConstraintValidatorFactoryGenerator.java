@@ -71,11 +71,11 @@ public enum ConstraintValidatorFactoryGenerator {
 		for(Class<?> constrained : constrainedClasses) {
 			BeanDescriptor beanDesc = DescriptorFactory.INSTANCE.getBeanDescriptor(constrained);
 			for(ConstraintDescriptor<?> descriptor : beanDesc.getConstraintDescriptors()) {
-				foundCandidateValidators.addAll(descriptor.getConstraintValidatorClasses());
+				foundCandidateValidators.addAll(this.resolveAllValidators(descriptor));
 			}
 			for(PropertyDescriptor propDescriptor : beanDesc.getConstrainedProperties()) {
 				for(ConstraintDescriptor<?> descriptor : propDescriptor.getConstraintDescriptors()) {
-					foundCandidateValidators.addAll(descriptor.getConstraintValidatorClasses());
+					foundCandidateValidators.addAll(this.resolveAllValidators(descriptor));
 				}
 			}
 		}
@@ -104,6 +104,43 @@ public enum ConstraintValidatorFactoryGenerator {
 		factoryDescriptor.setClassContents(TemplateController.INSTANCE.processTemplate("templates/validator/GeneratedConstraintValidatorFactory.ftl", templateDataModel));
 				
 		return factoryDescriptor;
+	}
+	
+	/**
+	 * Method to allow recursive resolution of composed constraints
+	 * 
+	 * @param descriptor
+	 * @return
+	 */
+	private Set<Class<? extends ConstraintValidator<?, ?>>> resolveAllValidators(ConstraintDescriptor<?> descriptor) {
+		return this.resolveAllValidators(descriptor, new HashSet<Class<?>>(10));
+	}
+	
+	/**
+	 * Method to allow recursive resolution of composed constraints without infinite recursion
+	 * 
+	 * @param descriptor
+	 * @param checked
+	 * @return
+	 */
+	private Set<Class<? extends ConstraintValidator<?, ?>>> resolveAllValidators(ConstraintDescriptor<?> descriptor, Set<Class<?>> checked) {
+		//set
+		Set<Class<? extends ConstraintValidator<?, ?>>> foundCandidateValidators = new HashSet<Class<? extends ConstraintValidator<?,?>>>();
+		
+		//get this level validator
+		foundCandidateValidators.addAll(descriptor.getConstraintValidatorClasses());
+		
+		//add this level validator to checked set
+		checked.add(descriptor.getAnnotation().getClass());
+		
+		//do this action for all other descriptors with annotations not in checked set
+		for(ConstraintDescriptor<?> composing : descriptor.getComposingConstraints()) {
+			if(!checked.contains(composing.getAnnotation().getClass())) {
+				foundCandidateValidators.addAll(this.resolveAllValidators(composing,checked));
+			}			
+		}		
+		
+		return foundCandidateValidators;
 	}
 	
 }
