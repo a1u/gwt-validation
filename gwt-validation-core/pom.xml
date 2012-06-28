@@ -89,6 +89,7 @@
 	</dependencies>
 	
 	<build>
+		<!-- 
 		<resources>
 			<resource>
 				<directory>${project.basedir}/src/main/java</directory>
@@ -99,7 +100,8 @@
 				<directory>${project.basedir}/src/test/java</directory>
 			</testResource>
 		</testResources>
-
+		-->
+		
 		<plugins>
 			<!-- sync with eclipse -->
 			<plugin>

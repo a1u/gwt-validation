@@ -10,7 +10,7 @@ import javax.validation.metadata.BeanDescriptor;
 import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.PropertyDescriptor;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 

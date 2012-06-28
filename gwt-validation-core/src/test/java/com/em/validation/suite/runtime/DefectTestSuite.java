@@ -38,6 +38,7 @@ import com.em.validation.client.core.defects.Defect_049;
 import com.em.validation.client.core.defects.Defect_068;
 import com.em.validation.client.core.defects.Defect_069;
 import com.em.validation.client.core.defects.Defect_070;
+import com.em.validation.client.core.defects.Defect_093;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
@@ -52,7 +53,8 @@ import com.em.validation.client.core.defects.Defect_070;
 	Defect_049.class,
 	Defect_068.class,
 	Defect_069.class,
-	Defect_070.class
+	Defect_070.class,
+	Defect_093.class
 })
 public class DefectTestSuite {
 

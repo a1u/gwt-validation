@@ -448,7 +448,8 @@ public class CoreValidatorImpl implements Validator{
 					}
 	
 				} catch (ValidationException vex) {
-					//todo: log that the validator cValidator was skipped b/c of a validation error
+					//for now, throw vex, in lieu of todo
+					throw vex;
 				}			
 			}
 		} else if(descriptor.getComposingConstraints().isEmpty()) {
